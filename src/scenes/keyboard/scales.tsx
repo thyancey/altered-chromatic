@@ -28,6 +28,7 @@ export function Scales() {
 
   return (
     <ScContainer>
+      <p>{'click a scale name to toggle it on/off'}</p>
       <h4>{'root note'}</h4>
       <p>{activeNote}</p>
       <h4>{'western scales'}</h4>

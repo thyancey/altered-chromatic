@@ -3,6 +3,7 @@ import { getColor } from '../../themes';
 
 import {
   KeyObj,
+  ScaleStatus,
   selectKeyboardKeys,
   setActiveNote,
 } from './slice';
@@ -23,7 +24,21 @@ const ScInstrument = styled.div`
   margin: auto;
 `
 
-export const ScKeyboardKey = styled.div`
+type ScKeyboardKeyProps = {
+  scaleStatus: ScaleStatus
+}
+
+export const ScKeyboardBaseKey = styled.div<ScKeyboardKeyProps>`
+  ${p => p.scaleStatus === 'root' && css`
+    border: .5rem solid ${getColor('red')};
+  `}
+
+  ${p => p.scaleStatus === 'scale' && css`
+    border: .5rem dashed ${getColor('red')};
+  `}
+`
+
+export const ScKeyboardKey = styled(ScKeyboardBaseKey)`
   position:relative;
   display:inline-block;
   width:4rem;
@@ -49,7 +64,7 @@ type ScAccidentalKeyboardKeyProps = {
   keyStyle: boolean
 }
 
-export const ScAccidentalKeyboardKey = styled.div<ScAccidentalKeyboardKeyProps>`
+export const ScAccidentalKeyboardKey = styled(ScKeyboardBaseKey)<ScAccidentalKeyboardKeyProps>`
   position:absolute;
   display:inline-block;
   z-index:1;
@@ -68,7 +83,7 @@ export const ScAccidentalKeyboardKey = styled.div<ScAccidentalKeyboardKeyProps>`
   box-shadow: .25rem .25rem .5rem .1rem ${getColor('blue')};
 
   &:hover{
-    background-color: ${getColor('purple')};
+    background-color: ${getColor('green')};
     box-shadow: .5rem .5rem .5rem .1rem ${getColor('blue')};
   }
 
@@ -103,6 +118,7 @@ export function Instrument() {
                   key={keyObj.idx}
                   onClick={e => onClick(e, keyObj)}
                   keyStyle={keyObj.keyStyle}
+                  scaleStatus={keyObj.scaleStatus}
               >
                   <span>{keyObj.note}</span>
               </ScAccidentalKeyboardKey>
@@ -111,6 +127,7 @@ export function Instrument() {
             return (
               <ScKeyboardKey
                 key={keyObj.idx}
+                scaleStatus={keyObj.scaleStatus}
                 onClick={e => onClick(e, keyObj)}
               >
                 <span>{keyObj.note}</span>

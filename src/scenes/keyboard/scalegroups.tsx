@@ -1,11 +1,13 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { getColor } from '../../themes';
 
 import {
   getActiveNote,
-  selectAllMajorScales
+  getActiveScale,
+  selectAllMajorScales,
+  setActiveScale
 } from './slice';
-import { useAppSelector } from '../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 
 export const ScContainer = styled.div`
   background-color: ${getColor('purple')};
@@ -24,22 +26,43 @@ export const ScScaleNote = styled.li`
 
 export const ScScaleGroup = styled.div`
   text-align:left;
-
-  p{
-    font-weight: bold;
+`
+type ScScaleLabelProps = {
+  isActive: boolean
+}
+export const ScScaleLabel = styled.p<ScScaleLabelProps>`
+  font-weight: bold;
+  cursor:pointer;
+  &:hover{
+    color:white;
   }
+
+  ${p => p.isActive && css`
+    color: ${getColor('green')}
+  `}
 `
 
 export function ScaleGroups() {
   const allScales = useAppSelector(selectAllMajorScales);
+  const activeScale = useAppSelector(getActiveScale);
   const activeNote = useAppSelector(getActiveNote);
+  const dispatch = useAppDispatch();
   if(!allScales) return null;
+
+  const onClick = (e:any, clickedId:string) => {
+    dispatch(setActiveScale(clickedId));
+  }
 
   return (
     <ScContainer>
       {allScales.map((scaleObj, idx) => (
         <ScScaleGroup key={scaleObj.id}>
-          <p>{`${activeNote?.split('-')[0]} ${scaleObj.label}:`}</p>
+          <ScScaleLabel
+            isActive={scaleObj.id === activeScale}
+            onClick={e => onClick(e, scaleObj.id)}
+          >
+            {`${activeNote?.split('-')[0]} ${scaleObj.label}:`}
+          </ScScaleLabel>
           <ul>
             {scaleObj.octaveNotes.map(octaveNote => (
               <ScScaleNote key={octaveNote}>

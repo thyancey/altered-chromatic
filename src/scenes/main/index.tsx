@@ -54,6 +54,24 @@ export const ScStage = styled.div`
   z-index:-1;
 `
 
+export const ScCopyright = styled.a`
+  position:absolute;
+  right:1rem;
+  bottom:.5rem;
+  color: ${getColor('green')};
+  font-size:2rem;
+
+  font-size:2rem;
+  color: ${getColor('blue')};
+  &:visited{
+    color: ${getColor('blue')};
+  }
+
+  &:hover{
+    color: ${getColor('yellow')};
+  }
+`
+
 function Main() {
   const [ collapsed, setCollapsed ] = useState(true);
   const pages = [
@@ -84,6 +102,7 @@ function Main() {
             <Route key={i} path={p.route} element={p.element} />
           ))}
         </Routes>
+        <ScCopyright href="http://thomasyancey.com" target="_blank">{'©Tom Yancey, 2022'}</ScCopyright>
       </ScStage>
     </HashRouter>
   );

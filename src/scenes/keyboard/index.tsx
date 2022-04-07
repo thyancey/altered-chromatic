@@ -15,6 +15,10 @@ export const ScContainer = styled.div`
   
   text-align:center;
 
+  >h1{
+    color: ${getColor('green')};
+  }
+
   >p{
     color: ${getColor('grey_light')};
     margin-bottom:1rem;
@@ -25,7 +29,6 @@ export function Keyboard() {
   return (
     <ScContainer>
       <h1>{'Altered Chromatic.'}</h1>
-      <p>{'click to play a note'}</p>
       <p>{'ctrl + click to set the key'}</p>
       <Instrument />
       <Scales />
