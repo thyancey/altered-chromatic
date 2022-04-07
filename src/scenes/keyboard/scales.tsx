@@ -2,26 +2,36 @@ import styled from 'styled-components';
 import { getColor } from '../../themes';
 
 import {
-  getActiveNote,
-  setActiveNote,
-  selectAllOctiveNotes,
+  getActiveNote
 } from './slice';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { useAppSelector } from '../../app/hooks';
+import { ScaleGroups } from './scalegroups';
 
 export const ScContainer = styled.div`
-  width:50%;
-  height:10rem;
   background-color: ${getColor('purple')};
+  text-align:left;
   display:inline-block;
+  padding: 0rem 2rem;
+
+  ul{
+    list-style:none;
+  }
+
+  >h4{
+    margin-left:-1rem;
+  }
 `
 
 export function Scales() {
   const activeNote = useAppSelector(getActiveNote);
-  const allNotes = useAppSelector(selectAllOctiveNotes);
-  
+  if(!activeNote) return null;
+
   return (
     <ScContainer>
-      <h2>{activeNote}</h2>
+      <h4>{'root note'}</h4>
+      <p>{activeNote}</p>
+      <h4>{'western scales'}</h4>
+      <ScaleGroups />
     </ScContainer>
   );
 }

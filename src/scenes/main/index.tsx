@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Counter } from '../../examples/counter/Counter';
 import { Keyboard } from '../../scenes/keyboard';
+import { About } from '../../scenes/about';
 import { getColor } from '../../themes/';
 import { HashRouter, Route, Routes, Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -58,14 +58,14 @@ function Main() {
   const [ collapsed, setCollapsed ] = useState(true);
   const pages = [
     {
-      route: '/example1',
-      text: 'Example',
-      element: <Counter/>
-    },
-    {
-      route: '/keyboard',
+      route: '/',
       text: 'Keyboard',
       element: <Keyboard/>
+    },
+    {
+      route: '/about',
+      text: 'About',
+      element: <About/>
     }
   ]
   

@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components';
 import { getColor } from '../../themes';
 
 import {
+  KeyObj,
   selectKeyboardKeys,
   setActiveNote,
 } from './slice';
@@ -84,6 +85,14 @@ export function Instrument() {
   const keys = useAppSelector(selectKeyboardKeys);
   const dispatch = useAppDispatch();
 
+  const onClick = (e:any, keyObj:KeyObj) => {
+    if(e.ctrlKey){
+      dispatch(setActiveNote(keyObj.octaveNote))
+    }
+
+    console.log(`play ${keyObj.octaveNote}`);
+  }
+
   return (
     <ScContainer>
       <ScInstrument>
@@ -92,7 +101,7 @@ export function Instrument() {
             return (
               <ScAccidentalKeyboardKey 
                   key={keyObj.idx}
-                  onClick={() => dispatch(setActiveNote(keyObj.octaveNote))}
+                  onClick={e => onClick(e, keyObj)}
                   keyStyle={keyObj.keyStyle}
               >
                   <span>{keyObj.note}</span>
@@ -102,7 +111,7 @@ export function Instrument() {
             return (
               <ScKeyboardKey
                 key={keyObj.idx}
-                onClick={() => dispatch(setActiveNote(keyObj.octaveNote))}
+                onClick={e => onClick(e, keyObj)}
               >
                 <span>{keyObj.note}</span>
               </ScKeyboardKey>

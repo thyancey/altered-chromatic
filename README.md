@@ -1,3 +1,12 @@
+
+# Altered Chromatic
+I dunno, what if "C Major" was really "A Major", and all notes only had a Sharp? Why is everything based around CDEFGAB anyways? WHY CANT WE MAKE A BRAND NEW PIANO?
+
+
+
+
+
+# Template readme
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
 
 ## Available Scripts
