@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
-import { Counter } from './examples/counter/Counter';
-import { Template } from './experiments/template';
-import { getColor } from './themes/';
-// import { Route, Link, withRouter, Redirect } from 'react-router-dom';
+import { useState } from 'react';
+import { Counter } from '../../examples/counter/Counter';
+import { Keyboard } from '../../scenes/keyboard';
+import { getColor } from '../../themes/';
 import { HashRouter, Route, Routes, Link } from 'react-router-dom';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 export const GroupContainer = styled.div`
   background-color: ${getColor('blue')};
@@ -23,7 +21,7 @@ export const ScHeader = styled.div`
 
   width: 100%;
   height:10rem;
-  border-bottom:1rem solid blue;
+  border-bottom:.5rem solid ${getColor('blue')};
   color:white;
   z-index:1;
   background-color:black;
@@ -53,10 +51,11 @@ export const ScStage = styled.div`
   right:0;
   bottom:0;
   padding-top:5rem;
+  z-index:-1;
 `
 
-function App() {
-  const [ collapsed, setCollapsed ] = useState(false);
+function Main() {
+  const [ collapsed, setCollapsed ] = useState(true);
   const pages = [
     {
       route: '/example1',
@@ -64,9 +63,9 @@ function App() {
       element: <Counter/>
     },
     {
-      route: '/experiment1',
-      text: 'Experiment 1',
-      element: <Template/>
+      route: '/keyboard',
+      text: 'Keyboard',
+      element: <Keyboard/>
     }
   ]
   
@@ -90,4 +89,4 @@ function App() {
   );
 }
 
-export default App;
+export default Main;

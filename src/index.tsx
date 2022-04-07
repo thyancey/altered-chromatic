@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import Main from './scenes/main';
 import { store } from './app/store';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
@@ -10,7 +10,7 @@ import GlobalStyle from './themes/';
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <Main />
       <GlobalStyle />
     </Provider>
   </React.StrictMode>,
