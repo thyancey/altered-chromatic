@@ -18,6 +18,7 @@ export const ScHeader = styled.div`
   top:0;
   left:0;
   transition: top .5s ease-in-out;
+  cursor:pointer;
 
   width: 100%;
   height:10rem;
@@ -29,6 +30,10 @@ export const ScHeader = styled.div`
   &.collapsed{
     top:-8rem;
     transition: top .5s ease-in-out;
+      
+    &:hover{
+      background-color: ${getColor('grey')};
+    }
   }
 
   >.link-button{

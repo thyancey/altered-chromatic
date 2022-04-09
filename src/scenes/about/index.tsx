@@ -15,7 +15,7 @@ export function About() {
   return (
     <ScContainer>
       <h2>{`I'll explain this soon.`}</h2>
-      <p>{`Next feature: play midi sounds`}</p>
+      <p>{`Next feature: play with keyboard keys`}</p>
     </ScContainer>
   );
 }

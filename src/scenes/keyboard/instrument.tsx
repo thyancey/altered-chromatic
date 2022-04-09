@@ -25,6 +25,12 @@ const ScInstrument = styled.div`
   border-radius: 1rem;
   width: max-content;
   margin: auto;
+
+  user-select: none; /* supported by Chrome and Opera */
+   -webkit-user-select: none; /* Safari */
+   -khtml-user-select: none; /* Konqueror HTML */
+   -moz-user-select: none; /* Firefox */
+   -ms-user-select: none; /* Internet Explorer/Edge */
 `
 
 type ScKeyboardKeyProps = {
