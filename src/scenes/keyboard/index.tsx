@@ -29,7 +29,7 @@ export function Keyboard() {
   return (
     <ScContainer>
       <h1>{'Altered Chromatic.'}</h1>
-      <p>{'ctrl + click to set the key'}</p>
+      <p>{'ctrl + click to set the key & root note'}</p>
       <Instrument />
       <Scales />
     </ScContainer>

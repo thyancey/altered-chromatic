@@ -2,12 +2,15 @@ import styled, { css } from 'styled-components';
 import { getColor } from '../../themes';
 
 import {
-  KeyObj,
-  ScaleStatus,
   selectKeyboardKeys,
   setActiveNote,
 } from './slice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { MusicBox } from '../../components/musicbox';
+import { 
+  CompleteNote,
+  ScaleStatus 
+} from '../../utils/music';
 
 
 export const ScContainer = styled.div`
@@ -97,40 +100,42 @@ export const ScAccidentalKeyboardKey = styled(ScKeyboardBaseKey)<ScAccidentalKey
 `
 
 export function Instrument() {
-  const keys = useAppSelector(selectKeyboardKeys);
+  const keyboardKeys = useAppSelector(selectKeyboardKeys);
   const dispatch = useAppDispatch();
 
-  const onClick = (e:any, keyObj:KeyObj) => {
+  const onClick = (e:any, noteObj:CompleteNote) => {
     if(e.ctrlKey){
-      dispatch(setActiveNote(keyObj.octaveNote))
+      dispatch(setActiveNote(noteObj.octaveNote))
     }
 
-    console.log(`play ${keyObj.octaveNote}`);
+    // @ts-ignore;
+    global.globalMidiHandler && global.globalMidiHandler([noteObj.midiNote]);
   }
 
   return (
     <ScContainer>
+      <MusicBox midiInstrument={'piano'} volume={1} />
       <ScInstrument>
-        {keys.map((keyObj, idx) => {
-          if(keyObj.type === 'accidental'){
+        {keyboardKeys.map(noteObj => {
+          if(noteObj.type === 'accidental'){
             return (
               <ScAccidentalKeyboardKey 
-                  key={keyObj.idx}
-                  onClick={e => onClick(e, keyObj)}
-                  keyStyle={keyObj.keyStyle}
-                  scaleStatus={keyObj.scaleStatus}
+                key={noteObj.idx}
+                onClick={e => onClick(e, noteObj)}
+                keyStyle={noteObj.keyStyle}
+                scaleStatus={noteObj.scaleStatus}
               >
-                  <span>{keyObj.note}</span>
+                <span>{noteObj.note}</span>
               </ScAccidentalKeyboardKey>
             );
           }else{
             return (
               <ScKeyboardKey
-                key={keyObj.idx}
-                scaleStatus={keyObj.scaleStatus}
-                onClick={e => onClick(e, keyObj)}
+                key={noteObj.idx}
+                scaleStatus={noteObj.scaleStatus}
+                onClick={e => onClick(e, noteObj)}
               >
-                <span>{keyObj.note}</span>
+                <span>{noteObj.note}</span>
               </ScKeyboardKey>
             );
           }
