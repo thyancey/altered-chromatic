@@ -1,19 +1,12 @@
 import { useState } from 'react';
 import { Keyboard } from '../../scenes/keyboard';
 import { About } from '../../scenes/about';
-import { getColor } from '../../themes/';
+import { getColor, mixin_glowOnHover } from '../../themes/';
 import { HashRouter, Route, Routes, Link } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import GithubLogo from './github-mark.svg';
 
-export const GroupContainer = styled.div`
-  background-color: ${getColor('blue')};
-  border: 1rem solid ${getColor('white')};
-  border-radius: 5rem;
-  margin: 3rem;
-  padding: 2rem 3.3rem;
-`;
-
-export const ScHeader = styled.div`
+const ScHeader = styled.div`
   position:fixed;
   top:0;
   left:0;
@@ -49,7 +42,7 @@ export const ScHeader = styled.div`
   }
 `;
 
-export const ScStage = styled.div`
+const ScStage = styled.div`
   position:absolute;
   left:0;
   top:0;
@@ -59,7 +52,7 @@ export const ScStage = styled.div`
   z-index:-1;
 `
 
-export const ScCopyright = styled.a`
+const ScCopyright = styled.a`
   position:absolute;
   right:1rem;
   bottom:.5rem;
@@ -71,11 +64,24 @@ export const ScCopyright = styled.a`
   &:visited{
     color: ${getColor('blue')};
   }
-
-  &:hover{
-    color: ${getColor('yellow')};
-  }
+  
+  ${mixin_glowOnHover('blue')}
 `
+
+const ScGithub = styled.button`
+  position: absolute;
+  width: 5rem;
+  right: 1rem;
+  top:50%;
+  transform:translateY(-50%);
+  background:0;
+  border:0;
+
+  cursor:pointer;
+
+  ${mixin_glowOnHover('green')}
+`
+
 
 function Main() {
   const [ collapsed, setCollapsed ] = useState(true);
@@ -100,6 +106,9 @@ function Main() {
             <h2>{p.text}</h2>
           </Link>
         ))}
+        <ScGithub>
+          <img src={GithubLogo} />
+        </ScGithub>
       </ScHeader>
       <ScStage>
         <Routes>

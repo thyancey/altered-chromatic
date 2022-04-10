@@ -17,6 +17,8 @@ export const ScContainer = styled.div`
 
   >h1{
     color: ${getColor('green')};
+    color: transparent;  
+    text-shadow: 0 0 0 ${getColor('green')};
   }
 
   >p{
@@ -28,7 +30,7 @@ export const ScContainer = styled.div`
 export function Keyboard() {
   return (
     <ScContainer>
-      <h1>{'Altered Chromatic.'}</h1>
+      <h1>{'Altered Chromatic'}</h1>
       <p>{'ctrl + click to set the key & root note'}</p>
       <Piano />
       <Scales />

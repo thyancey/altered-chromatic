@@ -11,7 +11,7 @@ export default createGlobalStyle`
     margin:0 auto;
   }
   h1, h2, h3, h4{
-    font-family: 'Bevan', cursive;
+    font-family: 'Pompiere', cursive;
   }
   a, p, span, h5, h6{
     font-family: 'Cabin', sans-serif;
@@ -73,6 +73,16 @@ export const getShadow = (shadowId: tShadow) => {
 export const getBreakpoint = (breakpointId: tBreakpoint) => {
   return store.breakpoints[breakpointId] as CssString;
 }
+
+
+export const mixin_glowOnHover = (color: tColor) => (`
+  transition: filter .2s;
+
+  &:hover{
+    filter: drop-shadow(0 0 1rem ${getColor(color)});
+    transition: filter .2s;
+  }
+`);
 
 type CssString = string;
 
