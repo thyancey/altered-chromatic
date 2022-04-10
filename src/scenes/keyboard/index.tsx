@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 import { getColor } from '../../themes';
-import { Instrument } from './instrument';
+import { DynamicBg } from './dynamic-bg';
+import { Piano } from './piano';
 import { Scales } from './scales';
 
-export const ScContainer = styled.div`
+const ScContainer = styled.div`
   position:absolute;
   left:0;
   top:0;
@@ -11,13 +12,9 @@ export const ScContainer = styled.div`
   right:0;
   background-color: ${getColor('grey')};
   z-index:-1;
-  padding-top:5rem;
+  padding-top:0rem;
   
   text-align:center;
-
-  >h1{
-    color: ${getColor('green')};
-  }
 
   >p{
     color: ${getColor('grey_light')};
@@ -25,13 +22,59 @@ export const ScContainer = styled.div`
   }
 `
 
+const ScLogo = styled.div`
+  width: max-content;
+  height: max-content;
+  margin: auto;
+  position: relative;
+  padding: 2rem 2rem 0rem 2rem;
+  margin-bottom: -6.5rem;
+
+  >h1{
+    color: ${getColor('black')};
+    font-size: 9rem;
+
+    padding:1rem;
+    width: max-content;
+    margin:auto;
+    font-weight:800;
+  }
+`
+
+const ScLogoBg = styled.div`
+  background-color: ${getColor('pink')};
+  border-radius: 2.5rem 2.5rem 0 0;
+  position:absolute;
+  z-index:-1;
+  left:0;
+  right:0;
+  top:0;
+  bottom:0;
+  filter: blur(2rem);
+  opacity:.7;
+`;
+
+const ScInstruction = styled.p`
+  color:yellow !important;
+`
+
+const ScPianoContainer = styled.div`
+  
+`
+
 export function Keyboard() {
   return (
     <ScContainer>
-      <h1>{'Altered Chromatic.'}</h1>
-      <p>{'ctrl + click to set the key & root note'}</p>
-      <Instrument />
+      <ScLogo>
+        <h1>{'Altered Chromatic'}</h1>
+        {/* <ScLogoBg /> */}
+      </ScLogo>
+      <ScPianoContainer>
+        <Piano />
+      </ScPianoContainer>
+      <ScInstruction>{'ctrl + click to set the key & root note'}</ScInstruction>
       <Scales />
+      <DynamicBg />
     </ScContainer>
   );
 }

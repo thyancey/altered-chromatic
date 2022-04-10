@@ -11,7 +11,7 @@ export default createGlobalStyle`
     margin:0 auto;
   }
   h1, h2, h3, h4{
-    font-family: 'Bevan', cursive;
+    font-family: 'Kanit', cursive;
   }
   a, p, span, h5, h6{
     font-family: 'Cabin', sans-serif;
@@ -74,6 +74,16 @@ export const getBreakpoint = (breakpointId: tBreakpoint) => {
   return store.breakpoints[breakpointId] as CssString;
 }
 
+
+export const mixin_glowOnHover = (color: tColor) => (`
+  transition: filter .2s;
+
+  &:hover{
+    filter: drop-shadow(0 0 1rem ${getColor(color)});
+    transition: filter .2s;
+  }
+`);
+
 type CssString = string;
 
 type tShadow = 'z1' | 'z2' | 'z3';
@@ -82,17 +92,20 @@ const shadows = {
   z2: '-0.1rem 0.1rem .25rem .1rem rgba(0,0,0,0.36)',
   z3: '-.2rem .5rem 1rem .2rem rgba(0,0,0,.36)'
 }
-type tColor = 'black' | 'grey' | 'grey_light' | 'white' | 'blue' | 'green' | 'yellow' | 'red' | 'purple';
+type tColor = 'black' | 'grey' | 'grey_light' | 'white' | 'blue' | 'green' | 'yellow' | 'red' | 'pink' | 'orange' | 'blue_dark';
 const colors = {
-  black: '#000000',
-  grey: '#373737',
-  grey_light: '#A39F8E',
-  white: '#fef8dd',
-  blue: '#1fb9f3',
-  green: '#51f249',
-  yellow: '#fff249',
-  red: '#F55658',
-  purple: '#6b1ff3'
+  black: '#1F1F1F',
+  grey: '#4D4D4F',
+  grey_light: '#D3D8CF',
+  white: '#FFFFFF',
+
+  red: '#E84744',
+  orange: '#E17A31',
+  green: '#9FB970',
+  yellow: '#E4C137',
+  blue: '#63C7D8',
+  blue_dark: '#48ABBD',
+  pink: '#DA3471',
 }
 
 type tBreakpoint = 'mobile_tiny' | 'mobile_medium' | 'mobile_large' | 'tablet' | 'desktop';
