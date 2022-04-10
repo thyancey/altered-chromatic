@@ -1,5 +1,5 @@
 const MIDI_DATA = {
-  "defaultInstrument": "piano",
+  "defaultInstrument": "starfield",
   "instruments":{
     "piano": {
       "midiId": 5,

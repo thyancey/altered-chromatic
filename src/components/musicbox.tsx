@@ -35,6 +35,7 @@ export function MusicBox({ midiInstrument, volume }: Props) {
   useEffect(() => {
     const foundInstrument = findInstrument(midiInstrument);
     midiSounds.cacheInstrument(foundInstrument.midiId);
+    midiSounds.setMasterVolume(volume);
 
     (global as any).globalMidiHandler = (notes: number[]) => playMidiNotes(notes, foundInstrument.midiId);
   }, [midiInstrument, volume])
