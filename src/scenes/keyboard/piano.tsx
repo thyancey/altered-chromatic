@@ -9,20 +9,19 @@ import {
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { MusicBox } from '../../components/musicbox';
 import { 
-  CompleteNote,
-  NoteName
+  CompleteNote
 } from '../../utils/music';
 import { KeyManager } from './key-manager';
-import { PianoKey, AltPianoKey } from './piano-key';
+import { PianoHalfKey, PianoWholeKey } from './piano-key';
+import MIDI_DATA from '../../components/mididata';
 
-export const SPECIAL_ACCIDENTALS: NoteName[] = [ 'A#', 'C#', 'D#' ];
 export const ScContainer = styled.div`
   display:block;
   text-align:center;
 `
 const ScPianoBar = styled.div`
   position:absolute;
-  z-index:3;
+  z-index:4;
   left:4rem;
   right:4rem;
   height:3rem;
@@ -48,7 +47,7 @@ const ScPiano = styled.div`
 `
 
 const ScPianoBg = styled.div`
-  background-color: ${getColor('white')};
+  background-color: ${getColor('pink_white')};
   z-index:-1;
 
   position:absolute;
@@ -102,18 +101,18 @@ export function Piano() {
           dispatch(setPressedKeys(keys));
         }}
       />
-      <MusicBox midiInstrument={'starfield'} volume={0.2} />
+      <MusicBox midiInstrument={MIDI_DATA.defaultInstrument} volume={0.2} />
       <ScPiano>
         <ScPianoBar />
         <ScPianoKeys>
           {pianoKeys.map(noteObj => {
             if(noteObj.note.includes('#')){
               return (
-                <AltPianoKey noteObj={noteObj} onClick={onClick} />
+                <PianoHalfKey key={noteObj.idx} noteObj={noteObj} onClick={onClick} />
               );
             }else{
               return (
-                <PianoKey noteObj={noteObj} onClick={onClick} />
+                <PianoWholeKey key={noteObj.idx} noteObj={noteObj} onClick={onClick} />
               );
             }
           })}

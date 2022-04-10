@@ -65,7 +65,7 @@ export const selectAllMajorScales = createSelector(
 );
 
 export const getScaleStatus = (octaveNote: string, scaleNotes: string[]): ScaleStatus => {
-  if(!scaleNotes.includes(octaveNote)) return 'inactive';
+  if(!scaleNotes.includes(octaveNote)) return 'invalid';
 
   if(octaveNote === scaleNotes[0] || octaveNote === scaleNotes[scaleNotes.length - 1]){
     return 'root';

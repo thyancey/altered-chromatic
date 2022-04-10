@@ -1,7 +1,7 @@
 export type NoteName = 'A' | 'A#' | 'B' | 'B#' | 'C' | 'C#' | 'D' | 'D#' | 'E' | 'E#' | 'F' | 'F#';
 // export type ScaleKey = 'ionian' | 'dorian' | 'phyrgian' | 'lydian' | 'mixolydian' | 'aeolian' | 'locrian';
 
-export type ScaleStatus = 'root' | 'scale' | 'inactive';
+export type ScaleStatus = 'root' | 'scale' | 'invalid'| 'inactive';
 export type CompleteNote = {
   note: NoteName,
   octaveNote: string,

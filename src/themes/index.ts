@@ -11,7 +11,7 @@ export default createGlobalStyle`
     margin:0 auto;
   }
   h1, h2, h3, h4{
-    font-family: 'Pompiere', cursive;
+    font-family: 'Kanit', cursive;
   }
   a, p, span, h5, h6{
     font-family: 'Cabin', sans-serif;
@@ -92,7 +92,7 @@ const shadows = {
   z2: '-0.1rem 0.1rem .25rem .1rem rgba(0,0,0,0.36)',
   z3: '-.2rem .5rem 1rem .2rem rgba(0,0,0,.36)'
 }
-type tColor = 'black' | 'grey' | 'grey_light' | 'white' | 'blue' | 'green' | 'yellow' | 'red' | 'pink';
+type tColor = 'black' | 'grey' | 'grey_light' | 'white' | 'blue' | 'green' | 'yellow' | 'red' | 'pink' | 'pink_light' | 'pink_white';
 const colors = {
   black: '#000000',
   grey: '#3A3A3A',
@@ -104,6 +104,8 @@ const colors = {
   yellow: '#EAF205',
   blue: '#3805F2',
   pink: '#EE05F2',
+  pink_light: '#EE7AF2',
+  pink_white: '#FEF4F2',
 }
 
 type tBreakpoint = 'mobile_tiny' | 'mobile_medium' | 'mobile_large' | 'tablet' | 'desktop';

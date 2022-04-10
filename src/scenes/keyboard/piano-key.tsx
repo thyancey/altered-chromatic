@@ -7,36 +7,11 @@ import {
   ScaleStatus
 } from '../../utils/music';
 
-export const SPECIAL_ACCIDENTALS: NoteName[] = [ 'A#', 'C#', 'D#' ];
+export const SPECIAL_SHARPS: NoteName[] = [ 'A#', 'C#', 'D#' ];
 export const ScContainer = styled.div`
   display:block;
   text-align:center;
 `
-
-
-type ScPianoKeyProps = {
-  scaleStatus: ScaleStatus,
-  shadeKey?: boolean,
-  keyPressed?: boolean
-}
-
-export const ScPianoBaseKey = styled.div<ScPianoKeyProps>`
-  ${p => p.scaleStatus === 'root' && css`
-    border: .5rem solid ${getColor('red')};
-  `}
-
-  ${p => p.scaleStatus === 'scale' && css`
-    border: .5rem dashed ${getColor('red')};
-  `}
-
-  ${p => p.keyPressed && css`
-    background-color: ${getColor('grey')} !important;
-  `}
-
-  border: .5rem solid ${getColor('black')};
-  border-radius: 0 0 1rem 1rem;
-`
-
 const mixin_bounceAnim = () => `
   @keyframes bounce {
     0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 
@@ -45,67 +20,18 @@ const mixin_bounceAnim = () => `
   } 
 `;
 
-
-const PianoKeyPressed = `
+const Anim_RegPress = `
   margin-top:-.25rem;
-  margin-left: -.1rem;
+  margin-left: -.6rem;
   margin-right: .6rem;
-  box-shadow: .2rem .3rem .5rem .125rem ${getColor('black')};
   z-index:0;
 
-  animation: bounce; /* referring directly to the animation's @keyframe declaration */
-  animation-duration: .25s; /* don't forget to set a duration! */
+  animation: bounce;
+  animation-duration: .25s;
 `
-
-const ScNoteLabel = styled.span`
-  position:absolute;
-  bottom:0rem;
-  left:50%;
-  transform: translateX(-50%);
-
-  color: ${getColor('grey')};
-  font-weight: bold;
-  opacity: .5;
-  font-size:3rem;
-`;
-
-
-const ScPianoKey = styled.div<ScPianoKeyProps>`
-  border-radius: 0 0 1rem 1rem;
-  box-shadow: .5rem .5rem .5rem .25rem ${getColor('black')};
-
-  position:relative;
-  width:7rem;
-  max-width:7rem;
-  height: 18rem;
-  margin-left: .25rem;
-  margin-right: .25rem;
-  background-color: ${getColor('white')};
-  cursor: pointer;
-  z-index: 1;
-  ${mixin_bounceAnim}
-
-  &:hover{
-    background-color: ${getColor('green')};
-  }
-
-  
-  ${p => p.keyPressed && css`
-    ${PianoKeyPressed}
-  `}
-  
-  &:active{
-    ${PianoKeyPressed}
-  }
-
-  ${ScNoteLabel}{
-    margin-bottom: 1rem;
-  }
-` 
-
-const PianoAccidentalKeyPressed = `
-  animation: bounce; /* referring directly to the animation's @keyframe declaration */
-  animation-duration: .25s; /* don't forget to set a duration! */
+const Anim_SharpPress = `
+  animation: bounce;
+  animation-duration: .25s;
   z-index:2;
 
   >div{
@@ -114,138 +40,164 @@ const PianoAccidentalKeyPressed = `
     margin-right: .6rem;
   }
 `
-type ScAccidentalPianoKeyProps = {
-  shadeKey: boolean,
+
+
+
+
+type SKeyBaseProps = {
   scaleStatus: ScaleStatus,
-  keyPressed?: boolean
+  altKey?: boolean,
 }
-
-
-const ScAccidentalPianoKey = styled.div<ScAccidentalPianoKeyProps>`
-  position:relative;
-  cursor: pointer;
-
-  ${mixin_bounceAnim}
-  
-  >div{
-    position:absolute;
-    z-index:2;
-    width:5rem;
-    height:10rem;
-    box-shadow: .5rem .5rem .5rem .25rem ${getColor('black')};
-
-    left:50%;
-    transform:translateX(-50%);
-    border-radius: 0 0 1rem 1rem;
-    
-    ${p => p.shadeKey ? css`
-      >span{
-        color: ${getColor('white')};
-      }
-      background-color: ${getColor('black')};
-      box-shadow: .35rem .35rem .5rem .175rem ${getColor('pink')};
-
-      &:hover{
-        background-color: ${getColor('green')};
-        >span{
-          color: ${getColor('black')}
-        }
-      }
-    ` : css`
-      >span{
-        color: ${getColor('black')};
-      }
-      background-color: ${getColor('grey_light')};
-      box-shadow: .35rem .35rem .5rem .25rem ${getColor('black')};
-
-      &:hover{
-        background-color: ${getColor('green')};
-      }
-    `}
-
-  }
-  &:active{
-    ${PianoAccidentalKeyPressed}
-  }
-
-  >div{
-    ${p => p.shadeKey ? 
-      css`
-        &:active{
-          box-shadow: .1rem .1rem .3rem .25rem ${getColor('pink')};
-        }
-      ` : css`
-        &:active{
-          box-shadow: .25rem .25rem .5rem .25rem ${getColor('black')};
-        }
-      `
-    }
-  }
-  
-  ${p => p.keyPressed && css`
-    ${PianoAccidentalKeyPressed}
-
-    >div{
-      ${p.shadeKey ? css`
-          box-shadow: .1rem .1rem .3rem .25rem ${getColor('pink')};
-      ` : css`
-        box-shadow: .25rem .25rem .5rem .25rem ${getColor('black')};
-      `}
-    }
-  `}
-
-  ${ScNoteLabel}{
-    font-size: 2rem;
-    margin-bottom: .5rem;
-  }
+const ScKeyBase = styled.div<SKeyBaseProps>`
 `
 
-const ScKeyboardLabel = styled.span`
+const ScNoteLabel = styled.span`
   position:absolute;
-  bottom:.5rem;
+  bottom:.25rem;
   left:50%;
   transform: translateX(-50%);
 
-  margin-bottom:-3rem;
-  border: .25rem solid ${getColor('grey')};
+  font-weight: bold;
+  font-size:3rem;
+
+  opacity:.3;
+`
+
+const CSS_BlueKey = `
+  color: ${getColor('white')};
+  background-color: ${getColor('blue')};
+
+  &:hover{
+    color: ${getColor('black')};
+    background-color: ${getColor('pink')};
+  }
+`
+const CSS_WhiteKey = `
   color: ${getColor('black')};
-  width:2rem;
-  padding: 0;
-  border-radius: .25rem;
-  background-color: ${getColor('grey_light')};
-  font-size: 1.5rem !important;
-`;
+  background-color: ${getColor('white')};
+
+  &:hover{
+    color: ${getColor('black')};
+    background-color: ${getColor('green')};
+  }
+`
+const CSS_BlackKey = `
+  color: ${getColor('white')};
+  background-color: ${getColor('black')};
+
+  &:hover{
+    color: ${getColor('black')};
+    background-color: ${getColor('green')};
+  }
+`
+
+const ScWholeKey = styled(ScKeyBase)`
+  width: 7rem;
+  margin-left:.5rem;
+  height: 18rem;
+  border-radius: 0 0 1rem 1rem;
+  
+  ${CSS_WhiteKey}
+  box-shadow: .25rem .25rem .75rem .5rem ${getColor('black')};
+
+  ${p => p.scaleStatus === 'invalid' && css`
+    opacity:.15;
+  `}
+
+  ${p => p.scaleStatus === 'root' && css`
+    ${CSS_BlueKey}
+  `}
+`
+
+const ScHalfKey = styled(ScKeyBase)`
+  width:5rem;
+  height:10rem;
+  border-radius: 0 0 1rem 1rem;
+  
+  ${CSS_BlackKey}
+  box-shadow: .25rem .25rem .75rem .25rem ${getColor('green')};
+
+  ${p => p.scaleStatus === 'invalid' && css`
+    opacity:.15;
+  `}
+
+  ${p => p.scaleStatus === 'root' && css`
+    ${CSS_BlueKey}
+  `}
+
+  border-radius: 0 0 1rem 1rem;
+
+  ${p => !p.altKey && css`
+    top:.5rem;
+    border-radius: 0 0 2.5rem 2.5rem;
+
+    ${ScNoteLabel}{
+      bottom:.75rem;
+    }
+  `}
+`
+
+type ScKeyWrapperBaseProps = {
+  keyPressed?: boolean
+}
+const ScKeyWrapperBase = styled.div<ScKeyWrapperBaseProps>`
+  position:relative;
+  ${mixin_bounceAnim}
+  cursor: pointer;
+`
+
+const ScWholeKeyWrapper = styled(ScKeyWrapperBase)`
+  z-index:1;
+
+  ${p => p.keyPressed && css`${Anim_RegPress}`}
+  &:active{
+    ${Anim_RegPress}
+  }
+`
+
+const ScHalfKeyWrapper = styled(ScKeyWrapperBase)`
+  z-index:3;
+
+  ${p => p.keyPressed && css`${Anim_SharpPress}`}
+  &:active{
+    ${Anim_SharpPress}
+  }
+
+  >div{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+  }
+`
+
 type Props = {
   noteObj: CompleteNote,
   onClick: Function
 }
-
-export function PianoKey({ noteObj, onClick }: Props) {
+export function PianoWholeKey({ noteObj, onClick }: Props) {
   return (
-    <ScPianoKey
+    <ScWholeKeyWrapper
       key={noteObj.idx}
-      scaleStatus={noteObj.scaleStatus}
-      keyPressed={noteObj.keyPressed}
       onClick={e => onClick(e, noteObj)}
+      keyPressed={noteObj.keyPressed}
     >
-      <ScNoteLabel>{noteObj.note}</ScNoteLabel>
-      {/* <ScKeyboardLabel>{noteObj.keyMatch}</ScKeyboardLabel> */}
-    </ScPianoKey>
+      <ScWholeKey scaleStatus={noteObj.scaleStatus}>
+        <ScNoteLabel>{noteObj.note}</ScNoteLabel>
+      </ScWholeKey>
+    </ScWholeKeyWrapper>
   );
 }
 
-export function AltPianoKey({ noteObj, onClick }: Props) {
+export function PianoHalfKey({ noteObj, onClick }: Props) {
   return (
-    <ScAccidentalPianoKey
+    <ScHalfKeyWrapper
       key={noteObj.idx}
       onClick={e => onClick(e, noteObj)}
-      shadeKey={SPECIAL_ACCIDENTALS.includes(noteObj.note)}
-      scaleStatus={noteObj.scaleStatus}
       keyPressed={noteObj.keyPressed}
     >
-      <div>
+      <ScHalfKey scaleStatus={noteObj.scaleStatus} altKey={SPECIAL_SHARPS.includes(noteObj.note)}>
         <ScNoteLabel>{noteObj.note}</ScNoteLabel>
-      </div>
-    </ScAccidentalPianoKey>
+      </ScHalfKey>
+    </ScHalfKeyWrapper>
   );
 }
