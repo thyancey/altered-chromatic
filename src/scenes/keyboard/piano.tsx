@@ -47,7 +47,7 @@ const ScPiano = styled.div`
 `
 
 const ScPianoBg = styled.div`
-  background-color: ${getColor('pink_white')};
+  background-color: ${getColor('blue')};
   z-index:-1;
 
   position:absolute;
@@ -60,7 +60,7 @@ const ScPianoBg = styled.div`
 
   border-radius: 2.5rem;
   
-  filter: blur(1rem);
+  filter: blur(2rem);
 `
 
 const ScPianoKeys = styled.div`

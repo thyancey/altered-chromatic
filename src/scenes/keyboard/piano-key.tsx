@@ -60,34 +60,37 @@ const ScNoteLabel = styled.span`
   font-weight: bold;
   font-size:3rem;
 
-  opacity:.3;
+  opacity:.8;
+`
+
+const CSS_WhiteKey = `
+  color: ${getColor('grey')};
+  background-color: ${getColor('white')};
+
+
+  &:hover{
+    color: ${getColor('black')};
+    background-color: ${getColor('grey_light')};
+  }
+`
+const CSS_BlackKey = `
+  color: ${getColor('grey_light')};
+  background-color: ${getColor('black')};
+
+
+  &:hover{
+    color: ${getColor('blue')};
+    background-color: ${getColor('grey')};
+  }
 `
 
 const CSS_BlueKey = `
   color: ${getColor('white')};
   background-color: ${getColor('blue')};
-
+  
   &:hover{
     color: ${getColor('black')};
-    background-color: ${getColor('pink')};
-  }
-`
-const CSS_WhiteKey = `
-  color: ${getColor('black')};
-  background-color: ${getColor('white')};
-
-  &:hover{
-    color: ${getColor('black')};
-    background-color: ${getColor('green')};
-  }
-`
-const CSS_BlackKey = `
-  color: ${getColor('white')};
-  background-color: ${getColor('black')};
-
-  &:hover{
-    color: ${getColor('black')};
-    background-color: ${getColor('green')};
+    background-color: ${getColor('blue_dark')};
   }
 `
 
@@ -115,7 +118,7 @@ const ScHalfKey = styled(ScKeyBase)`
   border-radius: 0 0 1rem 1rem;
   
   ${CSS_BlackKey}
-  box-shadow: .25rem .25rem .75rem .25rem ${getColor('green')};
+  box-shadow: .15rem .15rem .25rem .25rem ${getColor('blue')};
 
   ${p => p.scaleStatus === 'invalid' && css`
     opacity:.15;
