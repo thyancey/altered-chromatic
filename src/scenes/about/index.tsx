@@ -20,7 +20,7 @@ export function About() {
   return (
     <ScContainer>
       <h2>{'What is this?'}</h2>
-      <p>{'When I started to learn more about music theory, I started getting pretty frustrated when notes were sometimes Sharp and sometimes Flat (lookin at you E and B), and why each scale had to have a note of each letter, and why some notes dont have a sharp at all (at least in terms of the keyboard)'}</p>
+      <p>{'When I started to learn more about music theory, I started getting pretty frustrated when notes were sometimes Sharp and sometimes Flat, and why each scale had to have a note of each letter, and why some letters only have a half step between them (lookin at you E and B)'}</p>
       <p>{'So screw it, here\'s a more consistent 12-note chromatic notation, and a keyboard that follows the same rules. '}</p>
       <p>{'Since each note has a sharp, the "G" notes have been removed all together. In terms of pitch, "A" is the same as "C". Here is a note map if it helps you wrap you mind around it'}</p>
       <table>

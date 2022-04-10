@@ -1,6 +1,6 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { CompleteNote, NoteName, ScaleObj, SCALES, ScaleStatus, SPECIAL_ACCIDENTALS, getScaleObject, getAllOctaveNotesBetween, convertOctaveNoteToMidiId } from '../../utils/music';
+import { CompleteNote, NoteName, ScaleObj, SCALES, ScaleStatus, getScaleObject, getAllOctaveNotesBetween, convertOctaveNoteToMidiId } from '../../utils/music';
 
 export interface KeyboardState {
   activeNote: string | null;
@@ -82,10 +82,8 @@ export const selectKeyboardKeys = createSelector(
       return {
         note: noteLabel,
         octaveNote: octaveNote,
-        keyStyle: SPECIAL_ACCIDENTALS.includes(noteLabel),
         midiNote: convertOctaveNoteToMidiId(octaveNote),
         scaleStatus: activeScaleObj ? getScaleStatus(octaveNote, activeScaleObj.octaveNotes) : 'inactive',
-        type: noteLabel.includes('#') ? 'accidental' : 'normal',
         idx
       };
     })

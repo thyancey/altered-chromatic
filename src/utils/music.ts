@@ -1,5 +1,3 @@
-
-export type NoteType = 'normal' | 'accidental';
 export type NoteName = 'A' | 'A#' | 'B' | 'B#' | 'C' | 'C#' | 'D' | 'D#' | 'E' | 'E#' | 'F' | 'F#';
 // export type ScaleKey = 'ionian' | 'dorian' | 'phyrgian' | 'lydian' | 'mixolydian' | 'aeolian' | 'locrian';
 
@@ -7,9 +5,7 @@ export type ScaleStatus = 'root' | 'scale' | 'inactive';
 export type CompleteNote = {
   note: NoteName,
   octaveNote: string,
-  keyStyle: boolean,
   scaleStatus: ScaleStatus,
-  type: NoteType,
   idx: number,
   midiNote: number,
   keyPressed?: boolean,
@@ -32,7 +28,6 @@ export type ScaleObj = {
 }
 
 export const NOTES: NoteName[] = [ 'A', 'A#', 'B', 'B#', 'C', 'C#', 'D', 'D#', 'E', 'E#', 'F', 'F#' ];
-export const SPECIAL_ACCIDENTALS: NoteName[] = [ 'A#', 'C#', 'D#' ];
 export const MIDI_NOTE_REF = {
   octaveNote: 'A-4',
   code: 60

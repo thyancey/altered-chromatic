@@ -10,10 +10,12 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { MusicBox } from '../../components/musicbox';
 import { 
   CompleteNote,
-  ScaleStatus 
+  NoteName,
+  ScaleStatus
 } from '../../utils/music';
 import { KeyManager } from './key-manager';
 
+export const SPECIAL_ACCIDENTALS: NoteName[] = [ 'A#', 'C#', 'D#' ];
 export const ScContainer = styled.div`
   display:block;
   text-align:center;
@@ -159,12 +161,12 @@ export function Piano() {
       <MusicBox midiInstrument={'piano'} volume={1} />
       <ScPiano>
         {pianoKeys.map(noteObj => {
-          if(noteObj.type === 'accidental'){
+          if(noteObj.note.includes('#')){
             return (
               <ScAccidentalPianoKey 
                 key={noteObj.idx}
                 onClick={e => onClick(e, noteObj)}
-                keyStyle={noteObj.keyStyle}
+                keyStyle={SPECIAL_ACCIDENTALS.includes(noteObj.note)}
                 scaleStatus={noteObj.scaleStatus}
                 keyPressed={noteObj.keyPressed}
               >
