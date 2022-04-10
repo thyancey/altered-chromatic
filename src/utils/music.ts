@@ -12,6 +12,8 @@ export type CompleteNote = {
   type: NoteType,
   idx: number,
   midiNote: number,
+  keyPressed?: boolean,
+  keyMatch?: string
 }
 
 export type ScaleDefs = {

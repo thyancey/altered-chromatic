@@ -2,8 +2,9 @@ import styled, { css } from 'styled-components';
 import { getColor } from '../../themes';
 
 import {
-  selectKeyboardKeys,
+  selectKeyboardKeysWithPressed,
   setActiveNote,
+  setPressedKeys,
 } from './slice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { MusicBox } from '../../components/musicbox';
@@ -11,14 +12,14 @@ import {
   CompleteNote,
   ScaleStatus 
 } from '../../utils/music';
-
+import { KeyManager } from './key-manager';
 
 export const ScContainer = styled.div`
   display:block;
   text-align:center;
 `
 
-const ScInstrument = styled.div`
+const ScPiano = styled.div`
   padding: 1rem;
   background-color: ${getColor('blue')};
   border: 1rem solid ${getColor('white')};
@@ -33,11 +34,12 @@ const ScInstrument = styled.div`
    -ms-user-select: none; /* Internet Explorer/Edge */
 `
 
-type ScKeyboardKeyProps = {
-  scaleStatus: ScaleStatus
+type ScPianoKeyProps = {
+  scaleStatus: ScaleStatus,
+  keyPressed?: boolean
 }
 
-export const ScKeyboardBaseKey = styled.div<ScKeyboardKeyProps>`
+export const ScPianoBaseKey = styled.div<ScPianoKeyProps>`
   ${p => p.scaleStatus === 'root' && css`
     border: .5rem solid ${getColor('red')};
   `}
@@ -45,15 +47,20 @@ export const ScKeyboardBaseKey = styled.div<ScKeyboardKeyProps>`
   ${p => p.scaleStatus === 'scale' && css`
     border: .5rem dashed ${getColor('red')};
   `}
+
+${p => p.keyPressed && css`
+  background-color: ${getColor('grey')} !important;
+`}
 `
 
-export const ScKeyboardKey = styled(ScKeyboardBaseKey)`
+export const ScPianoKey = styled(ScPianoBaseKey)`
   position:relative;
   display:inline-block;
   width:4rem;
   height:13rem;
   margin-left: .25rem;
   margin-right: .25rem;
+  margin-bottom: 2rem;
   background-color: ${getColor('white')};
   cursor: pointer;
 
@@ -62,18 +69,15 @@ export const ScKeyboardKey = styled(ScKeyboardBaseKey)`
   }
   
   span{
-    position:absolute;
-    bottom:.5rem;
-    left:50%;
-    transform: translateX(-50%);
+    /* margin-bottom: -2rem; */
   }
 `
 
-type ScAccidentalKeyboardKeyProps = {
+type ScAccidentalPianoKeyProps = {
   keyStyle: boolean
 }
 
-export const ScAccidentalKeyboardKey = styled(ScKeyboardBaseKey)<ScAccidentalKeyboardKeyProps>`
+export const ScAccidentalPianoKey = styled(ScPianoBaseKey)<ScAccidentalPianoKeyProps>`
   position:absolute;
   display:inline-block;
   z-index:1;
@@ -97,16 +101,36 @@ export const ScAccidentalKeyboardKey = styled(ScKeyboardBaseKey)<ScAccidentalKey
   }
 
   span{
-    font-size:1rem;
-    position:absolute;
-    bottom:.5rem;
-    left:50%;
-    transform: translateX(-50%);
+    bottom:2rem;
+    font-size: 1.5rem;
   }
 `
 
-export function Instrument() {
-  const keyboardKeys = useAppSelector(selectKeyboardKeys);
+export const ScKeyboardLabel = styled.span`
+  position:absolute;
+  bottom:.5rem;
+  left:50%;
+  transform: translateX(-50%);
+
+  margin-bottom:-3rem;
+  border: .25rem solid ${getColor('grey')};
+  color: ${getColor('black')};
+  width:2rem;
+  padding: 0;
+  border-radius: .25rem;
+  background-color: ${getColor('grey_light')};
+  font-size: 1.5rem !important;
+`;
+
+export const ScNoteLabel = styled.span`
+  position:absolute;
+  bottom:.5rem;
+  left:50%;
+  transform: translateX(-50%);
+`;
+
+export function Piano() {
+  const pianoKeys = useAppSelector(selectKeyboardKeysWithPressed);
   const dispatch = useAppDispatch();
 
   const onClick = (e:any, noteObj:CompleteNote) => {
@@ -120,33 +144,49 @@ export function Instrument() {
 
   return (
     <ScContainer>
+      <KeyManager 
+        onKeyPressed={(key:string) => {
+          const foundPianoKey = pianoKeys.find(pK => pK.keyMatch === key);
+          if(foundPianoKey !== undefined){
+            // @ts-ignore;
+            global.globalMidiHandler && global.globalMidiHandler([foundPianoKey.midiNote]);
+          }
+        }}
+        onKeysChanged={(keys: string[]) => {
+          dispatch(setPressedKeys(keys));
+        }}
+      />
       <MusicBox midiInstrument={'piano'} volume={1} />
-      <ScInstrument>
-        {keyboardKeys.map(noteObj => {
+      <ScPiano>
+        {pianoKeys.map(noteObj => {
           if(noteObj.type === 'accidental'){
             return (
-              <ScAccidentalKeyboardKey 
+              <ScAccidentalPianoKey 
                 key={noteObj.idx}
                 onClick={e => onClick(e, noteObj)}
                 keyStyle={noteObj.keyStyle}
                 scaleStatus={noteObj.scaleStatus}
+                keyPressed={noteObj.keyPressed}
               >
-                <span>{noteObj.note}</span>
-              </ScAccidentalKeyboardKey>
+                <ScNoteLabel>{noteObj.note}</ScNoteLabel>
+                <ScKeyboardLabel>{noteObj.keyMatch}</ScKeyboardLabel>
+              </ScAccidentalPianoKey>
             );
           }else{
             return (
-              <ScKeyboardKey
+              <ScPianoKey
                 key={noteObj.idx}
                 scaleStatus={noteObj.scaleStatus}
+                keyPressed={noteObj.keyPressed}
                 onClick={e => onClick(e, noteObj)}
               >
-                <span>{noteObj.note}</span>
-              </ScKeyboardKey>
+                <ScNoteLabel>{noteObj.note}</ScNoteLabel>
+                <ScKeyboardLabel>{noteObj.keyMatch}</ScKeyboardLabel>
+              </ScPianoKey>
             );
           }
         })}
-      </ScInstrument>
+      </ScPiano>
     </ScContainer>
   );
 }

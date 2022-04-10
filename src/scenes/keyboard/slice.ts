@@ -5,14 +5,17 @@ import { CompleteNote, NoteName, ScaleObj, SCALES, ScaleStatus, SPECIAL_ACCIDENT
 export interface KeyboardState {
   activeNote: string | null;
   activeScale: string | null;
+  pressedKeys: string[];
 }
 
 const initialState: KeyboardState = {
   activeNote: null,
   activeScale: null,
+  pressedKeys: []
 };
 
-const PIANO_RANGE = ['A-4', 'C-6'];
+export const PIANO_RANGE = ['A-4', 'E-5'];
+export const KEYBOARD_MAP = ['a','w','s','e','d','r','f','t','g','y','h','u','j','i','k','o','l','p',';','[','\''];
 
 export const keyboardSlice = createSlice({
   name: 'keyboard',
@@ -28,14 +31,18 @@ export const keyboardSlice = createSlice({
       }else{
         state.activeScale = action.payload;
       }
+    },
+    setPressedKeys: (state, action: PayloadAction<string[]>) => {
+      state.pressedKeys = action.payload;
     }
   }
 });
 
-export const { setActiveNote, setActiveScale } = keyboardSlice.actions;
+export const { setActiveNote, setActiveScale, setPressedKeys } = keyboardSlice.actions;
 
 export const getActiveNote = (state: RootState) => state.keyboard.activeNote;
 export const getActiveScale = (state: RootState) => state.keyboard.activeScale;
+export const getPressedKeys = (state: RootState) => state.keyboard.pressedKeys;
 
 export const selectActiveScale = createSelector(
   [getActiveScale, getActiveNote],
@@ -69,7 +76,6 @@ export const getScaleStatus = (octaveNote: string, scaleNotes: string[]): ScaleS
 export const selectKeyboardKeys = createSelector(
   [selectActiveScale],
   (activeScaleObj): CompleteNote[] => {
-
     const octaveNotes = getAllOctaveNotesBetween(PIANO_RANGE[0], PIANO_RANGE[1]);
     return octaveNotes.map((octaveNote, idx) => {
       const noteLabel = octaveNote.split('-')[0] as NoteName;
@@ -85,5 +91,16 @@ export const selectKeyboardKeys = createSelector(
     })
   }
 );
+
+export const selectKeyboardKeysWithPressed = createSelector(
+  [selectKeyboardKeys, getPressedKeys],
+  (keyboardKeys, pressedKeys): CompleteNote[] => {
+    return keyboardKeys.map(kk => ({
+      ...kk,
+      keyMatch: KEYBOARD_MAP[kk.idx],
+      keyPressed: pressedKeys.includes(KEYBOARD_MAP[kk.idx])
+    }));
+  }
+)
 
 export default keyboardSlice.reducer;

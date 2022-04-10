@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { getColor } from '../../themes';
-import { Instrument } from './instrument';
+import { Piano } from './piano';
 import { Scales } from './scales';
 
 export const ScContainer = styled.div`
@@ -30,7 +30,7 @@ export function Keyboard() {
     <ScContainer>
       <h1>{'Altered Chromatic.'}</h1>
       <p>{'ctrl + click to set the key & root note'}</p>
-      <Instrument />
+      <Piano />
       <Scales />
     </ScContainer>
   );
