@@ -128,14 +128,18 @@ const ScHalfKey = styled(ScKeyBase)`
     ${CSS_BlueKey}
   `}
 
-  border-radius: 0 0 1rem 1rem;
+  border-radius: 0 0 2.5rem 2.5rem;
+
+  ${ScNoteLabel}{
+    bottom:.75rem;
+  }
 
   ${p => !p.altKey && css`
-    top:.5rem;
-    border-radius: 0 0 2.5rem 2.5rem;
+    top:-.25rem;
+    border-radius: 0 0 1rem 1rem;
 
     ${ScNoteLabel}{
-      bottom:.75rem;
+      bottom:.50rem;
     }
   `}
 `

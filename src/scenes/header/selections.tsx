@@ -1,14 +1,20 @@
 import styled from 'styled-components';
-import { getColor } from '../../themes';
 import Select from '../../components/select';
 import { useState } from 'react';
 import { SCALES } from '../../utils/music';
 
 const ScWrapper = styled.div`
-  display:inline-block;
+  position:absolute;
+  right:0;
+  top:0;
+
+  display:grid;
   width:50%;
-  vertical-align:top;
   height:100%;
+  padding:.5rem;
+
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
 `;
 
 const ScGroup = styled.div`
@@ -18,7 +24,6 @@ const ScGroup = styled.div`
   >p{
     margin-left:1rem;
     margin-bottom: -.5rem;
-    /* display:inline-block; */
   }
 `
 
@@ -35,6 +40,8 @@ function Selections({}: Props) {
             <option key={idx} value={sc}>{SCALES[sc].label}</option>
           )) }
         </Select>
+      </ScGroup>
+      <ScGroup>
         <p>{'Root note'}</p>
         <Select size='sm' value={scale} onChangeValue={(value: any) => setScale(value)} >
           { Object.keys(SCALES).map((sc, idx) => (
@@ -49,6 +56,8 @@ function Selections({}: Props) {
             <option key={idx} value={sc}>{SCALES[sc].label}</option>
           )) }
         </Select>
+      </ScGroup>
+      <ScGroup>
         <p>{'Root note'}</p>
         <Select size='sm' value={scale} onChangeValue={(value: any) => setScale(value)} >
           { Object.keys(SCALES).map((sc, idx) => (

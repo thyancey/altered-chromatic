@@ -14,7 +14,7 @@ const initialState: KeyboardState = {
   pressedKeys: []
 };
 
-export const PIANO_RANGE = ['A-4', 'E-5'];
+export const PIANO_RANGE = ['A-4', 'D-5'];
 export const KEYBOARD_MAP = ['a','w','s','e','d','r','f','t','g','y','h','u','j','i','k','o','l','p',';','[','\''];
 
 export const keyboardSlice = createSlice({

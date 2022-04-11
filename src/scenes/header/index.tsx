@@ -1,30 +1,31 @@
 import { useState } from 'react';
-import { getColor } from '../../themes/';
+import { ColorType, getColor } from '../../themes/';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-// import Icon_Github from '../../assets/github-mark.svg';
 import Icon_Tune from '../../assets/tune.svg';
+import Icon_Piano from '../../assets/piano.svg';
+import Icon_Help from '../../assets/help-circle-outline.svg';
 import { PageInfo } from '../main';
 import Selections from './selections';
 
 const ScHeader = styled.div`
-  position:fixed;
+  position:absolute;
+  z-index:1;
   top:0;
-  left:0;
+  padding-left:1rem;
   transition: top .5s ease-in-out;
   cursor:pointer;
+  padding: .5rem;
 
   width: 100%;
-  height:10rem;
+  height:15rem;
 
   color:${getColor('white')};
   
-
   &.collapsed{
-    top:-10.25rem;
+    top:-14.75rem;
     transition: top .5s ease-in-out;
   }
-
 `;
 
 const ScHeaderBg = styled.div`
@@ -41,10 +42,10 @@ const ScHeaderBg = styled.div`
 const ScShadowFixer = styled.div`
   position:absolute;
   z-index:-1;
-  width: 12rem;
+  width: 10rem;
   height:1rem;
   bottom:100%;
-  left: -3rem;
+  left: -2rem;
   background-color: ${getColor('blue')};
   pointer-events:none;
 `
@@ -80,49 +81,66 @@ const ScHeaderTab = styled.div`
   padding: 1.25rem;
 `
 
-const ScGithubIcon = styled.div`
-  width:100%;
-  height:100%;
-  cursor:pointer;
+type IconProps = {
+  iconId: string,
+  color: ColorType
+}
+const ScIcon = styled.div<IconProps>`
+  display:inline-block;
+  width:3rem;
+  height:3rem;
 
-  background-color: ${getColor('black')};
-`
-
-const ScGithub = styled.a`
-  position: absolute;
-  width: 6rem;
-  height: 6rem;
-  padding: 1rem;
-  right: 2rem;
-  top:50%;
-  transform:translateY(-50%);
-  background:0;
-  border:0;
-
-
-  &:hover{
-    ${ScGithubIcon}{
-      background-color: ${getColor('white')};
-    }
-  }
+  background-color: ${p => getColor(p.color)};
+  -webkit-mask: url(${p => getIcon(p.iconId)}) no-repeat center;
+  mask: url(${p => getIcon(p.iconId)}) no-repeat center;
+  mask-size: 100%;
 `
 
 const ScLinks = styled.div`
   display:inline-block;
   vertical-align:top;
+  width:50%;
+  >h2{
+    font-size:2rem;
+    pointer-events:none;
+    margin-left: 0.75rem;
+  }
   
-  >.link-button{
+  >*{
     color:${getColor('black')};
     display:block;
-    margin:1.4rem 1.8rem;
     transition: color .5s ease-in;
     text-decoration: none;
     &:hover{
       color: ${getColor('white')};
       transition: color .2s ease-out;
+
+      ${ScIcon}{
+        background-color:${getColor('white')};
+        transition: background-color .2s ease-out;
+      }
+    }
+
+    >*{
+      display:inline-block;
+
+      &:first-child{
+        vertical-align:middle;
+        margin-top:-1.5rem;
+        margin-right: 1rem;
+        margin-left: .5rem;
+      }
     }
   }
 `
+
+
+const getIcon = (id: string) => {
+  switch(id){
+    case 'piano': return Icon_Piano;
+    case 'help': return Icon_Help;
+  }
+}
 
 type Props = {
   pages: PageInfo[]
@@ -134,16 +152,15 @@ function Header({ pages }: Props) {
   return (
     <ScHeader className={ collapsed ? 'collapsed' : ''} >
       <ScLinks>
+        <h2>{'Altered Chromatic'}</h2>
         {pages.map((p, i) => (
-          <Link key={i} to={p.route} className="link-button">
-            <h2>{p.text}</h2>
+          <Link key={i} to={p.route} onClick={() => setCollapsed(!collapsed)}>
+            {p.icon && <ScIcon iconId={p.icon} color='black' />}
+            <h3>{p.text}</h3>
           </Link>
         ))}
       </ScLinks>
       <Selections />
-      <ScGithub href="https://github.com/thyancey/altered-chromatic" target="_blank" >
-        <ScGithubIcon />
-      </ScGithub>
       <ScHeaderTab onClick={() => setCollapsed(!collapsed)}>
         <ScTuneIcon />
         <ScShadowFixer />

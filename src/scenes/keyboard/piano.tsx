@@ -22,8 +22,8 @@ export const ScContainer = styled.div`
 const ScPianoBar = styled.div`
   position:absolute;
   z-index:4;
-  left:4rem;
-  right:4rem;
+  left:1rem;
+  right:1rem;
   height:3rem;
   top:3rem;
 
@@ -60,13 +60,13 @@ const ScPianoBg = styled.div`
 
   border-radius: 2.5rem;
   
-  filter: blur(2rem);
+  filter: blur(3rem);
 `
 
 const ScPianoKeys = styled.div`
   position:relative;
   width:100%;
-  padding:0 4rem;
+  padding:0 1rem;
 
   >div{
     display:inline-block;

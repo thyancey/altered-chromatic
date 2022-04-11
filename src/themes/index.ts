@@ -54,13 +54,21 @@ export default createGlobalStyle`
   code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
   }
+
+  #root{
+    position:fixed;
+    left:0;
+    top:0;
+    right:0;
+    bottom:0;
+  }
 `
 
 export const listColors = () => {
   return Object.keys(store.colors);
 }
 
-export const getColor = (colorId: tColor) => {
+export const getColor = (colorId: ColorType) => {
   return store.colors[colorId] as CssString; 
 }
 
@@ -73,7 +81,7 @@ export const getBreakpoint = (breakpointId: tBreakpoint) => {
 }
 
 
-export const mixin_glowOnHover = (color: tColor) => (`
+export const mixin_glowOnHover = (color: ColorType) => (`
   transition: filter .2s;
 
   &:hover{
@@ -83,7 +91,7 @@ export const mixin_glowOnHover = (color: tColor) => (`
 `);
 
 /* from pablo on https://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors */
-export const getShade = (colId: tColor, percent: number) => {
+export const getShade = (colId: ColorType, percent: number) => {
   const color = colors[colId] || colId;
 
   let R = parseInt(color.substring(1,3),16);
@@ -112,7 +120,7 @@ const shadows = {
   z2: '-0.1rem 0.1rem .25rem .1rem rgba(0,0,0,0.36)',
   z3: '-.2rem .5rem 1rem .2rem rgba(0,0,0,.36)'
 }
-type tColor = 'black' | 'grey' | 'grey_light' | 'white' | 'blue' | 'green' | 'yellow' | 'red' | 'pink' | 'orange' | 'blue_dark';
+export type ColorType = 'black' | 'grey' | 'grey_light' | 'white' | 'blue' | 'green' | 'yellow' | 'red' | 'pink' | 'orange' | 'blue_dark';
 const colors = {
   black: '#1F1F1F',
   grey: '#4D4D4F',

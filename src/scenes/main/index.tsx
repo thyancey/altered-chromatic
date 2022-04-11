@@ -35,23 +35,46 @@ const ScCopyright = styled.a`
     color: ${getColor('blue')};
   }
 `
+const ScGithub = styled.a`
+  position:absolute;
+  left:1rem;
+  bottom:.5rem;
+  font-size:2rem;
+  font-weight:bold;
+  color: ${getColor('black')};
+  text-decoration: none;
+
+
+  &:visited{
+    color: ${getColor('black')};
+  }
+
+  transition: color .2s;
+  &:hover{
+    transition: color .2s;
+    color: ${getColor('blue')};
+  }
+`
 
 export type PageInfo = {
   route: string,
   text: string,
-  element: ReactElement
+  element?: ReactElement,
+  icon?: string
 }
 
 function Main() {
-  const pages: PageInfo[] = [
+  const pages: PageInfo[] = [    
     {
       route: '/',
       text: 'Keyboard',
+      icon: 'piano',
       element: <Keyboard/>
     },
     {
       route: '/about',
       text: 'About',
+      icon: 'help',
       element: <About/>
     }
   ]
@@ -66,6 +89,7 @@ function Main() {
           ))}
         </Routes>
         <ScCopyright href="http://thomasyancey.com" target="_blank">{'©Tom Yancey, 2022'}</ScCopyright>
+        <ScGithub href="https://github.com/thyancey/altered-chromatic" target="_blank">{'github'}</ScGithub>
       </ScStage>
     </HashRouter>
   );
