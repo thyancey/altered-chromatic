@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import { getColor } from '../../themes';
 
 import {
+  getShowKeyboardKeys,
+  getShowMusicNotes,
   selectKeyboardKeysWithPressed,
   setActiveNote,
   setPressedKeys,
@@ -22,8 +24,8 @@ export const ScContainer = styled.div`
 const ScPianoBar = styled.div`
   position:absolute;
   z-index:4;
-  left:4rem;
-  right:4rem;
+  left:1rem;
+  right:1rem;
   height:3rem;
   top:3rem;
 
@@ -60,13 +62,13 @@ const ScPianoBg = styled.div`
 
   border-radius: 2.5rem;
   
-  filter: blur(2rem);
+  filter: blur(3rem);
 `
 
 const ScPianoKeys = styled.div`
   position:relative;
   width:100%;
-  padding:0 4rem;
+  padding:0 1rem;
 
   >div{
     display:inline-block;
@@ -77,6 +79,8 @@ const ScPianoKeys = styled.div`
 export function Piano() {
   const pianoKeys = useAppSelector(selectKeyboardKeysWithPressed);
   const dispatch = useAppDispatch();
+  const showMusicNotes = useAppSelector(getShowMusicNotes);
+  const showKeyboardKeys = useAppSelector(getShowKeyboardKeys);
 
   const onClick = (e:any, noteObj:CompleteNote) => {
     if(e.ctrlKey){
@@ -108,11 +112,11 @@ export function Piano() {
           {pianoKeys.map(noteObj => {
             if(noteObj.note.includes('#')){
               return (
-                <PianoHalfKey key={noteObj.idx} noteObj={noteObj} onClick={onClick} />
+                <PianoHalfKey key={noteObj.idx} noteObj={noteObj} onClick={onClick} showMusicNotes={showMusicNotes} showKeyboardKeys={showKeyboardKeys} />
               );
             }else{
               return (
-                <PianoWholeKey key={noteObj.idx} noteObj={noteObj} onClick={onClick} />
+                <PianoWholeKey key={noteObj.idx} noteObj={noteObj} onClick={onClick} showMusicNotes={showMusicNotes} showKeyboardKeys={showKeyboardKeys} />
               );
             }
           })}

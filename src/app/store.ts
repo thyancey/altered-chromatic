@@ -1,11 +1,9 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import counterReducer from '../examples/counter/counterSlice';
 import keyboardReducer from '../scenes/keyboard/slice';
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
-    keyboard: keyboardReducer,
+    keyboard: keyboardReducer
   },
 });
 
