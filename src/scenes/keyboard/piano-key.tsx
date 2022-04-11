@@ -51,6 +51,22 @@ type SKeyBaseProps = {
 const ScKeyBase = styled.div<SKeyBaseProps>`
 `
 
+const ScKeyLabel = styled.span`
+  position:absolute;
+  bottom:4rem;
+  left:50%;
+  transform: translateX(-50%);
+
+  font-weight: bold;
+  font-size:2rem;
+
+  opacity:.8;
+
+  background-color: ${getColor('grey_light')};
+  border-radius: .5rem;
+  padding: .25rem 1rem;
+`
+
 const ScNoteLabel = styled.span`
   position:absolute;
   bottom:.25rem;
@@ -133,6 +149,10 @@ const ScHalfKey = styled(ScKeyBase)`
   ${ScNoteLabel}{
     bottom:.75rem;
   }
+  ${ScKeyLabel}{
+    bottom:5rem;
+    background-color: ${getColor('grey')};
+  }
 
   ${p => !p.altKey && css`
     top:-.25rem;
@@ -140,6 +160,9 @@ const ScHalfKey = styled(ScKeyBase)`
 
     ${ScNoteLabel}{
       bottom:.50rem;
+    }
+    ${ScKeyLabel}{
+      bottom:4.75rem;
     }
   `}
 `
@@ -179,9 +202,11 @@ const ScHalfKeyWrapper = styled(ScKeyWrapperBase)`
 
 type Props = {
   noteObj: CompleteNote,
-  onClick: Function
+  onClick: Function,
+  showKeyboardKeys?: boolean,
+  showMusicNotes?: boolean
 }
-export function PianoWholeKey({ noteObj, onClick }: Props) {
+export function PianoWholeKey({ noteObj, onClick, showMusicNotes, showKeyboardKeys }: Props) {
   return (
     <ScWholeKeyWrapper
       key={noteObj.idx}
@@ -189,13 +214,14 @@ export function PianoWholeKey({ noteObj, onClick }: Props) {
       keyPressed={noteObj.keyPressed}
     >
       <ScWholeKey scaleStatus={noteObj.scaleStatus}>
-        <ScNoteLabel>{noteObj.note}</ScNoteLabel>
+        {showKeyboardKeys && (<ScKeyLabel>{noteObj.keyMatch}</ScKeyLabel>)}
+        {showMusicNotes && (<ScNoteLabel>{noteObj.note}</ScNoteLabel>)}
       </ScWholeKey>
     </ScWholeKeyWrapper>
   );
 }
 
-export function PianoHalfKey({ noteObj, onClick }: Props) {
+export function PianoHalfKey({ noteObj, onClick, showMusicNotes, showKeyboardKeys }: Props) {
   return (
     <ScHalfKeyWrapper
       key={noteObj.idx}
@@ -203,7 +229,8 @@ export function PianoHalfKey({ noteObj, onClick }: Props) {
       keyPressed={noteObj.keyPressed}
     >
       <ScHalfKey scaleStatus={noteObj.scaleStatus} altKey={SPECIAL_SHARPS.includes(noteObj.note)}>
-        <ScNoteLabel>{noteObj.note}</ScNoteLabel>
+        {showKeyboardKeys && (<ScKeyLabel>{noteObj.keyMatch}</ScKeyLabel>)}
+        {showMusicNotes && (<ScNoteLabel>{noteObj.note}</ScNoteLabel>)}
       </ScHalfKey>
     </ScHalfKeyWrapper>
   );

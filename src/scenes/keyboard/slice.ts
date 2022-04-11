@@ -7,13 +7,17 @@ export interface KeyboardState {
   activeNote: string | null;
   activeScale: string | null;
   pressedKeys: string[];
+  showKeyboardKeys: boolean;
+  showMusicNotes: boolean;
 }
 
 const initialState: KeyboardState = {
   activeKey: null,
   activeNote: null,
   activeScale: null,
-  pressedKeys: []
+  pressedKeys: [],
+  showKeyboardKeys: true,
+  showMusicNotes: true
 };
 
 export const PIANO_RANGE = ['A-4', 'D-5'];
@@ -44,16 +48,24 @@ export const keyboardSlice = createSlice({
     },
     setPressedKeys: (state, action: PayloadAction<string[]>) => {
       state.pressedKeys = action.payload;
+    },
+    setShowKeyboardKeys: (state, action: PayloadAction<boolean>) => {
+      state.showKeyboardKeys = action.payload;
+    },
+    setShowMusicNotes: (state, action: PayloadAction<boolean>) => {
+      state.showMusicNotes = action.payload;
     }
   }
 });
 
-export const { setActiveKey, setActiveNote, setActiveScale, setPressedKeys } = keyboardSlice.actions;
+export const { setShowMusicNotes, setShowKeyboardKeys, setActiveKey, setActiveNote, setActiveScale, setPressedKeys } = keyboardSlice.actions;
 
 export const getActiveKey = (state: RootState) => state.keyboard.activeKey;
 export const getActiveNote = (state: RootState) => state.keyboard.activeNote;
 export const getActiveScale = (state: RootState) => state.keyboard.activeScale;
 export const getPressedKeys = (state: RootState) => state.keyboard.pressedKeys;
+export const getShowKeyboardKeys = (state: RootState) => state.keyboard.showKeyboardKeys;
+export const getShowMusicNotes = (state: RootState) => state.keyboard.showMusicNotes;
 
 
 export const selectNotesFromScale = createSelector(

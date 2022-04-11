@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import { getColor } from '../../themes';
 
 import {
+  getShowKeyboardKeys,
+  getShowMusicNotes,
   selectKeyboardKeysWithPressed,
   setActiveNote,
   setPressedKeys,
@@ -77,6 +79,8 @@ const ScPianoKeys = styled.div`
 export function Piano() {
   const pianoKeys = useAppSelector(selectKeyboardKeysWithPressed);
   const dispatch = useAppDispatch();
+  const showMusicNotes = useAppSelector(getShowMusicNotes);
+  const showKeyboardKeys = useAppSelector(getShowKeyboardKeys);
 
   const onClick = (e:any, noteObj:CompleteNote) => {
     if(e.ctrlKey){
@@ -108,11 +112,11 @@ export function Piano() {
           {pianoKeys.map(noteObj => {
             if(noteObj.note.includes('#')){
               return (
-                <PianoHalfKey key={noteObj.idx} noteObj={noteObj} onClick={onClick} />
+                <PianoHalfKey key={noteObj.idx} noteObj={noteObj} onClick={onClick} showMusicNotes={showMusicNotes} showKeyboardKeys={showKeyboardKeys} />
               );
             }else{
               return (
-                <PianoWholeKey key={noteObj.idx} noteObj={noteObj} onClick={onClick} />
+                <PianoWholeKey key={noteObj.idx} noteObj={noteObj} onClick={onClick} showMusicNotes={showMusicNotes} showKeyboardKeys={showKeyboardKeys} />
               );
             }
           })}

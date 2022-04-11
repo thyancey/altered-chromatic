@@ -10,18 +10,19 @@ const ScSelect = styled.select`
   padding-left: 1.5rem;
   font-size: 3rem;
   font-weight: bold;
+  border:none;
 
   background:none;
   color: ${getColor('white')};
   background-color: ${getColor('pink')};
-  border-radius: 1.5rem;
+  border-radius: 1.25rem;
 
   appearance: none;
   cursor:pointer;
   ${mixinFontFamily('details')};
 `
 
-const ScTuneIcon = styled.div`
+const ScDropdownIcon = styled.div`
   position:absolute;
   right:1rem;
   top:1rem;
@@ -36,7 +37,7 @@ const ScTuneIcon = styled.div`
   pointer-events:none;
 `
 type ScWrapperProps = {
-  selectSize?: SizeTypes,
+  componentSize?: SizeTypes,
   grow?: string
 };
 const ScWrapper = styled.div<ScWrapperProps>`
@@ -51,25 +52,25 @@ const ScWrapper = styled.div<ScWrapperProps>`
     }
   `}
 
-  ${p => (!p.selectSize || p.selectSize === 'md') && css`
+  ${p => (!p.componentSize || p.componentSize === 'md') && css`
     ${ScSelect} {
       font-size: 2rem;
     }
-    ${ScTuneIcon}{
+    ${ScDropdownIcon}{
     }
   `}
-  ${p => (p.selectSize === 'lg') && css`
+  ${p => (p.componentSize === 'lg') && css`
     ${ScSelect} {font-size: 3rem;}
-    ${ScTuneIcon}{
+    ${ScDropdownIcon}{
       width:4rem;
       height:4rem;
     }
   `}
-  ${p => (p.selectSize === 'sm') && css`
+  ${p => (p.componentSize === 'sm') && css`
     ${ScSelect} {
       font-size: 1.5rem;
     }
-    ${ScTuneIcon}{
+    ${ScDropdownIcon}{
       top:.8rem;
       
       width:2.5rem;
@@ -81,7 +82,7 @@ const ScWrapper = styled.div<ScWrapperProps>`
     ${ScSelect}{
       background-color: ${getShade('pink', 8)};
     }
-    ${ScTuneIcon}{
+    ${ScDropdownIcon}{
     }
   }
 `;
@@ -96,12 +97,12 @@ type Props = {
 }
 function Select({ children, value, onChangeValue, size, grow, placeholder }: Props) {
   return (
-    <ScWrapper selectSize={size} grow={grow}>
+    <ScWrapper componentSize={size} grow={grow}>
       {/* @ts-ignore */}
       <ScSelect placeholder={placeholder} value={value} onChange={(e:any) => onChangeValue(e.target.value)} >
         { children }
       </ScSelect>
-      <ScTuneIcon />
+      <ScDropdownIcon />
     </ScWrapper>
   );
 }

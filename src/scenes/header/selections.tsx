@@ -1,13 +1,14 @@
 import styled from 'styled-components';
 import Select from '../../components/select';
+import Toggle from '../../components/toggle';
 import { useState } from 'react';
 import { NOTES, SCALES } from '../../utils/music';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { setActiveKey, getActiveKey, setActiveScale, getActiveScale } from '../keyboard/slice';
+import { setActiveKey, getActiveKey, setActiveScale, getActiveScale, setShowKeyboardKeys, getShowKeyboardKeys, setShowMusicNotes, getShowMusicNotes } from '../keyboard/slice';
 
 const ScWrapper = styled.div`
   position:absolute;
-  right:0;
+  right:1rem;
   top:0;
 
   display:grid;
@@ -36,6 +37,8 @@ function Selections({}: Props) {
   const dispatch = useAppDispatch();
   const activeScale = useAppSelector(getActiveScale);
   const activeKey = useAppSelector(getActiveKey);
+  const showKeyboardKeys = useAppSelector(getShowKeyboardKeys);
+  const showMusicNotes = useAppSelector(getShowMusicNotes);
 
   return (
     <ScWrapper>
@@ -49,13 +52,14 @@ function Selections({}: Props) {
         </Select>
       </ScGroup>
       <ScGroup>
-        <p>{'Scales'}</p>
-        <Select size='sm' grow='stretch' value={scale || ''} onChangeValue={(value: any) => setScale(value)} >
-         <option key={-1} value=''>{''}</option>
-          { Object.keys(SCALES).map((sc, idx) => (
-            <option key={idx} value={sc}>{SCALES[sc].label}</option>
-          )) }
-        </Select>
+        <p>{'Show notes'}</p>
+        <Toggle 
+          labels={{'off': 'OFF', 'on': 'ON'}}
+          size='sm'
+          grow='stretch'
+          value={showMusicNotes}
+          onSetToggle={(value: boolean) => dispatch(setShowMusicNotes(value))} 
+        />
       </ScGroup>
       <ScGroup>
         <p>{'Key'}</p>
@@ -67,13 +71,14 @@ function Selections({}: Props) {
         </Select>
       </ScGroup>
       <ScGroup>
-        <p>{'Root note'}</p>
-        <Select size='sm' grow='stretch' value={scale || ''} onChangeValue={(value: any) => setScale(value)} >
-          <option key={-1} value=''>{''}</option>
-          { Object.keys(SCALES).map((sc, idx) => (
-            <option key={idx} value={sc}>{SCALES[sc].label}</option>
-          )) }
-        </Select>
+        <p>{'Show keyboard keys'}</p>
+        <Toggle 
+          labels={{'off': 'OFF', 'on': 'ON'}}
+          size='sm'
+          grow='stretch'
+          value={showKeyboardKeys}
+          onSetToggle={(value: boolean) => dispatch(setShowKeyboardKeys(value))} 
+        />
       </ScGroup>
     </ScWrapper>
   );
