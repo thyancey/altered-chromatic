@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { getColor } from '../../themes/';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import Icon_Github from '../../assets/github-mark.svg';
+// import Icon_Github from '../../assets/github-mark.svg';
 import Icon_Tune from '../../assets/tune.svg';
 import { PageInfo } from '../main';
+import Selections from './selections';
 
 const ScHeader = styled.div`
   position:fixed;
@@ -91,16 +92,12 @@ const ScHeaderTab = styled.div`
   padding: 1.25rem;
 `
 
-
 const ScGithubIcon = styled.div`
   width:100%;
   height:100%;
   cursor:pointer;
 
   background-color: ${getColor('black')};
-  -webkit-mask: url(${Icon_Github}) no-repeat center;
-  mask: url(${Icon_Github}) no-repeat center;
-  mask-size: 100%;
 `
 
 const ScGithub = styled.a`
@@ -136,6 +133,7 @@ function Header({ pages }: Props) {
           <h2>{p.text}</h2>
         </Link>
       ))}
+      <Selections />
       <ScGithub href="https://github.com/thyancey/altered-chromatic" target="_blank" >
         <ScGithubIcon />
       </ScGithub>
