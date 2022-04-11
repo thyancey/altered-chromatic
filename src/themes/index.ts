@@ -1,5 +1,13 @@
 import { createGlobalStyle } from "styled-components"
 
+export const mixinFontFamily = (style: 'details'|'display') => {
+  switch(style){
+    case 'details' : return `font-family: 'Cabin', sans-serif`;
+    case 'display': return `font-family: 'Kanit', cursive`;
+    default: return `font-family: 'Cabin', sans-serif`;
+  }
+}
+
 export default createGlobalStyle`
   *{
     margin: 0;
@@ -11,10 +19,10 @@ export default createGlobalStyle`
     margin:0 auto;
   }
   h1, h2, h3, h4{
-    font-family: 'Kanit', cursive;
+    ${mixinFontFamily('display')};
   }
   a, p, span, h5, h6{
-    font-family: 'Cabin', sans-serif;
+    ${mixinFontFamily('details')};
   }
   h1{
     font-size: 5rem;
@@ -48,19 +56,9 @@ export default createGlobalStyle`
   }
 `
 
-/*
-export const mixinFontFamily = (style) => {
-  switch(style){
-    case 'details' : return css`font-family: 'Roboto', sans-serif`;
-    case 'display': return css`font-family: 'Bevan', cursive`;
-    default: return css`font-family: 'Roboto', sans-serif`;
-  }
-}
-*/
 export const listColors = () => {
   return Object.keys(store.colors);
 }
-
 
 export const getColor = (colorId: tColor) => {
   return store.colors[colorId] as CssString; 
@@ -84,8 +82,30 @@ export const mixin_glowOnHover = (color: tColor) => (`
   }
 `);
 
-type CssString = string;
+/* from pablo on https://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors */
+export const getShade = (colId: tColor, percent: number) => {
+  const color = colors[colId] || colId;
 
+  let R = parseInt(color.substring(1,3),16);
+  let G = parseInt(color.substring(3,5),16);
+  let B = parseInt(color.substring(5,7),16);
+
+  R = Math.round(R * (100 + percent) / 100);
+  G = Math.round(G * (100 + percent) / 100);
+  B = Math.round(B * (100 + percent) / 100);
+
+  R = (R<255)?R:255;  
+  G = (G<255)?G:255;  
+  B = (B<255)?B:255;  
+
+  const RR = ((R.toString(16).length===1)?"0"+R.toString(16):R.toString(16));
+  const GG = ((G.toString(16).length===1)?"0"+G.toString(16):G.toString(16));
+  const BB = ((B.toString(16).length===1)?"0"+B.toString(16):B.toString(16));
+
+  return "#"+RR+GG+BB;
+}
+
+type CssString = string;
 type tShadow = 'z1' | 'z2' | 'z3';
 const shadows = {
   z1: '-0.1rem 0.1rem .25rem .1rem rgba(0,0,0,0.16)',

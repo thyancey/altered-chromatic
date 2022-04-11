@@ -25,18 +25,6 @@ const ScHeader = styled.div`
     transition: top .5s ease-in-out;
   }
 
-  >.link-button{
-    color:${getColor('black')};
-    display:inline-block;
-    vertical-align:middle;
-    margin:1.4rem 1.8rem;
-    transition: color .5s ease-in;
-    text-decoration: none;
-    &:hover{
-      color: ${getColor('white')};
-      transition: color .2s ease-out;
-    }
-  }
 `;
 
 const ScHeaderBg = styled.div`
@@ -119,6 +107,23 @@ const ScGithub = styled.a`
   }
 `
 
+const ScLinks = styled.div`
+  display:inline-block;
+  vertical-align:top;
+  
+  >.link-button{
+    color:${getColor('black')};
+    display:block;
+    margin:1.4rem 1.8rem;
+    transition: color .5s ease-in;
+    text-decoration: none;
+    &:hover{
+      color: ${getColor('white')};
+      transition: color .2s ease-out;
+    }
+  }
+`
+
 type Props = {
   pages: PageInfo[]
 }
@@ -127,17 +132,19 @@ function Header({ pages }: Props) {
   const [ collapsed, setCollapsed ] = useState(true);
 
   return (
-    <ScHeader className={ collapsed ? 'collapsed' : ''} onClick={() => setCollapsed(!collapsed)}>
-      {pages.map((p, i) => (
-        <Link key={i} to={p.route} className="link-button">
-          <h2>{p.text}</h2>
-        </Link>
-      ))}
+    <ScHeader className={ collapsed ? 'collapsed' : ''} >
+      <ScLinks>
+        {pages.map((p, i) => (
+          <Link key={i} to={p.route} className="link-button">
+            <h2>{p.text}</h2>
+          </Link>
+        ))}
+      </ScLinks>
       <Selections />
       <ScGithub href="https://github.com/thyancey/altered-chromatic" target="_blank" >
         <ScGithubIcon />
       </ScGithub>
-      <ScHeaderTab>
+      <ScHeaderTab onClick={() => setCollapsed(!collapsed)}>
         <ScTuneIcon />
         <ScShadowFixer />
       </ScHeaderTab>
