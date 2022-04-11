@@ -36,12 +36,20 @@ const ScTuneIcon = styled.div`
   pointer-events:none;
 `
 type ScWrapperProps = {
-  selectSize?: SizeTypes
+  selectSize?: SizeTypes,
+  grow?: string
 };
 const ScWrapper = styled.div<ScWrapperProps>`
   position:relative;
   width:max-content;
   margin:.5rem;
+
+  ${p => p.grow === 'stretch' && css`
+    width:auto;
+    select{
+      width:100%;
+    }
+  `}
 
   ${p => (!p.selectSize || p.selectSize === 'md') && css`
     ${ScSelect} {
@@ -82,13 +90,15 @@ type Props = {
   value: any,
   onChangeValue: Function,
   children?: React.ReactNode,
-  size?: SizeTypes
+  size?: SizeTypes,
+  grow?: string,
+  placeholder?: string,
 }
-function Select({ children, value, onChangeValue, size }: Props) {
+function Select({ children, value, onChangeValue, size, grow, placeholder }: Props) {
   return (
-    <ScWrapper selectSize={size}>
+    <ScWrapper selectSize={size} grow={grow}>
       {/* @ts-ignore */}
-      <ScSelect value={value} onChange={(e:any) => onChangeValue(e.target.value)} >
+      <ScSelect placeholder={placeholder} value={value} onChange={(e:any) => onChangeValue(e.target.value)} >
         { children }
       </ScSelect>
       <ScTuneIcon />

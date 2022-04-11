@@ -1,14 +1,16 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { CompleteNote, NoteName, ScaleObj, SCALES, ScaleStatus, getScaleObject, getAllOctaveNotesBetween, convertOctaveNoteToMidiId } from '../../utils/music';
+import { CompleteNote, NoteName, ScaleObj, SCALES, ScaleStatus, getOctaveScaleObject, getAllOctaveNotesBetween, convertOctaveNoteToMidiId, getKeyScaleObject } from '../../utils/music';
 
 export interface KeyboardState {
+  activeKey: string | null;
   activeNote: string | null;
   activeScale: string | null;
   pressedKeys: string[];
 }
 
 const initialState: KeyboardState = {
+  activeKey: null,
   activeNote: null,
   activeScale: null,
   pressedKeys: []
@@ -22,8 +24,16 @@ export const keyboardSlice = createSlice({
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
+    setActiveKey: (state, action: PayloadAction<string>) => {
+      state.activeKey = action.payload;
+    },
     setActiveNote: (state, action: PayloadAction<string>) => {
       state.activeNote = action.payload;
+      if(action.payload){
+        state.activeKey = action.payload.split('-')[0];
+      }else{
+        state.activeKey = null;
+      }
     },
     setActiveScale: (state, action: PayloadAction<string>) => {
       if(state.activeScale === action.payload){
@@ -38,44 +48,56 @@ export const keyboardSlice = createSlice({
   }
 });
 
-export const { setActiveNote, setActiveScale, setPressedKeys } = keyboardSlice.actions;
+export const { setActiveKey, setActiveNote, setActiveScale, setPressedKeys } = keyboardSlice.actions;
 
+export const getActiveKey = (state: RootState) => state.keyboard.activeKey;
 export const getActiveNote = (state: RootState) => state.keyboard.activeNote;
 export const getActiveScale = (state: RootState) => state.keyboard.activeScale;
 export const getPressedKeys = (state: RootState) => state.keyboard.pressedKeys;
 
-export const selectActiveScale = createSelector(
+
+export const selectNotesFromScale = createSelector(
+  [getActiveKey, getActiveScale],
+  (activeKey, activeScale): ScaleObj | null => {
+    if(!activeKey || !activeScale) return null;
+
+    return getKeyScaleObject(activeKey, activeScale);
+  }
+);
+
+
+export const selectActiveScaleObject = createSelector(
   [getActiveScale, getActiveNote],
   (activeScale, activeNote): ScaleObj | null => {
     if(!activeNote || !activeScale) return null;
 
-    return getScaleObject(activeNote, activeScale);
+    return getOctaveScaleObject(activeNote, activeScale);
   }
 );
 
 export const selectAllMajorScales = createSelector(
   [getActiveNote],
-  (activeNote): ScaleObj[] | null => {
-    if(!activeNote) return null;
+  (activeNote): ScaleObj[] => {
+    if(!activeNote) return [];
 
     return Object.keys(SCALES).map(scaleKey => {
-      return getScaleObject(activeNote, scaleKey)
+      return getOctaveScaleObject(activeNote, scaleKey)
     });
   }
 );
 
-export const getScaleStatus = (octaveNote: string, scaleNotes: string[]): ScaleStatus => {
-  if(!scaleNotes.includes(octaveNote)) return 'invalid';
+export const getScaleStatus = (noteLabel: string, scaleNotes: string[]): ScaleStatus => {
+  if(!scaleNotes.includes(noteLabel)) return 'invalid';
 
-  if(octaveNote === scaleNotes[0] || octaveNote === scaleNotes[scaleNotes.length - 1]){
+  if(noteLabel === scaleNotes[0] || noteLabel === scaleNotes[scaleNotes.length - 1]){
     return 'root';
   }
   return 'scale';
 }
 
 export const selectKeyboardKeys = createSelector(
-  [selectActiveScale],
-  (activeScaleObj): CompleteNote[] => {
+  [selectNotesFromScale],
+  (keyScaleObj): CompleteNote[] => {
     const octaveNotes = getAllOctaveNotesBetween(PIANO_RANGE[0], PIANO_RANGE[1]);
     return octaveNotes.map((octaveNote, idx) => {
       const noteLabel = octaveNote.split('-')[0] as NoteName;
@@ -83,7 +105,7 @@ export const selectKeyboardKeys = createSelector(
         note: noteLabel,
         octaveNote: octaveNote,
         midiNote: convertOctaveNoteToMidiId(octaveNote),
-        scaleStatus: activeScaleObj ? getScaleStatus(octaveNote, activeScaleObj.octaveNotes) : 'inactive',
+        scaleStatus: keyScaleObj ? getScaleStatus(noteLabel, keyScaleObj.notes) : 'inactive',
         idx
       };
     })

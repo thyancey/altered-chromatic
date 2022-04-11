@@ -24,7 +24,7 @@ export type ScaleDef = {
 export type ScaleObj = {
   id: string,
   label: string,
-  octaveNotes: string[]
+  notes: string[]
 }
 
 export const NOTES: NoteName[] = [ 'A', 'A#', 'B', 'B#', 'C', 'C#', 'D', 'D#', 'E', 'E#', 'F', 'F#' ];
@@ -151,15 +151,26 @@ export const getOctaveNotesInScale = (rootOctaveNote: string, scaleKey: string, 
   return transformScaleNotesToOctaveNotes(scaleNotes, parseInt(notePieces[1]));
 }
 
-export const getScaleObject = (rootOctaveNote: string, scaleKey: string): ScaleObj => {
+export const getOctaveScaleObject = (rootOctaveNote: string, scaleKey: string): ScaleObj => {
   const scaleDef = SCALES[scaleKey];
 
   return {
     id: scaleKey,
     label: scaleDef.label,
-    octaveNotes: getOctaveNotesInScale(rootOctaveNote, scaleKey, true)
+    notes: getOctaveNotesInScale(rootOctaveNote, scaleKey, true)
   }
 }
+
+export const getKeyScaleObject = (musicKey: string, scaleKey: string): ScaleObj => {
+  const scaleDef = SCALES[scaleKey];
+
+  return {
+    id: scaleKey,
+    label: scaleDef.label,
+    notes: getNotesInScale(musicKey, scaleKey, true)
+  }
+}
+
 
 /*
   "what are all the chromatic notes between A and B?" - ex, making piano keys
