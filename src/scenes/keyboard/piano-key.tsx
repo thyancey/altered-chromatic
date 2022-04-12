@@ -46,12 +46,13 @@ const Anim_SharpPress = `
 
 type SKeyBaseProps = {
   scaleStatus: ScaleStatus,
-  altKey?: boolean,
+  altKey?: boolean
 }
 const ScKeyBase = styled.div<SKeyBaseProps>`
 `
 
 const ScKeyLabel = styled.span`
+  pointer-events:none;
   position:absolute;
   bottom:4rem;
   left:50%;
@@ -68,6 +69,7 @@ const ScKeyLabel = styled.span`
 `
 
 const ScNoteLabel = styled.span`
+  pointer-events:none;
   position:absolute;
   bottom:.25rem;
   left:50%;
@@ -158,7 +160,7 @@ const ScHalfKey = styled(ScKeyBase)`
     top:-.25rem;
     border-radius: 0 0 1rem 1rem;
 
-    ${ScNoteLabel}{
+    ${ScNoteLabel}{ 
       bottom:.50rem;
     }
     ${ScKeyLabel}{
@@ -202,18 +204,21 @@ const ScHalfKeyWrapper = styled(ScKeyWrapperBase)`
 
 type Props = {
   noteObj: CompleteNote,
-  onClick: Function,
+  onMouseEnter: Function,
+  onMouseDown: Function,
   showKeyboardKeys?: boolean,
-  showMusicNotes?: boolean
+  showMusicNotes?: boolean,
+  keyIsDown?: boolean
 }
-export function PianoWholeKey({ noteObj, onClick, showMusicNotes, showKeyboardKeys }: Props) {
+export function PianoWholeKey({ noteObj, onMouseEnter, onMouseDown, showMusicNotes, showKeyboardKeys, keyIsDown }: Props) {
   return (
     <ScWholeKeyWrapper
       key={noteObj.idx}
-      onClick={e => onClick(e, noteObj)}
-      keyPressed={noteObj.keyPressed}
+      onMouseEnter={e => onMouseEnter(e, noteObj)}
+      onMouseDown={e => onMouseDown(e, noteObj)}
+      keyPressed={noteObj.keyPressed || keyIsDown}
     >
-      <ScWholeKey scaleStatus={noteObj.scaleStatus}>
+      <ScWholeKey data-midinote={noteObj.midiNote} data-octavenote={noteObj.octaveNote} scaleStatus={noteObj.scaleStatus}>
         {showKeyboardKeys && (<ScKeyLabel>{noteObj.keyMatch}</ScKeyLabel>)}
         {showMusicNotes && (<ScNoteLabel>{noteObj.note}</ScNoteLabel>)}
       </ScWholeKey>
@@ -221,14 +226,15 @@ export function PianoWholeKey({ noteObj, onClick, showMusicNotes, showKeyboardKe
   );
 }
 
-export function PianoHalfKey({ noteObj, onClick, showMusicNotes, showKeyboardKeys }: Props) {
+export function PianoHalfKey({ noteObj, onMouseEnter, onMouseDown, showMusicNotes, showKeyboardKeys, keyIsDown }: Props) {
   return (
     <ScHalfKeyWrapper
       key={noteObj.idx}
-      onClick={e => onClick(e, noteObj)}
-      keyPressed={noteObj.keyPressed}
+      onMouseEnter={e => onMouseEnter(e, noteObj)}
+      onMouseDown={e => onMouseDown(e, noteObj)}
+      keyPressed={noteObj.keyPressed || keyIsDown}
     >
-      <ScHalfKey scaleStatus={noteObj.scaleStatus} altKey={SPECIAL_SHARPS.includes(noteObj.note)}>
+      <ScHalfKey data-midinote={noteObj.midiNote} data-octavenote={noteObj.octaveNote} scaleStatus={noteObj.scaleStatus} altKey={SPECIAL_SHARPS.includes(noteObj.note)}>
         {showKeyboardKeys && (<ScKeyLabel>{noteObj.keyMatch}</ScKeyLabel>)}
         {showMusicNotes && (<ScNoteLabel>{noteObj.note}</ScNoteLabel>)}
       </ScHalfKey>

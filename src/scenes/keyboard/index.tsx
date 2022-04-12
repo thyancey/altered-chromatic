@@ -72,7 +72,6 @@ export function Keyboard() {
       <ScPianoContainer>
         <Piano />
       </ScPianoContainer>
-      <ScInstruction>{'ctrl + click to set the key & root note'}</ScInstruction>
       <Scales />
       <DynamicBg />
     </ScContainer>
