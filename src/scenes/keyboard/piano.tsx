@@ -78,6 +78,8 @@ const ScPianoKeys = styled.div`
   }
 `
 
+let otherTouchedKeys: string[] = [];
+
 export function Piano() {
   const pianoKeys = useAppSelector(selectKeyboardKeysWithPressed);
   const dispatch = useAppDispatch();
@@ -86,33 +88,16 @@ export function Piano() {
   const [ fingerIsDown, setFingerIsDown ] = useState(false);
   const [ touchedKeys, setTouchedKeys ] = useState<string[]>([]);
 
-  const onClick = (e:any, noteObj:CompleteNote) => {
-    // if(e.ctrlKey){
-    //   dispatch(setActiveNote(noteObj.octaveNote))
-    // }
-    // console.log('onClick!', noteObj.octaveNote);
-    // playNote(noteObj);
-  }
-
   type LilNoteObj = {
     octaveNote: string,
     midiNote: number
   }
 
-  const onTouchStart = (e:any, noteObj:CompleteNote) => {
-    // console.log('onTouchStart!', noteObj.octaveNote);
-    setFingerIsDown(true);
-    setTouchedKeys([noteObj.octaveNote]);
-    playNote(noteObj.midiNote);
+  const setAllTouchedKeys = (touchedKeys: string[]) => {
+    setTouchedKeys(touchedKeys);
+    otherTouchedKeys = touchedKeys;
   }
-  const onTouchEnd = (e:any, noteObj:CompleteNote) => {
-    // console.log('onTouchEnd!', noteObj.octaveNote);
-    setTouchedKeys([]);
 
-    setFingerIsDown(false);
-    e.preventDefault();
-    // playNote(noteObj.midiNote);
-  }
   const onMouseDown = (e:any, noteObj:CompleteNote) => {
     // console.log('onMouseDown!', noteObj.octaveNote);
     setFingerIsDown(true);
@@ -127,7 +112,7 @@ export function Piano() {
   const onMouseEnter = (e:any, noteObj:CompleteNote) => {
     // console.log('>>> onMouseEnter!', noteObj.octaveNote);
     if(fingerIsDown){
-      setTouchedKeys([noteObj.octaveNote]);
+      setAllTouchedKeys([noteObj.octaveNote]);
       playNote(noteObj.midiNote);
     }
   }
@@ -153,24 +138,34 @@ export function Piano() {
     return null;
   }
 
-
-  const onTouchMove = (e:any, noteObj:CompleteNote) => {
-    // console.log('>>> onTouchMove!', noteObj.octaveNote);
-    // if(fingerIsDown){
-    const lilNoteObj = getNoteUnderFinger(e);
-
-    if(lilNoteObj && !touchedKeys.includes(lilNoteObj.octaveNote)){
-      // console.log('touchedNote', lilNoteObj.octaveNote);
-      // console.log(`touchMove: (${e.clientX},${e.clientY})`);
-      // (global as any).ele = document.elementFromPoint(e.clientX, e.clientY);
-      setTouchedKeys([lilNoteObj.octaveNote]);
+  const attemptKeyUnderTouchPosition = (touchEvent:any) => {
+    const lilNoteObj = getNoteUnderFinger(touchEvent);
+    
+    if(lilNoteObj && !otherTouchedKeys.includes(lilNoteObj.octaveNote)){
+      setAllTouchedKeys([lilNoteObj.octaveNote]);
       playNote(lilNoteObj.midiNote);
     }
+  }
+  
+  const onDocumentTouchMove = (e:any) => {
+    // console.log('onDocumentTouchMove!');
+    attemptKeyUnderTouchPosition(e);
+  }
+
+  const onDocumentTouchStart = (e:any) => {
+    // console.log('onDocumentTouchStart');
+    attemptKeyUnderTouchPosition(e);
+  }
+
+  const onDocumentTouchEnd = (e:any) => {
+    // console.log('onDocumentTouchEnd');
+    setAllTouchedKeys([]);
+    e.preventDefault(); // prevent mouse click from triggering even on a touch device
   }
 
   const onDocumentMouseUp = (e:any) => {
     // console.log('onDocumentMouseUp!');
-    setTouchedKeys([]);
+    setAllTouchedKeys([]);
     setFingerIsDown(false);
   }
 
@@ -182,6 +177,9 @@ export function Piano() {
   useEffect(() => {
     console.log('useEffect')
     document.addEventListener('mouseup', onDocumentMouseUp);
+    document.addEventListener('touchstart', onDocumentTouchStart);
+    document.addEventListener('touchmove', onDocumentTouchMove);
+    document.addEventListener('touchend', onDocumentTouchEnd);
 
     if(checkTouchSupport()){
       dispatch(setShowKeyboardKeys(false));
@@ -213,31 +211,24 @@ export function Piano() {
             if(noteObj.note.includes('#')){
               return (
                 <PianoHalfKey 
-                  key={noteObj.idx} 
-                  noteObj={noteObj} 
-                  onClick={onClick} 
-                  onMouseEnter={onMouseEnter} 
-                  onTouchStart={onTouchStart} 
-                  onTouchMove={onTouchMove} 
-                  onTouchEnd={onTouchEnd} 
-                  onMouseDown={onMouseDown} 
-                  showMusicNotes={showMusicNotes} 
-                  showKeyboardKeys={showKeyboardKeys} 
+                  key={noteObj.idx}
+                  noteObj={noteObj}
+                  onMouseEnter={onMouseEnter}
+                  onMouseDown={onMouseDown}
+                  showMusicNotes={showMusicNotes}
+                  showKeyboardKeys={showKeyboardKeys}
                   keyIsDown={touchedKeys.includes(noteObj.octaveNote)} />
               );
             }else{
               return (
                 <PianoWholeKey 
-                key={noteObj.idx} noteObj={noteObj} 
-                onClick={onClick} 
-                onMouseEnter={onMouseEnter} 
-                onTouchStart={onTouchStart} 
-                onTouchMove={onTouchMove} 
-                onTouchEnd={onTouchEnd} 
-                onMouseDown={onMouseDown} 
-                showMusicNotes={showMusicNotes} 
-                showKeyboardKeys={showKeyboardKeys} 
-                keyIsDown={touchedKeys.includes(noteObj.octaveNote)} />
+                  key={noteObj.idx}
+                  noteObj={noteObj}
+                  onMouseEnter={onMouseEnter}
+                  onMouseDown={onMouseDown}
+                  showMusicNotes={showMusicNotes}
+                  showKeyboardKeys={showKeyboardKeys}
+                  keyIsDown={touchedKeys.includes(noteObj.octaveNote)} />
               );
             }
           })}

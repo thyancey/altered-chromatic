@@ -204,25 +204,17 @@ const ScHalfKeyWrapper = styled(ScKeyWrapperBase)`
 
 type Props = {
   noteObj: CompleteNote,
-  onClick: Function,
   onMouseEnter: Function,
   onMouseDown: Function,
-  onTouchStart: Function,
-  onTouchMove: Function,
-  onTouchEnd: Function,
   showKeyboardKeys?: boolean,
   showMusicNotes?: boolean,
   keyIsDown?: boolean
 }
-export function PianoWholeKey({ noteObj, onClick, onMouseEnter, onTouchStart, onTouchMove, onTouchEnd, onMouseDown, showMusicNotes, showKeyboardKeys, keyIsDown }: Props) {
+export function PianoWholeKey({ noteObj, onMouseEnter, onMouseDown, showMusicNotes, showKeyboardKeys, keyIsDown }: Props) {
   return (
     <ScWholeKeyWrapper
       key={noteObj.idx}
-      onClick={e => onClick(e, noteObj)}
       onMouseEnter={e => onMouseEnter(e, noteObj)}
-      onTouchStart={e => onTouchStart(e, noteObj)}
-      onTouchMove={e => onTouchMove(e, noteObj)}
-      onTouchEnd={e => onTouchEnd(e, noteObj)}
       onMouseDown={e => onMouseDown(e, noteObj)}
       keyPressed={noteObj.keyPressed || keyIsDown}
     >
@@ -234,15 +226,11 @@ export function PianoWholeKey({ noteObj, onClick, onMouseEnter, onTouchStart, on
   );
 }
 
-export function PianoHalfKey({ noteObj, onClick, onMouseEnter, onTouchStart, onTouchMove, onTouchEnd, onMouseDown, showMusicNotes, showKeyboardKeys, keyIsDown }: Props) {
+export function PianoHalfKey({ noteObj, onMouseEnter, onMouseDown, showMusicNotes, showKeyboardKeys, keyIsDown }: Props) {
   return (
     <ScHalfKeyWrapper
       key={noteObj.idx}
-      onClick={e => onClick(e, noteObj)}
       onMouseEnter={e => onMouseEnter(e, noteObj)}
-      onTouchStart={e => onTouchStart(e, noteObj)}
-      onTouchMove={e => onTouchMove(e, noteObj)}
-      onTouchEnd={e => onTouchEnd(e, noteObj)}
       onMouseDown={e => onMouseDown(e, noteObj)}
       keyPressed={noteObj.keyPressed || keyIsDown}
     >
