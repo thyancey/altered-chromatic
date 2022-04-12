@@ -84,12 +84,12 @@ export function About() {
     <ScContainer>
       <ScLeft>
         <h2>{'What is this?'}</h2>
-        <p>{'When I started to learn more about music theory, I started getting pretty frustrated when notes were sometimes Sharp and sometimes Flat, and why each scale had to have a note of each letter, and why some letters only have a half step between them (lookin at you E and B)'}</p>
-        <p>{'So screw it, here\'s a more consistent 12-note chromatic notation, and a keyboard that follows the same rules. Since each note has a sharp, the "G" notes have been removed all together. In terms of pitch, "A" is the same as "C".'}</p>
+        <p>{'While I was diving deeper into music theory, a few of the concepts started to frustrate me. Specifically, why some notes (B/C, E/F) only had a half-step between them. In addition, depending on what mode you are playing in, a note like "C flat" can exist, even though it\'s technically B! My old brain was having a hard time baking all of the note and scale rules in and thought - if we could throw history aside, is there another way to notate this stuff?'}</p>
+        <p>{'So screw it! Here\'s a more consistent 12-note chromatic notation, and a keyboard that follows the same rules.  Since each note has a sharp, the "G" notes have been removed all together. I made all the notes revolve around "A" and not "C". In terms of pitch, "A" is the same as "C".'}</p>
         <h2>{'Just added'}</h2>
-        <p>{`redesign`}</p>
+        <p>{`keyboard/touch events`}</p>
         <h2>{'Next feature'}</h2>
-        <p>{`scale tools`}</p>
+        <p>{`better multi-touch input on mobile`}</p>
       </ScLeft>
       <ScTable>
         <ScRowPair>

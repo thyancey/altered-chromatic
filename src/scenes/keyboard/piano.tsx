@@ -48,6 +48,7 @@ const ScPiano = styled.div`
   -khtml-user-select: none; /* Konqueror HTML */
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
+  -webkit-tap-highlight-color:  rgba(255, 255, 255, 0); 
 `
 
 const ScPianoBg = styled.div`
@@ -86,6 +87,7 @@ export function Piano() {
   const showMusicNotes = useAppSelector(getShowMusicNotes);
   const showKeyboardKeys = useAppSelector(getShowKeyboardKeys);
   const [ fingerIsDown, setFingerIsDown ] = useState(false);
+  const [ useTouchEvents, setUseTouchEvents ] = useState(false);
   const [ touchedKeys, setTouchedKeys ] = useState<string[]>([]);
 
   type LilNoteObj = {
@@ -99,29 +101,49 @@ export function Piano() {
   }
 
   const onMouseDown = (e:any, noteObj:CompleteNote) => {
-    // console.log('onMouseDown!', noteObj.octaveNote);
-    setFingerIsDown(true);
-    playNote(noteObj.midiNote);
+    // console.log('onMouseDown!', noteObj.octaveNote, useTouchEvents);
+    if(!useTouchEvents){
+      setFingerIsDown(true);
+      playNote(noteObj.midiNote);
+    }
   }
 
   const playNote = (midiNote: number) => {
     // @ts-ignore;
     global.globalMidiHandler && global.globalMidiHandler([midiNote]);
   }
+  const playNotes = (midiNotes: number[]) => {
+    // @ts-ignore;
+    global.globalMidiHandler && global.globalMidiHandler(midiNotes);
+  }
 
   const onMouseEnter = (e:any, noteObj:CompleteNote) => {
-    // console.log('>>> onMouseEnter!', noteObj.octaveNote);
-    if(fingerIsDown){
+    // console.log('>>> onMouseEnter!', noteObj.octaveNote, useTouchEvents);
+    if(!useTouchEvents && fingerIsDown){
       setAllTouchedKeys([noteObj.octaveNote]);
       playNote(noteObj.midiNote);
     }
   }
 
-  const getNoteUnderFinger = (e:any): LilNoteObj | null => {
+  const attemptNotesUnderFinger = (e:any): void => {
+    // console.log('touches', e.touches);
+    const lilNoteArray: LilNoteObj[] = [];
+    for(let i = 0; i < e.touches.length; i++){
+      const lilNoteObj = getNoteForTouch(e.touches[i]);
+      if(lilNoteObj && !otherTouchedKeys.includes(lilNoteObj.octaveNote)){
+        lilNoteArray.push(lilNoteObj);
+      }
+    }
+    
+    if(lilNoteArray.length > 0){
+      setAllTouchedKeys(lilNoteArray.map(nO => nO.octaveNote));
+      playNotes(lilNoteArray.map((nO: LilNoteObj) => nO.midiNote));
+    }
+  }
+
+  const getNoteForTouch = (touchEvent:any) => {
     try{
-      const touch = e.touches[0];
-      // console.log('touches', touches);
-      const ele = document.elementFromPoint(touch.clientX, touch.clientY);
+      const ele = document.elementFromPoint(touchEvent.clientX, touchEvent.clientY);
       const mN = ele?.getAttribute('data-midinote');
       const oN = ele?.getAttribute('data-octavenote');
 
@@ -139,12 +161,14 @@ export function Piano() {
   }
 
   const attemptKeyUnderTouchPosition = (touchEvent:any) => {
+    attemptNotesUnderFinger(touchEvent);
+    /*
     const lilNoteObj = getNoteUnderFinger(touchEvent);
     
     if(lilNoteObj && !otherTouchedKeys.includes(lilNoteObj.octaveNote)){
       setAllTouchedKeys([lilNoteObj.octaveNote]);
       playNote(lilNoteObj.midiNote);
-    }
+    }*/
   }
   
   const onDocumentTouchMove = (e:any) => {
@@ -160,7 +184,7 @@ export function Piano() {
   const onDocumentTouchEnd = (e:any) => {
     // console.log('onDocumentTouchEnd');
     setAllTouchedKeys([]);
-    e.preventDefault(); // prevent mouse click from triggering even on a touch device
+    // e.preventDefault(); // prevent mouse click from triggering even on a touch device
   }
 
   const onDocumentMouseUp = (e:any) => {
@@ -175,13 +199,13 @@ export function Piano() {
   }
 
   useEffect(() => {
-    console.log('useEffect')
     document.addEventListener('mouseup', onDocumentMouseUp);
     document.addEventListener('touchstart', onDocumentTouchStart);
     document.addEventListener('touchmove', onDocumentTouchMove);
     document.addEventListener('touchend', onDocumentTouchEnd);
 
     if(checkTouchSupport()){
+      setUseTouchEvents(true);
       dispatch(setShowKeyboardKeys(false));
     }
   }, []);
