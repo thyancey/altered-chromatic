@@ -74,9 +74,9 @@ export function ScaleGroups() {
             {`${activeKey} ${scaleObj.label}:`}
           </ScScaleLabel>
           <ul>
-            {scaleObj.notes.map(octaveNote => (
-              <ScScaleNote key={octaveNote}>
-                <span>{octaveNote.split('-')[0]}</span>
+            {scaleObj.notes.map((note, sIdx) => (
+              <ScScaleNote key={`${idx}_${sIdx}_${note}`} id={note}>
+                <span>{note.split('-')[0]}</span>
               </ScScaleNote>
             ))}
           </ul>
