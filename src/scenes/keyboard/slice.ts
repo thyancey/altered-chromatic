@@ -98,6 +98,17 @@ export const selectAllMajorScales = createSelector(
   }
 );
 
+export const selectAllMajorScales2 = createSelector(
+  [getActiveKey],
+  (activeKey): ScaleObj[] => {
+    if(!activeKey) return [];
+
+    return Object.keys(SCALES).map(scaleKey => {
+      return getKeyScaleObject(activeKey, scaleKey)
+    });
+  }
+);
+
 export const getScaleStatus = (noteLabel: string, scaleNotes: string[]): ScaleStatus => {
   if(!scaleNotes.includes(noteLabel)) return 'invalid';
 
