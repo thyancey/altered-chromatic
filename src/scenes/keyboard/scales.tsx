@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { getColor } from '../../themes';
 
 import {
-  getActiveNote
+  getActiveKey
 } from './slice';
 import { useAppSelector } from '../../app/hooks';
 import { ScaleGroups } from './scalegroups';
@@ -24,17 +24,21 @@ const ScContainer = styled.div`
 `
 
 const ScScales = styled.div`
-  background-color: ${getColor('pink')};
-  padding: 1rem 2rem;
+  /* background-color: ${getColor('white')}; */
+  padding-bottom: 2rem;
+  border-radius: 1rem;
   
   >h4{
+    margin-top:0;
+    padding-top:0;
     text-align:center;
+    font-size: 2rem;
   }
 `
 
 const ScScalesBg = styled.div`
   background-color: ${getColor('white')};
-  border-radius: 2.5rem 2.5rem 0 0;
+  /* border-radius: 2.5rem 2.5rem 0 0; */
   position:absolute;
   z-index:-1;
   left:0;
@@ -46,18 +50,13 @@ const ScScalesBg = styled.div`
 `
 
 export function Scales() {
-  const activeNote = useAppSelector(getActiveNote);
-  if(!activeNote) return null;
+  const activeKey = useAppSelector(getActiveKey);
+  if(!activeKey) return null;
 
   return (
     <ScContainer>
       <ScScales>
-        <p>{`key: ${activeNote.split('-')[0]}`}</p>
-        <p>{`root note: ${activeNote}`}</p>
-      </ScScales>
-      <ScScales>
-        <h4>{'scales'}</h4>
-        <p>{'click a scale name to toggle it on/off'}</p>
+        <h4>{'( scales )'}</h4>
         <ScaleGroups />
       </ScScales>
       <ScScalesBg />
