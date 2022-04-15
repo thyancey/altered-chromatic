@@ -125,12 +125,12 @@ export function Piano() {
     }
   }
 
-  const attemptNotesUnderFinger = (e:any): void => {
+  const attemptNotesUnderFinger = (e:any, absolute?: boolean): void => {
     // console.log('touches', e.touches);
     const lilNoteArray: LilNoteObj[] = [];
     for(let i = 0; i < e.touches.length; i++){
       const lilNoteObj = getNoteForTouch(e.touches[i]);
-      if(lilNoteObj && !otherTouchedKeys.includes(lilNoteObj.octaveNote)){
+      if(lilNoteObj && (absolute || !otherTouchedKeys.includes(lilNoteObj.octaveNote))){
         lilNoteArray.push(lilNoteObj);
       }
     }
@@ -160,8 +160,8 @@ export function Piano() {
     return null;
   }
 
-  const attemptKeyUnderTouchPosition = (touchEvent:any) => {
-    attemptNotesUnderFinger(touchEvent);
+  const attemptKeyUnderTouchPosition = (touchEvent:any, absolute?: boolean) => {
+    attemptNotesUnderFinger(touchEvent, absolute);
     /*
     const lilNoteObj = getNoteUnderFinger(touchEvent);
     
@@ -178,7 +178,7 @@ export function Piano() {
 
   const onDocumentTouchStart = (e:any) => {
     // console.log('onDocumentTouchStart');
-    attemptKeyUnderTouchPosition(e);
+    attemptKeyUnderTouchPosition(e, true);
   }
 
   const onDocumentTouchEnd = (e:any) => {
