@@ -103,30 +103,30 @@ export const selectActiveScaleDef = createSelector(
 );
 
 export const selectNotesFromScale = createSelector(
-  [getActiveKey, selectActiveScaleDef],
-  (activeKey, activeScaleDef): ScaleObj | null => {
-    if(!activeKey || !activeScaleDef) return null;
+  [getActiveKey, selectActiveScaleDef, selectNoteDefs],
+  (activeKey, activeScaleDef, noteDefs): ScaleObj | null => {
+    if(!activeKey || !activeScaleDef || !noteDefs) return null;
 
-    return getKeyScaleObject(activeKey, activeScaleDef);
+    return getKeyScaleObject(activeKey, activeScaleDef, noteDefs);
   }
 );
 
 export const selectActiveScaleObject = createSelector(
-  [getActiveNote, selectActiveScaleDef],
-  (activeNote, activeScaleDef): ScaleObj | null => {
+  [getActiveNote, selectActiveScaleDef, selectNoteDefs],
+  (activeNote, activeScaleDef, noteDefs): ScaleObj | null => {
     if(!activeNote || !activeScaleDef) return null;
 
-    return getOctaveScaleObject(activeNote, activeScaleDef);
+    return getOctaveScaleObject(activeNote, activeScaleDef, noteDefs);
   }
 );
 
 export const selectAllMajorScales = createSelector(
-  [getActiveKey, selectScaleDefs],
-  (activeKey, scaleDefs): ScaleObj[] => {
-    if(!activeKey) return [];
+  [getActiveKey, selectScaleDefs, selectNoteDefs],
+  (activeKey, scaleDefs, noteDefs): ScaleObj[] => {
+    if(!activeKey || !scaleDefs || !noteDefs) return [];
 
     return Object.keys(scaleDefs).map(scaleKey => {
-      return getKeyScaleObject(activeKey, scaleDefs[scaleKey])
+      return getKeyScaleObject(activeKey, scaleDefs[scaleKey], noteDefs)
     });
   }
 );

@@ -4,30 +4,37 @@ export const NOTES: NoteName[] = [ 'A', 'A#', 'B', 'B#', 'C', 'C#', 'D', 'D#', '
 
 export const STANDARD_SCALES: ScaleDefs = {
   'ionian': {
+    id: 'ionian',
     label: 'Ionian (Major)',
     intervals: [2,2,1,2,2,2,1]
   } as ScaleDef,
   'dorian': {
+    id: 'dorian',
     label: 'Dorian',
     intervals: [2,1,2,2,2,1,2]
   } as ScaleDef,
   'phyrgian': {
+    id: 'phyrgian',
     label: 'Phyrgian',
     intervals: [1,2,2,2,1,2,2]
   } as ScaleDef,
   'lydian': {
+    id: 'lydian',
     label: 'Lydian',
     intervals: [2,2,2,1,2,2,1]
   } as ScaleDef,
   'mixolydian': {
+    id: 'mixolydian',
     label: 'Mixolydian',
     intervals: [2,2,1,2,2,1,2]
   } as ScaleDef,
   'aeolian': {
+    id: 'aeolian',
     label: 'Aeolian (Minor)',
     intervals: [2,1,2,2,1,2,2]
   } as ScaleDef,
   'locrian': {
+    id: 'locrian',
     label: 'Locrian',
     intervals: [1,2,2,1,2,2,2]
   } as ScaleDef
