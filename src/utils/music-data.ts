@@ -2,11 +2,6 @@ import { LilNoteObj, NoteName, ScaleDef, ScaleDefs } from "../types";
 
 export const NOTES: NoteName[] = [ 'A', 'A#', 'B', 'B#', 'C', 'C#', 'D', 'D#', 'E', 'E#', 'F', 'F#' ];
 
-export const MIDI_NOTE_REF: LilNoteObj = {
-  octaveNote: 'A-4',
-  midiNote: 60
-};
-
 export const STANDARD_SCALES: ScaleDefs = {
   'ionian': {
     label: 'Ionian (Major)',

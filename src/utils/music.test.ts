@@ -1,7 +1,7 @@
 import {
   transformNotesToOctaveNotes, getNotesInScale, rotateArray, getOctaveNotesInScale, transformScaleNotesToOctaveNotes, getAllOctaveNotesBetween, getOctaveNoteDelta, convertOctaveNoteToMidiId
 } from './music';
-import { MIDI_NOTE_REF, STANDARD_SCALES } from './music-data';
+import { STANDARD_SCALES } from './music-data';
 
 describe('utils > music', () => {
   describe('#rotateArray', () => {
@@ -157,23 +157,28 @@ describe('utils > music', () => {
   });
 
   describe('#convertOctaveNoteToMidiId', () => {
+    const midiRefDef = {
+      octaveNote: 'A-4',
+      midiNote: 60
+    }
+
     it('converts base note to expected midi value (using const)', () => {
-      expect(convertOctaveNoteToMidiId(MIDI_NOTE_REF.octaveNote)).toEqual(
-        MIDI_NOTE_REF.midiNote
+      expect(convertOctaveNoteToMidiId(midiRefDef.octaveNote, midiRefDef)).toEqual(
+        midiRefDef.midiNote
       );
     });
     it('converts base note to expected midi value', () => {
-      expect(convertOctaveNoteToMidiId('A-4')).toEqual(
+      expect(convertOctaveNoteToMidiId('A-4', midiRefDef)).toEqual(
         60
       );
     });
     it('converts note to expected midi value', () => {
-      expect(convertOctaveNoteToMidiId('A#-4')).toEqual(
+      expect(convertOctaveNoteToMidiId('A#-4', midiRefDef)).toEqual(
         61
       );
     });
     it('converts note to expected midi value', () => {
-      expect(convertOctaveNoteToMidiId('F#-3')).toEqual(
+      expect(convertOctaveNoteToMidiId('F#-3', midiRefDef)).toEqual(
         59
       );
     });

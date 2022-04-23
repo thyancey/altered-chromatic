@@ -1,5 +1,5 @@
-import { NoteName, OctaveNote, ScaleDef, ScaleObj } from "../types";
-import { MIDI_NOTE_REF, NOTES } from "./music-data";
+import { LilNoteObj, NoteName, OctaveNote, ScaleDef, ScaleObj } from "../types";
+import { NOTES } from "./music-data";
 
 export const rotateArray = (array: any[], toIdx: number) => {
   return array.map((_, idx) => array[(idx + toIdx) % array.length]);
@@ -145,7 +145,7 @@ export const getOctaveNoteDelta = (firstOctaveNote: OctaveNote, secondOctaveNote
  * 
  * in altered chromatic, A-4 = 60
  */
-export const convertOctaveNoteToMidiId = (octaveNote: OctaveNote) => {
-  const delta = getOctaveNoteDelta(MIDI_NOTE_REF.octaveNote, octaveNote);
-  return MIDI_NOTE_REF.midiNote + delta;
+export const convertOctaveNoteToMidiId = (octaveNote: OctaveNote, midiRef: LilNoteObj) => {
+  const delta = getOctaveNoteDelta(midiRef.octaveNote, octaveNote);
+  return midiRef.midiNote + delta;
 }

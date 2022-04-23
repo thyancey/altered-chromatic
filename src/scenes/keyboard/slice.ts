@@ -1,8 +1,8 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { CompleteNote, NoteName, ScaleDef, ScaleDefs, ScaleObj, ScaleStatus } from '../../types';
+import { CompleteNote, LilNoteObj, NoteName, ScaleDef, ScaleDefs, ScaleObj, ScaleStatus } from '../../types';
 import { getOctaveScaleObject, getAllOctaveNotesBetween, convertOctaveNoteToMidiId, getKeyScaleObject } from '../../utils/music';
-import { getMusicScales } from '../../utils/music-data';
+import { getMusicMidiMap, getMusicNotes, getMusicScales } from '../../utils/music-data';
 
 export interface KeyboardState {
   activeKey: string | null;
@@ -74,6 +74,20 @@ export const getShowMusicNotes = (state: RootState) => state.keyboard.showMusicN
 export const getMusicType = (state: RootState) => state.keyboard.musicType;
 // export const getScaleDefs = (state: RootState) => getMusicScales(state.keyboard.musicType);
 
+export const selectMidiRefDef = createSelector(
+  [getMusicType],
+  (musicType): LilNoteObj => {
+    return getMusicMidiMap(musicType);
+  }
+);
+
+export const selectNoteDefs = createSelector(
+  [getMusicType],
+  (musicType): NoteName[] => {
+    return getMusicNotes(musicType);
+  }
+);
+
 export const selectScaleDefs = createSelector(
   [getMusicType],
   (musicType): ScaleDefs => {
@@ -127,15 +141,15 @@ export const getScaleStatus = (noteLabel: string, scaleNotes: string[]): ScaleSt
 }
 
 export const selectKeyboardKeys = createSelector(
-  [selectNotesFromScale],
-  (keyScaleObj): CompleteNote[] => {
+  [selectNotesFromScale, selectMidiRefDef],
+  (keyScaleObj, midiRefDef): CompleteNote[] => {
     const octaveNotes = getAllOctaveNotesBetween(PIANO_RANGE[0], PIANO_RANGE[1]);
     return octaveNotes.map((octaveNote, idx) => {
       const noteLabel = octaveNote.split('-')[0] as NoteName;
       return {
         note: noteLabel,
         octaveNote: octaveNote,
-        midiNote: convertOctaveNoteToMidiId(octaveNote),
+        midiNote: convertOctaveNoteToMidiId(octaveNote, midiRefDef),
         scaleStatus: keyScaleObj ? getScaleStatus(noteLabel, keyScaleObj.notes) : 'inactive',
         idx
       };
