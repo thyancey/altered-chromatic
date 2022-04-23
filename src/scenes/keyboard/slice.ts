@@ -1,8 +1,8 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { CompleteNote, InstrumentDef, LilNoteObj, NoteName, ScaleDef, ScaleDefs, ScaleObj, ScaleStatus } from '../../types';
-import { getOctaveScaleObject, getAllOctaveNotesBetween, convertOctaveNoteToMidiId, getKeyScaleObject } from '../../utils/music';
-import { DEFAULT_CONFIG_TYPE, DEFAULT_INSTRUMENT_TYPE, getMusicMidiMap, getMusicNotes, getMusicScales, INSTRUMENT_DEFS } from '../../utils/music-data';
+import { getOctaveScaleObject, getAllOctaveNotesBetween, convertOctaveNoteToMidiId, getKeyScaleObject, translateNoteBetweenConfigs } from '../../utils/music';
+import { DEFAULT_CONFIG_TYPE, DEFAULT_INSTRUMENT_TYPE, getMusicMidiMap, getMusicNotes, getMusicScales, INSTRUMENT_DEFS, MUSIC_CONFIGS } from '../../utils/music-data';
 
 export interface KeyboardState {
   activeKey: string | null;
@@ -63,9 +63,15 @@ export const keyboardSlice = createSlice({
         state.activeConfig = action.payload;
         if(action.payload === 'alteredChromatic'){
           state.instrumentType = 'alteredPiano';
+          if(state.activeKey){
+            state.activeKey = translateNoteBetweenConfigs(state.activeKey, MUSIC_CONFIGS.standardChromatic.notes, MUSIC_CONFIGS.alteredChromatic.notes);
+          }
         }
         if(action.payload === 'standardChromatic'){
           state.instrumentType = 'standardPiano';
+          if(state.activeKey){
+            state.activeKey = translateNoteBetweenConfigs(state.activeKey, MUSIC_CONFIGS.alteredChromatic.notes, MUSIC_CONFIGS.standardChromatic.notes);
+          }
         }
       }
     },

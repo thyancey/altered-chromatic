@@ -148,3 +148,18 @@ export const convertOctaveNoteToMidiId = (octaveNote: OctaveNote, midiRef: LilNo
   const delta = getOctaveNoteDelta(midiRef.octaveNote, octaveNote, allNotes);
   return midiRef.midiNote + delta;
 }
+
+/**
+ * Might not be helpful for other stuff, but translated from standardChromatic to alteredChromatic, and vice versa
+ * 
+ * ex "C" -> "A" or "B" -> "F#"
+ */
+export const translateNoteBetweenConfigs = (noteName: NoteName, allOldNotes: NoteName[], allNewNotes: NoteName[]) => {
+  const foundIdx = allOldNotes.indexOf(noteName);
+  if(foundIdx > -1 && allNewNotes[foundIdx]){
+    return allNewNotes[foundIdx];
+  }
+
+  console.error(`Error translating between noteDefs for "${noteName}"`);
+  return noteName;
+}
