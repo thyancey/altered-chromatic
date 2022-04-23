@@ -3,10 +3,9 @@ import { getColor } from '../../themes';
 
 import {
   getActiveKey,
-  getActiveNote,
   getActiveScale,
   selectAllMajorScales,
-  selectAllMajorScales2,
+  setActiveKey,
   setActiveScale
 } from './slice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -19,6 +18,14 @@ export const ScContainer = styled.div`
   ul{
     list-style:none;
   }
+
+  
+  user-select: none; /* supported by Chrome and Opera */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  -webkit-tap-highlight-color:  rgba(255, 255, 255, 0); 
 `
 
 export const ScScaleNote = styled.li`
@@ -26,6 +33,11 @@ export const ScScaleNote = styled.li`
   list-style:none;
   margin:.5rem;
   margin-top: -.25rem;
+  
+  cursor:pointer;
+  &:hover{
+    color:${getColor('white')};
+  }
 `
 
 type ScScaleGroupProps = {
@@ -54,7 +66,7 @@ export const ScScaleLabel = styled.p`
 `
 
 export function ScaleGroups() {
-  const allScales = useAppSelector(selectAllMajorScales2);
+  const allScales = useAppSelector(selectAllMajorScales);
   const activeScale = useAppSelector(getActiveScale);
   const activeKey = useAppSelector(getActiveKey);
   const dispatch = useAppDispatch();
@@ -62,6 +74,10 @@ export function ScaleGroups() {
 
   const onClick = (e:any, clickedId:string) => {
     dispatch(setActiveScale(clickedId));
+  }
+  
+  const onClickNote = (e:any, clickedNote:string) => {
+    dispatch(setActiveKey(clickedNote));
   }
 
   return (
@@ -75,7 +91,11 @@ export function ScaleGroups() {
           </ScScaleLabel>
           <ul>
             {scaleObj.notes.map((note, sIdx) => (
-              <ScScaleNote key={`${idx}_${sIdx}_${note}`} id={note}>
+              <ScScaleNote 
+                key={`${idx}_${sIdx}_${note}`} 
+                id={note}
+                onClick={e => onClickNote(e, note)}
+              >
                 <span>{note.split('-')[0]}</span>
               </ScScaleNote>
             ))}

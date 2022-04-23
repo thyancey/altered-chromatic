@@ -4,20 +4,18 @@ import { getColor } from '../../themes';
 import {
   getShowKeyboardKeys,
   getShowMusicNotes,
+  selectInstrumentDef,
   selectKeyboardKeysWithPressed,
-  setActiveNote,
   setPressedKeys,
   setShowKeyboardKeys,
 } from './slice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { MusicBox } from '../../components/musicbox';
-import { 
-  CompleteNote
-} from '../../utils/music';
 import { KeyManager } from './key-manager';
 import { PianoHalfKey, PianoWholeKey } from './piano-key';
 import MIDI_DATA from '../../components/mididata';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { CompleteNote, LilNoteObj, MidiNote } from '../../types';
 
 export const ScContainer = styled.div`
   display:block;
@@ -86,14 +84,10 @@ export function Piano() {
   const dispatch = useAppDispatch();
   const showMusicNotes = useAppSelector(getShowMusicNotes);
   const showKeyboardKeys = useAppSelector(getShowKeyboardKeys);
+  const instrumentDef = useAppSelector(selectInstrumentDef);
   const [ fingerIsDown, setFingerIsDown ] = useState(false);
   const [ useTouchEvents, setUseTouchEvents ] = useState(false);
   const [ touchedKeys, setTouchedKeys ] = useState<string[]>([]);
-
-  type LilNoteObj = {
-    octaveNote: string,
-    midiNote: number
-  }
 
   const setAllTouchedKeys = (touchedKeys: string[]) => {
     setTouchedKeys(touchedKeys);
@@ -108,11 +102,11 @@ export function Piano() {
     }
   }
 
-  const playNote = (midiNote: number) => {
+  const playNote = (midiNote: MidiNote) => {
     // @ts-ignore;
     global.globalMidiHandler && global.globalMidiHandler([midiNote]);
   }
-  const playNotes = (midiNotes: number[]) => {
+  const playNotes = (midiNotes: MidiNote[]) => {
     // @ts-ignore;
     global.globalMidiHandler && global.globalMidiHandler(midiNotes);
   }
@@ -208,7 +202,7 @@ export function Piano() {
       setUseTouchEvents(true);
       dispatch(setShowKeyboardKeys(false));
     }
-  }, []);
+  }, [ dispatch ]);
 
   // console.log(fingerIsDown ? `\n---finger is DOWN }]!---` : `---finger is ^^up^^}]!---\n`)
   // console.log('touchedNotes', touchedKeys);
@@ -226,6 +220,7 @@ export function Piano() {
         onKeysChanged={(keys: string[]) => {
           dispatch(setPressedKeys(keys));
         }}
+        keysToWatch={instrumentDef.keyboardKeys}
       />
       <MusicBox midiInstrument={MIDI_DATA.defaultInstrument} volume={0.2} />
       <ScPiano>

@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import { KEYBOARD_MAP } from './slice';
 
 type Props = {
   onKeyPressed: Function,
-  onKeysChanged: Function
+  onKeysChanged: Function,
+  keysToWatch: string[]
 }
 
-export function KeyManager({ onKeyPressed, onKeysChanged }: Props) {
-  const keys = usePressObserver(KEYBOARD_MAP);
+export function KeyManager({ onKeyPressed, onKeysChanged, keysToWatch }: Props) {
+  const keys = usePressObserver(keysToWatch);
   const prevKeys = usePreviousKeys(keys);
 
   useEffect(() => {

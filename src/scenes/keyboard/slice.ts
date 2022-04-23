@@ -1,6 +1,8 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { CompleteNote, NoteName, ScaleObj, SCALES, ScaleStatus, getOctaveScaleObject, getAllOctaveNotesBetween, convertOctaveNoteToMidiId, getKeyScaleObject } from '../../utils/music';
+import { CompleteNote, InstrumentDef, LilNoteObj, NoteName, ScaleDef, ScaleDefs, ScaleObj, ScaleStatus } from '../../types';
+import { getOctaveScaleObject, getAllOctaveNotesBetween, convertOctaveNoteToMidiId, getKeyScaleObject, translateNoteBetweenConfigs } from '../../utils/music';
+import { DEFAULT_CONFIG_TYPE, DEFAULT_INSTRUMENT_TYPE, getMusicMidiMap, getMusicNotes, getMusicScales, INSTRUMENT_DEFS, MUSIC_CONFIGS } from '../../utils/music-data';
 
 export interface KeyboardState {
   activeKey: string | null;
@@ -9,6 +11,8 @@ export interface KeyboardState {
   pressedKeys: string[];
   showKeyboardKeys: boolean;
   showMusicNotes: boolean;
+  activeConfig: string;
+  instrumentType: string;
 }
 
 const initialState: KeyboardState = {
@@ -17,11 +21,10 @@ const initialState: KeyboardState = {
   activeScale: null,
   pressedKeys: [],
   showKeyboardKeys: true,
-  showMusicNotes: true
+  showMusicNotes: true,
+  activeConfig: DEFAULT_CONFIG_TYPE,
+  instrumentType: DEFAULT_INSTRUMENT_TYPE,
 };
-
-export const PIANO_RANGE = ['A-4', 'D-5'];
-export const KEYBOARD_MAP = ['a','w','s','e','d','r','f','t','g','y','h','u','j','i','k','o','l','p',';','[','\''];
 
 export const keyboardSlice = createSlice({
   name: 'keyboard',
@@ -54,11 +57,28 @@ export const keyboardSlice = createSlice({
     },
     setShowMusicNotes: (state, action: PayloadAction<boolean>) => {
       state.showMusicNotes = action.payload;
-    }
+    },
+    setActiveConfig: (state, action: PayloadAction<string>) => {
+      if(state.activeConfig !== action.payload){
+        state.activeConfig = action.payload;
+        if(action.payload === 'alteredChromatic'){
+          state.instrumentType = 'alteredPiano';
+          if(state.activeKey){
+            state.activeKey = translateNoteBetweenConfigs(state.activeKey, MUSIC_CONFIGS.standardChromatic.notes, MUSIC_CONFIGS.alteredChromatic.notes);
+          }
+        }
+        if(action.payload === 'standardChromatic'){
+          state.instrumentType = 'standardPiano';
+          if(state.activeKey){
+            state.activeKey = translateNoteBetweenConfigs(state.activeKey, MUSIC_CONFIGS.alteredChromatic.notes, MUSIC_CONFIGS.standardChromatic.notes);
+          }
+        }
+      }
+    },
   }
 });
 
-export const { setShowMusicNotes, setShowKeyboardKeys, setActiveKey, setActiveNote, setActiveScale, setPressedKeys } = keyboardSlice.actions;
+export const { setShowMusicNotes, setShowKeyboardKeys, setActiveKey, setActiveNote, setActiveScale, setPressedKeys, setActiveConfig } = keyboardSlice.actions;
 
 export const getActiveKey = (state: RootState) => state.keyboard.activeKey;
 export const getActiveNote = (state: RootState) => state.keyboard.activeNote;
@@ -67,44 +87,69 @@ export const getPressedKeys = (state: RootState) => state.keyboard.pressedKeys;
 export const getShowKeyboardKeys = (state: RootState) => state.keyboard.showKeyboardKeys;
 export const getShowMusicNotes = (state: RootState) => state.keyboard.showMusicNotes;
 
+export const getActiveConfig = (state: RootState) => state.keyboard.activeConfig;
+export const getInstrumentType = (state: RootState) => state.keyboard.instrumentType;
 
-export const selectNotesFromScale = createSelector(
-  [getActiveKey, getActiveScale],
-  (activeKey, activeScale): ScaleObj | null => {
-    if(!activeKey || !activeScale) return null;
-
-    return getKeyScaleObject(activeKey, activeScale);
+export const selectInstrumentDef = createSelector(
+  [getInstrumentType],
+  (instrumentType): InstrumentDef => {
+    return INSTRUMENT_DEFS[instrumentType];
   }
 );
 
+export const selectMidiRefDef = createSelector(
+  [getActiveConfig],
+  (activeConfig): LilNoteObj => {
+    return getMusicMidiMap(activeConfig);
+  }
+);
+
+export const selectAllNotes = createSelector(
+  [getActiveConfig],
+  (activeConfig): NoteName[] => {
+    return getMusicNotes(activeConfig);
+  }
+);
+
+export const selectScaleDefs = createSelector(
+  [getActiveConfig],
+  (activeConfig): ScaleDefs => {
+    return getMusicScales(activeConfig);
+  }
+);
+
+export const selectActiveScaleDef = createSelector(
+  [selectScaleDefs, getActiveScale],
+  (scaleDefs, activeScale): ScaleDef | null => {
+    return activeScale ? scaleDefs[activeScale] : null;
+  }
+);
+
+export const selectNotesFromScale = createSelector(
+  [getActiveKey, selectActiveScaleDef, selectAllNotes],
+  (activeKey, activeScaleDef, allNotes): ScaleObj | null => {
+    if(!activeKey || !activeScaleDef || !allNotes) return null;
+
+    return getKeyScaleObject(activeKey, activeScaleDef, allNotes);
+  }
+);
 
 export const selectActiveScaleObject = createSelector(
-  [getActiveScale, getActiveNote],
-  (activeScale, activeNote): ScaleObj | null => {
-    if(!activeNote || !activeScale) return null;
+  [getActiveNote, selectActiveScaleDef, selectAllNotes],
+  (activeNote, activeScaleDef, allNotes): ScaleObj | null => {
+    if(!activeNote || !activeScaleDef) return null;
 
-    return getOctaveScaleObject(activeNote, activeScale);
+    return getOctaveScaleObject(activeNote, activeScaleDef, allNotes);
   }
 );
 
 export const selectAllMajorScales = createSelector(
-  [getActiveNote],
-  (activeNote): ScaleObj[] => {
-    if(!activeNote) return [];
+  [getActiveKey, selectScaleDefs, selectAllNotes],
+  (activeKey, scaleDefs, allNotes): ScaleObj[] => {
+    if(!activeKey || !scaleDefs || !allNotes) return [];
 
-    return Object.keys(SCALES).map(scaleKey => {
-      return getOctaveScaleObject(activeNote, scaleKey)
-    });
-  }
-);
-
-export const selectAllMajorScales2 = createSelector(
-  [getActiveKey],
-  (activeKey): ScaleObj[] => {
-    if(!activeKey) return [];
-
-    return Object.keys(SCALES).map(scaleKey => {
-      return getKeyScaleObject(activeKey, scaleKey)
+    return Object.keys(scaleDefs).map(scaleKey => {
+      return getKeyScaleObject(activeKey, scaleDefs[scaleKey], allNotes)
     });
   }
 );
@@ -119,15 +164,15 @@ export const getScaleStatus = (noteLabel: string, scaleNotes: string[]): ScaleSt
 }
 
 export const selectKeyboardKeys = createSelector(
-  [selectNotesFromScale],
-  (keyScaleObj): CompleteNote[] => {
-    const octaveNotes = getAllOctaveNotesBetween(PIANO_RANGE[0], PIANO_RANGE[1]);
+  [selectNotesFromScale, selectMidiRefDef, selectAllNotes, selectInstrumentDef],
+  (keyScaleObj, midiRefDef, allNotes, instrumentDef): CompleteNote[] => {
+    const octaveNotes = getAllOctaveNotesBetween(instrumentDef.range[0], instrumentDef.range[1], allNotes);
     return octaveNotes.map((octaveNote, idx) => {
       const noteLabel = octaveNote.split('-')[0] as NoteName;
       return {
         note: noteLabel,
         octaveNote: octaveNote,
-        midiNote: convertOctaveNoteToMidiId(octaveNote),
+        midiNote: convertOctaveNoteToMidiId(octaveNote, midiRefDef, allNotes),
         scaleStatus: keyScaleObj ? getScaleStatus(noteLabel, keyScaleObj.notes) : 'inactive',
         idx
       };
@@ -136,12 +181,12 @@ export const selectKeyboardKeys = createSelector(
 );
 
 export const selectKeyboardKeysWithPressed = createSelector(
-  [selectKeyboardKeys, getPressedKeys],
-  (keyboardKeys, pressedKeys): CompleteNote[] => {
+  [selectKeyboardKeys, getPressedKeys, selectInstrumentDef],
+  (keyboardKeys, pressedKeys, instrumentDef): CompleteNote[] => {
     return keyboardKeys.map(kk => ({
       ...kk,
-      keyMatch: KEYBOARD_MAP[kk.idx],
-      keyPressed: pressedKeys.includes(KEYBOARD_MAP[kk.idx])
+      keyMatch: instrumentDef.keyboardKeys[kk.idx],
+      keyPressed: pressedKeys.includes(instrumentDef.keyboardKeys[kk.idx])
     }));
   }
 )
