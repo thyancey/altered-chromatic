@@ -1,6 +1,4 @@
-import { LilNoteObj, NoteName, ScaleDef, ScaleDefs } from "../types";
-
-export const NOTES: NoteName[] = [ 'A', 'A#', 'B', 'B#', 'C', 'C#', 'D', 'D#', 'E', 'E#', 'F', 'F#' ];
+import { LilNoteObj, NoteName, ScaleDef, ScaleDefs } from '../types';
 
 export const STANDARD_SCALES: ScaleDefs = {
   'ionian': {
@@ -50,6 +48,15 @@ type MusicConfigs = {
   [key: string]: MusicConfig
 }
 
+const Config_StandardChromatic: MusicConfig = {
+  notes: [ 'A', 'A#', 'B', 'B#', 'C', 'C#', 'D', 'D#', 'E', 'E#', 'F', 'F#' ],
+  scales: STANDARD_SCALES,
+  midiMap: {
+    octaveNote: 'A-4',
+    midiNote: 60
+  }
+}
+
 const Config_AlteredChromatic: MusicConfig = {
   notes: [ 'A', 'A#', 'B', 'B#', 'C', 'C#', 'D', 'D#', 'E', 'E#', 'F', 'F#' ],
   scales: STANDARD_SCALES,
@@ -59,7 +66,9 @@ const Config_AlteredChromatic: MusicConfig = {
   }
 }
 
+
 const MusicConfigs: MusicConfigs = {
+  'standardChromatic': Config_StandardChromatic,
   'alteredChromatic': Config_AlteredChromatic
 }
 

@@ -141,15 +141,15 @@ export const getScaleStatus = (noteLabel: string, scaleNotes: string[]): ScaleSt
 }
 
 export const selectKeyboardKeys = createSelector(
-  [selectNotesFromScale, selectMidiRefDef],
-  (keyScaleObj, midiRefDef): CompleteNote[] => {
-    const octaveNotes = getAllOctaveNotesBetween(PIANO_RANGE[0], PIANO_RANGE[1]);
+  [selectNotesFromScale, selectMidiRefDef, selectNoteDefs],
+  (keyScaleObj, midiRefDef, noteDefs): CompleteNote[] => {
+    const octaveNotes = getAllOctaveNotesBetween(PIANO_RANGE[0], PIANO_RANGE[1], noteDefs);
     return octaveNotes.map((octaveNote, idx) => {
       const noteLabel = octaveNote.split('-')[0] as NoteName;
       return {
         note: noteLabel,
         octaveNote: octaveNote,
-        midiNote: convertOctaveNoteToMidiId(octaveNote, midiRefDef),
+        midiNote: convertOctaveNoteToMidiId(octaveNote, midiRefDef, noteDefs),
         scaleStatus: keyScaleObj ? getScaleStatus(noteLabel, keyScaleObj.notes) : 'inactive',
         idx
       };
