@@ -11,7 +11,7 @@ export interface KeyboardState {
   pressedKeys: string[];
   showKeyboardKeys: boolean;
   showMusicNotes: boolean;
-  musicType: string;
+  activeConfig: string;
   instrumentType: string;
 }
 
@@ -22,7 +22,7 @@ const initialState: KeyboardState = {
   pressedKeys: [],
   showKeyboardKeys: true,
   showMusicNotes: true,
-  musicType: DEFAULT_CONFIG_TYPE,
+  activeConfig: DEFAULT_CONFIG_TYPE,
   instrumentType: DEFAULT_INSTRUMENT_TYPE,
 };
 
@@ -57,11 +57,22 @@ export const keyboardSlice = createSlice({
     },
     setShowMusicNotes: (state, action: PayloadAction<boolean>) => {
       state.showMusicNotes = action.payload;
-    }
+    },
+    setActiveConfig: (state, action: PayloadAction<string>) => {
+      if(state.activeConfig !== action.payload){
+        state.activeConfig = action.payload;
+        if(action.payload === 'alteredChromatic'){
+          state.instrumentType = 'alteredPiano';
+        }
+        if(action.payload === 'standardChromatic'){
+          state.instrumentType = 'standardPiano';
+        }
+      }
+    },
   }
 });
 
-export const { setShowMusicNotes, setShowKeyboardKeys, setActiveKey, setActiveNote, setActiveScale, setPressedKeys } = keyboardSlice.actions;
+export const { setShowMusicNotes, setShowKeyboardKeys, setActiveKey, setActiveNote, setActiveScale, setPressedKeys, setActiveConfig } = keyboardSlice.actions;
 
 export const getActiveKey = (state: RootState) => state.keyboard.activeKey;
 export const getActiveNote = (state: RootState) => state.keyboard.activeNote;
@@ -70,9 +81,8 @@ export const getPressedKeys = (state: RootState) => state.keyboard.pressedKeys;
 export const getShowKeyboardKeys = (state: RootState) => state.keyboard.showKeyboardKeys;
 export const getShowMusicNotes = (state: RootState) => state.keyboard.showMusicNotes;
 
-export const getMusicType = (state: RootState) => state.keyboard.musicType;
+export const getActiveConfig = (state: RootState) => state.keyboard.activeConfig;
 export const getInstrumentType = (state: RootState) => state.keyboard.instrumentType;
-// export const getScaleDefs = (state: RootState) => getMusicScales(state.keyboard.musicType);
 
 export const selectInstrumentDef = createSelector(
   [getInstrumentType],
@@ -82,23 +92,23 @@ export const selectInstrumentDef = createSelector(
 );
 
 export const selectMidiRefDef = createSelector(
-  [getMusicType],
-  (musicType): LilNoteObj => {
-    return getMusicMidiMap(musicType);
+  [getActiveConfig],
+  (activeConfig): LilNoteObj => {
+    return getMusicMidiMap(activeConfig);
   }
 );
 
 export const selectAllNotes = createSelector(
-  [getMusicType],
-  (musicType): NoteName[] => {
-    return getMusicNotes(musicType);
+  [getActiveConfig],
+  (activeConfig): NoteName[] => {
+    return getMusicNotes(activeConfig);
   }
 );
 
 export const selectScaleDefs = createSelector(
-  [getMusicType],
-  (musicType): ScaleDefs => {
-    return getMusicScales(musicType);
+  [getActiveConfig],
+  (activeConfig): ScaleDefs => {
+    return getMusicScales(activeConfig);
   }
 );
 

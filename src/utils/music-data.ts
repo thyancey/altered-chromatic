@@ -71,23 +71,23 @@ export const DEFAULT_INSTRUMENT_TYPE = 'standardPiano';
 // export const DEFAULT_CONFIG_TYPE = 'alteredChromatic';
 // export const DEFAULT_INSTRUMENT_TYPE = 'alteredPiano';
 
-const MusicConfigs: TypeMusicConfigs = {
+export const MUSIC_CONFIGS: TypeMusicConfigs = {
   'standardChromatic': Config_StandardChromatic,
   'alteredChromatic': Config_AlteredChromatic
 }
 
 const getMusicConfig = (subKey: string, configType: string = DEFAULT_CONFIG_TYPE) => {
   
-  if(!MusicConfigs[configType]){
+  if(!MUSIC_CONFIGS[configType]){
     console.error(`cannot get config for configType${configType}`);
   }
   // @ts-ignore
-  if(!MusicConfigs[configType][subKey]){
+  if(!MUSIC_CONFIGS[configType][subKey]){
     console.error(`cannot get config for subKey ${subKey} under ${configType}`);
   }
 
   // @ts-ignore
-  return MusicConfigs[configType][subKey];
+  return MUSIC_CONFIGS[configType][subKey];
 }
 
 export const getMusicNotes = (configType?: string): NoteName[] => {

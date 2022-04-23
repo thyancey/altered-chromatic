@@ -2,7 +2,8 @@ import styled from 'styled-components';
 import Select from '../../components/select';
 import Toggle from '../../components/toggle';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { setActiveKey, getActiveKey, setActiveScale, getActiveScale, setShowKeyboardKeys, getShowKeyboardKeys, setShowMusicNotes, getShowMusicNotes, selectScaleDefs, selectAllNotes } from '../keyboard/slice';
+import { setActiveKey, getActiveKey, setActiveScale, getActiveScale, setShowKeyboardKeys, getShowKeyboardKeys, setShowMusicNotes, getShowMusicNotes, selectScaleDefs, selectAllNotes, setActiveConfig, getActiveConfig } from '../keyboard/slice';
+import { MUSIC_CONFIGS } from '../../utils/music-data';
 
 const ScWrapper = styled.div`
   position:absolute;
@@ -27,7 +28,23 @@ const ScGroup = styled.div`
     margin-left:1rem;
     margin-bottom: -.5rem;
   }
-`
+`;
+
+const ScToggleGroup = styled.div`
+  margin:auto;
+  position:relative;
+  width:calc(50% - .5rem);
+  display:inline-block;
+
+  &:last-child{
+    padding-left:1rem;
+  }
+
+  >p{
+    margin-left:1rem;
+    margin-bottom: -.5rem;
+  }
+`;
 
 function Selections() {
   const dispatch = useAppDispatch();
@@ -37,6 +54,7 @@ function Selections() {
   const showMusicNotes = useAppSelector(getShowMusicNotes);
   const scaleDefs = useAppSelector(selectScaleDefs);
   const allNotes = useAppSelector(selectAllNotes);
+  const activeConfig = useAppSelector(getActiveConfig);
 
   return (
     <ScWrapper>
@@ -50,14 +68,26 @@ function Selections() {
         </Select>
       </ScGroup>
       <ScGroup>
-        <p>{'Show notes'}</p>
-        <Toggle 
-          labels={{'off': 'OFF', 'on': 'ON'}}
-          size='sm'
-          grow='stretch'
-          value={showMusicNotes}
-          onSetToggle={(value: boolean) => dispatch(setShowMusicNotes(value))} 
-        />
+        <ScToggleGroup>
+          <p>{'Show notes'}</p>
+          <Toggle 
+            labels={{'off': 'OFF', 'on': 'ON'}}
+            size='sm'
+            grow='stretch'
+            value={showMusicNotes}
+            onSetToggle={(value: boolean) => dispatch(setShowMusicNotes(value))} 
+          />
+        </ScToggleGroup>
+        <ScToggleGroup>
+          <p>{'Show keyboard'}</p>
+          <Toggle 
+            labels={{'off': 'OFF', 'on': 'ON'}}
+            size='sm'
+            grow='stretch'
+            value={showKeyboardKeys}
+            onSetToggle={(value: boolean) => dispatch(setShowKeyboardKeys(value))} 
+          />
+        </ScToggleGroup>
       </ScGroup>
       <ScGroup>
         <p>{'Key'}</p>
@@ -69,14 +99,12 @@ function Selections() {
         </Select>
       </ScGroup>
       <ScGroup>
-        <p>{'Show keyboard keys'}</p>
-        <Toggle 
-          labels={{'off': 'OFF', 'on': 'ON'}}
-          size='sm'
-          grow='stretch'
-          value={showKeyboardKeys}
-          onSetToggle={(value: boolean) => dispatch(setShowKeyboardKeys(value))} 
-        />
+        <p>{'Chromatic mode'}</p>
+        <Select size='sm' grow='stretch' value={activeConfig} onChangeValue={(value: any) => dispatch(setActiveConfig(value))} >
+          { Object.keys(MUSIC_CONFIGS).map((configId: string, idx: number) => (
+            <option key={idx} value={configId}>{configId}</option>
+          )) }
+        </Select>
       </ScGroup>
     </ScWrapper>
   );
