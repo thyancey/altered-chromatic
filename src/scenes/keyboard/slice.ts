@@ -1,7 +1,8 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { CompleteNote, NoteName, ScaleObj, ScaleStatus } from '../../types';
-import { SCALES, getOctaveScaleObject, getAllOctaveNotesBetween, convertOctaveNoteToMidiId, getKeyScaleObject } from '../../utils/music';
+import { getOctaveScaleObject, getAllOctaveNotesBetween, convertOctaveNoteToMidiId, getKeyScaleObject } from '../../utils/music';
+import { SCALES } from '../../utils/music-data';
 
 export interface KeyboardState {
   activeKey: string | null;

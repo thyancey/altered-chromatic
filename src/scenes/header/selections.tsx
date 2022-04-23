@@ -2,9 +2,9 @@ import styled from 'styled-components';
 import Select from '../../components/select';
 import Toggle from '../../components/toggle';
 import { useState } from 'react';
-import { NOTES, SCALES } from '../../utils/music';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { setActiveKey, getActiveKey, setActiveScale, getActiveScale, setShowKeyboardKeys, getShowKeyboardKeys, setShowMusicNotes, getShowMusicNotes } from '../keyboard/slice';
+import { NOTES, SCALES } from '../../utils/music-data';
 
 const ScWrapper = styled.div`
   position:absolute;

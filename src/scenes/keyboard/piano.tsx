@@ -5,7 +5,6 @@ import {
   getShowKeyboardKeys,
   getShowMusicNotes,
   selectKeyboardKeysWithPressed,
-  setActiveNote,
   setPressedKeys,
   setShowKeyboardKeys,
 } from './slice';
@@ -15,7 +14,7 @@ import { KeyManager } from './key-manager';
 import { PianoHalfKey, PianoWholeKey } from './piano-key';
 import MIDI_DATA from '../../components/mididata';
 import { useEffect, useState } from 'react';
-import { CompleteNote } from '../../types';
+import { CompleteNote, LilNoteObj, MidiNote } from '../../types';
 
 export const ScContainer = styled.div`
   display:block;
@@ -88,11 +87,6 @@ export function Piano() {
   const [ useTouchEvents, setUseTouchEvents ] = useState(false);
   const [ touchedKeys, setTouchedKeys ] = useState<string[]>([]);
 
-  type LilNoteObj = {
-    octaveNote: string,
-    midiNote: number
-  }
-
   const setAllTouchedKeys = (touchedKeys: string[]) => {
     setTouchedKeys(touchedKeys);
     otherTouchedKeys = touchedKeys;
@@ -106,11 +100,11 @@ export function Piano() {
     }
   }
 
-  const playNote = (midiNote: number) => {
+  const playNote = (midiNote: MidiNote) => {
     // @ts-ignore;
     global.globalMidiHandler && global.globalMidiHandler([midiNote]);
   }
-  const playNotes = (midiNotes: number[]) => {
+  const playNotes = (midiNotes: MidiNote[]) => {
     // @ts-ignore;
     global.globalMidiHandler && global.globalMidiHandler(midiNotes);
   }
@@ -206,7 +200,7 @@ export function Piano() {
       setUseTouchEvents(true);
       dispatch(setShowKeyboardKeys(false));
     }
-  }, []);
+  }, [ dispatch ]);
 
   // console.log(fingerIsDown ? `\n---finger is DOWN }]!---` : `---finger is ^^up^^}]!---\n`)
   // console.log('touchedNotes', touchedKeys);

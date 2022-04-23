@@ -1,7 +1,7 @@
 import {
-  transformNotesToOctaveNotes,
-  getNotesInScale, rotateArray, getOctaveNotesInScale, transformScaleNotesToOctaveNotes, getAllOctaveNotesBetween, getOctaveNoteDelta, convertOctaveNoteToMidiId, MIDI_NOTE_REF
+  transformNotesToOctaveNotes, getNotesInScale, rotateArray, getOctaveNotesInScale, transformScaleNotesToOctaveNotes, getAllOctaveNotesBetween, getOctaveNoteDelta, convertOctaveNoteToMidiId
 } from './music';
+import { MIDI_NOTE_REF } from './music-data';
 
 describe('utils > music', () => {
   describe('#rotateArray', () => {
@@ -159,7 +159,7 @@ describe('utils > music', () => {
   describe('#convertOctaveNoteToMidiId', () => {
     it('converts base note to expected midi value (using const)', () => {
       expect(convertOctaveNoteToMidiId(MIDI_NOTE_REF.octaveNote)).toEqual(
-        MIDI_NOTE_REF.code
+        MIDI_NOTE_REF.midiNote
       );
     });
     it('converts base note to expected midi value', () => {
