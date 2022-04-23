@@ -68,26 +68,12 @@ function Selections() {
         </Select>
       </ScGroup>
       <ScGroup>
-        <ScToggleGroup>
-          <p>{'Show notes'}</p>
-          <Toggle 
-            labels={{'off': 'OFF', 'on': 'ON'}}
-            size='sm'
-            grow='stretch'
-            value={showMusicNotes}
-            onSetToggle={(value: boolean) => dispatch(setShowMusicNotes(value))} 
-          />
-        </ScToggleGroup>
-        <ScToggleGroup>
-          <p>{'Show keyboard'}</p>
-          <Toggle 
-            labels={{'off': 'OFF', 'on': 'ON'}}
-            size='sm'
-            grow='stretch'
-            value={showKeyboardKeys}
-            onSetToggle={(value: boolean) => dispatch(setShowKeyboardKeys(value))} 
-          />
-        </ScToggleGroup>
+        <p>{'Chromatic mode'}</p>
+        <Select size='sm' grow='stretch' value={activeConfig} onChangeValue={(value: any) => dispatch(setActiveConfig(value))} >
+          { Object.keys(MUSIC_CONFIGS).map((configId: string, idx: number) => (
+            <option key={idx} value={configId}>{configId}</option>
+          )) }
+        </Select>
       </ScGroup>
       <ScGroup>
         <p>{'Key'}</p>
@@ -99,12 +85,26 @@ function Selections() {
         </Select>
       </ScGroup>
       <ScGroup>
-        <p>{'Chromatic mode'}</p>
-        <Select size='sm' grow='stretch' value={activeConfig} onChangeValue={(value: any) => dispatch(setActiveConfig(value))} >
-          { Object.keys(MUSIC_CONFIGS).map((configId: string, idx: number) => (
-            <option key={idx} value={configId}>{configId}</option>
-          )) }
-        </Select>
+        <ScToggleGroup>
+          <p>{'Notes'}</p>
+          <Toggle 
+            labels={{'off': 'OFF', 'on': 'ON'}}
+            size='sm'
+            grow='stretch'
+            value={showMusicNotes}
+            onSetToggle={(value: boolean) => dispatch(setShowMusicNotes(value))} 
+          />
+        </ScToggleGroup>
+        <ScToggleGroup>
+          <p>{'Keyboard'}</p>
+          <Toggle 
+            labels={{'off': 'OFF', 'on': 'ON'}}
+            size='sm'
+            grow='stretch'
+            value={showKeyboardKeys}
+            onSetToggle={(value: boolean) => dispatch(setShowKeyboardKeys(value))} 
+          />
+        </ScToggleGroup>
       </ScGroup>
     </ScWrapper>
   );
