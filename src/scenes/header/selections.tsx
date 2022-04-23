@@ -3,8 +3,8 @@ import Select from '../../components/select';
 import Toggle from '../../components/toggle';
 import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { setActiveKey, getActiveKey, setActiveScale, getActiveScale, setShowKeyboardKeys, getShowKeyboardKeys, setShowMusicNotes, getShowMusicNotes } from '../keyboard/slice';
-import { NOTES, SCALES } from '../../utils/music-data';
+import { setActiveKey, getActiveKey, setActiveScale, getActiveScale, setShowKeyboardKeys, getShowKeyboardKeys, setShowMusicNotes, getShowMusicNotes, selectScaleDefs } from '../keyboard/slice';
+import { NOTES } from '../../utils/music-data';
 
 const ScWrapper = styled.div`
   position:absolute;
@@ -39,6 +39,7 @@ function Selections({}: Props) {
   const activeKey = useAppSelector(getActiveKey);
   const showKeyboardKeys = useAppSelector(getShowKeyboardKeys);
   const showMusicNotes = useAppSelector(getShowMusicNotes);
+  const scaleDefs = useAppSelector(selectScaleDefs);
 
   return (
     <ScWrapper>
@@ -46,8 +47,8 @@ function Selections({}: Props) {
         <p>{'Scales'}</p>
         <Select size='sm' grow='stretch' value={activeScale || ''} onChangeValue={(value: any) => dispatch(setActiveScale(value))} >
           <option key={-1} value=''>{''}</option>
-          { Object.keys(SCALES).map((sc, idx) => (
-            <option key={idx} value={sc}>{SCALES[sc].label}</option>
+          { Object.keys(scaleDefs).map((sc, idx) => (
+            <option key={idx} value={sc}>{scaleDefs[sc].label}</option>
           )) }
         </Select>
       </ScGroup>

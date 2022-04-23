@@ -1,7 +1,7 @@
 import {
   transformNotesToOctaveNotes, getNotesInScale, rotateArray, getOctaveNotesInScale, transformScaleNotesToOctaveNotes, getAllOctaveNotesBetween, getOctaveNoteDelta, convertOctaveNoteToMidiId
 } from './music';
-import { MIDI_NOTE_REF } from './music-data';
+import { MIDI_NOTE_REF, STANDARD_SCALES } from './music-data';
 
 describe('utils > music', () => {
   describe('#rotateArray', () => {
@@ -35,22 +35,22 @@ describe('utils > music', () => {
 
   describe('#getNotesInScale', () => {
     it('should return notes', () => {
-      expect(getNotesInScale('A', 'ionian')).toEqual(
+      expect(getNotesInScale('A', STANDARD_SCALES['ionian'])).toEqual(
         ['A','B','C','C#','D#','E#','F#']
       );
     });
     it('should return notes from another rootNote', () => {
-      expect(getNotesInScale('C#', 'ionian')).toEqual(
+      expect(getNotesInScale('C#', STANDARD_SCALES['ionian'])).toEqual(
         ['C#','D#','E#','F','A','B','C']
       );
     });
     it('should return notes from aeolian mode', () => {
-      expect(getNotesInScale('A', 'aeolian')).toEqual(
+      expect(getNotesInScale('A', STANDARD_SCALES['aeolian'])).toEqual(
         ['A','B','B#','C#','D#','E','F']
       );
     });
     it('should wrap root note, if requested', () => {
-      expect(getNotesInScale('A', 'aeolian', true)).toEqual(
+      expect(getNotesInScale('A', STANDARD_SCALES['aeolian'], true)).toEqual(
         ['A','B','B#','C#','D#','E','F','A']
       );
     });
@@ -99,12 +99,12 @@ describe('utils > music', () => {
 
   describe('#getOctaveNotesInScale', () => {
     it('should return octaveNotes in normal range', () => {
-      expect(getOctaveNotesInScale('F-2', 'ionian')).toEqual(
+      expect(getOctaveNotesInScale('F-2', STANDARD_SCALES['ionian'])).toEqual(
         ['F-2','A-3','B-3','B#-3','C#-3','D#-3','E#-3']
       );
     });
     it('should return octaveNotes in normal range, and wrap root note, if requested', () => {
-      expect(getOctaveNotesInScale('F-2', 'ionian', true)).toEqual(
+      expect(getOctaveNotesInScale('F-2', STANDARD_SCALES['ionian'], true)).toEqual(
         ['F-2','A-3','B-3','B#-3','C#-3','D#-3','E#-3','F-3']
       );
     });

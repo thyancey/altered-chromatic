@@ -62,6 +62,7 @@ export type ScaleDefs = {
 }
 
 export type ScaleDef = {
+  id: string,
   label: string,
   intervals: number[]
 }

@@ -1,8 +1,8 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { CompleteNote, NoteName, ScaleObj, ScaleStatus } from '../../types';
+import { CompleteNote, NoteName, ScaleDef, ScaleDefs, ScaleObj, ScaleStatus } from '../../types';
 import { getOctaveScaleObject, getAllOctaveNotesBetween, convertOctaveNoteToMidiId, getKeyScaleObject } from '../../utils/music';
-import { SCALES } from '../../utils/music-data';
+import { getMusicScales } from '../../utils/music-data';
 
 export interface KeyboardState {
   activeKey: string | null;
@@ -11,6 +11,7 @@ export interface KeyboardState {
   pressedKeys: string[];
   showKeyboardKeys: boolean;
   showMusicNotes: boolean;
+  musicType: string;
 }
 
 const initialState: KeyboardState = {
@@ -19,7 +20,8 @@ const initialState: KeyboardState = {
   activeScale: null,
   pressedKeys: [],
   showKeyboardKeys: true,
-  showMusicNotes: true
+  showMusicNotes: true,
+  musicType: 'alteredChromatic'
 };
 
 export const PIANO_RANGE = ['A-4', 'D-5'];
@@ -69,44 +71,48 @@ export const getPressedKeys = (state: RootState) => state.keyboard.pressedKeys;
 export const getShowKeyboardKeys = (state: RootState) => state.keyboard.showKeyboardKeys;
 export const getShowMusicNotes = (state: RootState) => state.keyboard.showMusicNotes;
 
+export const getMusicType = (state: RootState) => state.keyboard.musicType;
+// export const getScaleDefs = (state: RootState) => getMusicScales(state.keyboard.musicType);
 
-export const selectNotesFromScale = createSelector(
-  [getActiveKey, getActiveScale],
-  (activeKey, activeScale): ScaleObj | null => {
-    if(!activeKey || !activeScale) return null;
-
-    return getKeyScaleObject(activeKey, activeScale);
+export const selectScaleDefs = createSelector(
+  [getMusicType],
+  (musicType): ScaleDefs => {
+    return getMusicScales(musicType);
   }
 );
 
+export const selectActiveScaleDef = createSelector(
+  [selectScaleDefs, getActiveScale],
+  (scaleDefs, activeScale): ScaleDef | null => {
+    return activeScale ? scaleDefs[activeScale] : null;
+  }
+);
+
+export const selectNotesFromScale = createSelector(
+  [getActiveKey, selectActiveScaleDef],
+  (activeKey, activeScaleDef): ScaleObj | null => {
+    if(!activeKey || !activeScaleDef) return null;
+
+    return getKeyScaleObject(activeKey, activeScaleDef);
+  }
+);
 
 export const selectActiveScaleObject = createSelector(
-  [getActiveScale, getActiveNote],
-  (activeScale, activeNote): ScaleObj | null => {
-    if(!activeNote || !activeScale) return null;
+  [getActiveNote, selectActiveScaleDef],
+  (activeNote, activeScaleDef): ScaleObj | null => {
+    if(!activeNote || !activeScaleDef) return null;
 
-    return getOctaveScaleObject(activeNote, activeScale);
+    return getOctaveScaleObject(activeNote, activeScaleDef);
   }
 );
 
 export const selectAllMajorScales = createSelector(
-  [getActiveNote],
-  (activeNote): ScaleObj[] => {
-    if(!activeNote) return [];
-
-    return Object.keys(SCALES).map(scaleKey => {
-      return getOctaveScaleObject(activeNote, scaleKey)
-    });
-  }
-);
-
-export const selectAllMajorScales2 = createSelector(
-  [getActiveKey],
-  (activeKey): ScaleObj[] => {
+  [getActiveKey, selectScaleDefs],
+  (activeKey, scaleDefs): ScaleObj[] => {
     if(!activeKey) return [];
 
-    return Object.keys(SCALES).map(scaleKey => {
-      return getKeyScaleObject(activeKey, scaleKey)
+    return Object.keys(scaleDefs).map(scaleKey => {
+      return getKeyScaleObject(activeKey, scaleDefs[scaleKey])
     });
   }
 );

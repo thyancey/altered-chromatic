@@ -3,10 +3,8 @@ import { getColor } from '../../themes';
 
 import {
   getActiveKey,
-  getActiveNote,
   getActiveScale,
   selectAllMajorScales,
-  selectAllMajorScales2,
   setActiveScale
 } from './slice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -54,7 +52,7 @@ export const ScScaleLabel = styled.p`
 `
 
 export function ScaleGroups() {
-  const allScales = useAppSelector(selectAllMajorScales2);
+  const allScales = useAppSelector(selectAllMajorScales);
   const activeScale = useAppSelector(getActiveScale);
   const activeKey = useAppSelector(getActiveKey);
   const dispatch = useAppDispatch();

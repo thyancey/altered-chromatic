@@ -1,5 +1,5 @@
-import { NoteName, OctaveNote, ScaleId, ScaleObj } from "../types";
-import { MIDI_NOTE_REF, NOTES, SCALES } from "./music-data";
+import { NoteName, OctaveNote, ScaleDef, ScaleObj } from "../types";
+import { MIDI_NOTE_REF, NOTES } from "./music-data";
 
 export const rotateArray = (array: any[], toIdx: number) => {
   return array.map((_, idx) => array[(idx + toIdx) % array.length]);
@@ -7,20 +7,20 @@ export const rotateArray = (array: any[], toIdx: number) => {
 
 export const getArrayValueAtRelativeIndex = (array: any[], idx: number) => array[idx % array.length];
 
-export const getNotesInScale = (rootNote: string, scaleId: ScaleId, wrapRootNote = false) => {
+export const getNotesInScale = (rootNote: string, scaleDef: ScaleDef, wrapRootNote = false) => {
   const noteIdx = NOTES.findIndex(n => n === rootNote);
-  const scale = SCALES[scaleId];
+
   if(noteIdx === -1) {
     console.error(`invalid note provided "${rootNote}"`)
     return [];
   };
-  if(!scale){
-    console.error(`invalid scale provided "${scaleId}"`)
+  if(!scaleDef){
+    console.error(`invalid scaleDef provided`)
     return [];
   };
 
   let curIdx = noteIdx;
-  const scaleNotes = scale.intervals.map((interval, idx) => {
+  const scaleNotes = scaleDef.intervals.map((interval, idx) => {
     const note = getArrayValueAtRelativeIndex(NOTES, curIdx);
     curIdx += interval;
     return note
@@ -81,30 +81,26 @@ export const transformScaleNotesToOctaveNotes = (scaleNoteNames: NoteName[], sta
 
   example: ('A-1', 'ionian', true) => ['A-1','B-1','C-1','C#-1','D#-1','E#-1','F#-1','A-2']
 */
-export const getOctaveNotesInScale = (rootOctaveNote: OctaveNote, scaleId: ScaleId, wrapRootNote = false) => {
+export const getOctaveNotesInScale = (rootOctaveNote: OctaveNote, scaleDef: ScaleDef, wrapRootNote = false) => {
   const notePieces = rootOctaveNote.split('-');
-  const scaleNotes = getNotesInScale(notePieces[0], scaleId, wrapRootNote);
+  const scaleNotes = getNotesInScale(notePieces[0], scaleDef, wrapRootNote);
 
   return transformScaleNotesToOctaveNotes(scaleNotes, parseInt(notePieces[1]));
 }
 
-export const getOctaveScaleObject = (rootOctaveNote: OctaveNote, scaleId: ScaleId): ScaleObj => {
-  const scaleDef = SCALES[scaleId];
-
+export const getOctaveScaleObject = (rootOctaveNote: OctaveNote, scaleDef: ScaleDef): ScaleObj => {
   return {
-    id: scaleId,
+    id: scaleDef.id,
     label: scaleDef.label,
-    notes: getOctaveNotesInScale(rootOctaveNote, scaleId, true)
+    notes: getOctaveNotesInScale(rootOctaveNote, scaleDef, true)
   }
 }
 
-export const getKeyScaleObject = (musicKey: string, scaleId: ScaleId): ScaleObj => {
-  const scaleDef = SCALES[scaleId];
-
+export const getKeyScaleObject = (musicKey: string, scaleDef: ScaleDef): ScaleObj => {
   return {
-    id: scaleId,
+    id: scaleDef.id,
     label: scaleDef.label,
-    notes: getNotesInScale(musicKey, scaleId, true)
+    notes: getNotesInScale(musicKey, scaleDef, true)
   }
 }
 
