@@ -1,31 +1,5 @@
-export type NoteName = 'A' | 'A#' | 'B' | 'B#' | 'C' | 'C#' | 'D' | 'D#' | 'E' | 'E#' | 'F' | 'F#';
-// export type ScaleKey = 'ionian' | 'dorian' | 'phyrgian' | 'lydian' | 'mixolydian' | 'aeolian' | 'locrian';
+import { NoteName, ScaleDef, ScaleDefs, ScaleObj } from "../types";
 
-export type ScaleStatus = 'root' | 'scale' | 'invalid'| 'inactive';
-export type CompleteNote = {
-  note: NoteName,
-  octaveNote: string,
-  scaleStatus: ScaleStatus,
-  idx: number,
-  midiNote: number,
-  keyPressed?: boolean,
-  keyMatch?: string
-}
-
-export type ScaleDefs = {
-  [key: string]: ScaleDef
-}
-
-export type ScaleDef = {
-  label: string,
-  intervals: number[]
-}
-
-export type ScaleObj = {
-  id: string,
-  label: string,
-  notes: string[]
-}
 
 export const NOTES: NoteName[] = [ 'A', 'A#', 'B', 'B#', 'C', 'C#', 'D', 'D#', 'E', 'E#', 'F', 'F#' ];
 export const MIDI_NOTE_REF = {

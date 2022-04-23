@@ -1,11 +1,6 @@
 import styled, { css } from 'styled-components';
 import { getColor } from '../../themes';
-
-import { 
-  CompleteNote,
-  NoteName,
-  ScaleStatus
-} from '../../utils/music';
+import { CompleteNote, NoteName, ScaleStatus } from '../../types';
 
 export const SPECIAL_SHARPS: NoteName[] = [ 'A#', 'C#', 'D#' ];
 export const ScContainer = styled.div`

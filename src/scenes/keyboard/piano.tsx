@@ -11,13 +11,11 @@ import {
 } from './slice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { MusicBox } from '../../components/musicbox';
-import { 
-  CompleteNote
-} from '../../utils/music';
 import { KeyManager } from './key-manager';
 import { PianoHalfKey, PianoWholeKey } from './piano-key';
 import MIDI_DATA from '../../components/mididata';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { CompleteNote } from '../../types';
 
 export const ScContainer = styled.div`
   display:block;
