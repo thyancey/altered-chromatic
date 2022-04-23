@@ -1,9 +1,8 @@
 import styled from 'styled-components';
 import Select from '../../components/select';
 import Toggle from '../../components/toggle';
-import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { setActiveKey, getActiveKey, setActiveScale, getActiveScale, setShowKeyboardKeys, getShowKeyboardKeys, setShowMusicNotes, getShowMusicNotes, selectScaleDefs, selectNoteDefs } from '../keyboard/slice';
+import { setActiveKey, getActiveKey, setActiveScale, getActiveScale, setShowKeyboardKeys, getShowKeyboardKeys, setShowMusicNotes, getShowMusicNotes, selectScaleDefs, selectAllNotes } from '../keyboard/slice';
 
 const ScWrapper = styled.div`
   position:absolute;
@@ -30,16 +29,14 @@ const ScGroup = styled.div`
   }
 `
 
-type Props = {}
-function Selections({}: Props) {
-  const [ scale, setScale ] = useState('test');
+function Selections() {
   const dispatch = useAppDispatch();
   const activeScale = useAppSelector(getActiveScale);
   const activeKey = useAppSelector(getActiveKey);
   const showKeyboardKeys = useAppSelector(getShowKeyboardKeys);
   const showMusicNotes = useAppSelector(getShowMusicNotes);
   const scaleDefs = useAppSelector(selectScaleDefs);
-  const noteDefs = useAppSelector(selectNoteDefs);
+  const allNotes = useAppSelector(selectAllNotes);
 
   return (
     <ScWrapper>
@@ -66,7 +63,7 @@ function Selections({}: Props) {
         <p>{'Key'}</p>
         <Select size='sm' grow='stretch' value={activeKey || ''} onChangeValue={(value: any) => dispatch(setActiveKey(value))} >
           <option key={-1} value=''>{''}</option>
-          { noteDefs.map((nN, idx) => (
+          { allNotes.map((nN, idx) => (
             <option key={idx} value={nN}>{nN}</option>
           )) }
         </Select>

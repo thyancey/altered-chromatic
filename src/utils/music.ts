@@ -6,8 +6,8 @@ export const rotateArray = (array: any[], toIdx: number) => {
 
 export const getArrayValueAtRelativeIndex = (array: any[], idx: number) => array[idx % array.length];
 
-export const getNotesInScale = (rootNote: string, scaleDef: ScaleDef, noteDefs: NoteName[], wrapRootNote = false) => {
-  const noteIdx = noteDefs.findIndex(n => n === rootNote);
+export const getNotesInScale = (rootNote: string, scaleDef: ScaleDef, allNotes: NoteName[], wrapRootNote = false) => {
+  const noteIdx = allNotes.findIndex(n => n === rootNote);
 
   if(noteIdx === -1) {
     console.error(`invalid note provided "${rootNote}"`)
@@ -20,7 +20,7 @@ export const getNotesInScale = (rootNote: string, scaleDef: ScaleDef, noteDefs: 
 
   let curIdx = noteIdx;
   const scaleNotes = scaleDef.intervals.map((interval, idx) => {
-    const note = getArrayValueAtRelativeIndex(noteDefs, curIdx);
+    const note = getArrayValueAtRelativeIndex(allNotes, curIdx);
     curIdx += interval;
     return note
   });
@@ -34,14 +34,14 @@ export const getNotesInScale = (rootNote: string, scaleDef: ScaleDef, noteDefs: 
 
   example: ([ 'F', 'A' ], 1, 2) => [ 'F-1', 'A-2', 'F-2' ]
 */
-export const transformNotesToOctaveNotes = (noteNames: NoteName[], noteDefs: NoteName[], minOctave = 0, maxOctave = 9) => {
+export const transformNotesToOctaveNotes = (noteNames: NoteName[], allNotes: NoteName[], minOctave = 0, maxOctave = 9) => {
   let octaveNotes = [];
-  let lastNoteIdx = noteDefs.findIndex(n => n === noteNames[0]); // 0 for A
+  let lastNoteIdx = allNotes.findIndex(n => n === noteNames[0]); // 0 for A
   let curOctave = minOctave; 
 
   while(curOctave <= maxOctave){
     for(let i = 0; i < noteNames.length; i++){
-      const thisNoteIdx = noteDefs.findIndex(nn => nn === noteNames[i]);
+      const thisNoteIdx = allNotes.findIndex(nn => nn === noteNames[i]);
       if(thisNoteIdx < lastNoteIdx){
         curOctave++;
         if(curOctave > maxOctave) break;
@@ -60,12 +60,12 @@ export const transformNotesToOctaveNotes = (noteNames: NoteName[], noteDefs: Not
 
   example: ([ 'F', 'A' ], 2) => [ 'F-2', 'A-3' ]
 */
-export const transformScaleNotesToOctaveNotes = (scaleNoteNames: NoteName[], noteDefs: NoteName[], startOctave: number) => {
-  let lastNoteIdx = noteDefs.findIndex(n => n === scaleNoteNames[0]); // 0 for A
+export const transformScaleNotesToOctaveNotes = (scaleNoteNames: NoteName[], allNotes: NoteName[], startOctave: number) => {
+  let lastNoteIdx = allNotes.findIndex(n => n === scaleNoteNames[0]); // 0 for A
   let curOctave = startOctave; 
 
   return scaleNoteNames.map(snn => {
-    const thisNoteIdx = noteDefs.findIndex(nn => nn === snn);
+    const thisNoteIdx = allNotes.findIndex(nn => nn === snn);
     if(thisNoteIdx < lastNoteIdx){
       curOctave++;
     }
@@ -80,26 +80,26 @@ export const transformScaleNotesToOctaveNotes = (scaleNoteNames: NoteName[], not
 
   example: ('A-1', 'ionian', true) => ['A-1','B-1','C-1','C#-1','D#-1','E#-1','F#-1','A-2']
 */
-export const getOctaveNotesInScale = (rootOctaveNote: OctaveNote, scaleDef: ScaleDef, noteDefs: NoteName[], wrapRootNote = false) => {
+export const getOctaveNotesInScale = (rootOctaveNote: OctaveNote, scaleDef: ScaleDef, allNotes: NoteName[], wrapRootNote = false) => {
   const notePieces = rootOctaveNote.split('-');
-  const scaleNotes = getNotesInScale(notePieces[0], scaleDef, noteDefs, wrapRootNote);
+  const scaleNotes = getNotesInScale(notePieces[0], scaleDef, allNotes, wrapRootNote);
 
-  return transformScaleNotesToOctaveNotes(scaleNotes, noteDefs, parseInt(notePieces[1]));
+  return transformScaleNotesToOctaveNotes(scaleNotes, allNotes, parseInt(notePieces[1]));
 }
 
-export const getOctaveScaleObject = (rootOctaveNote: OctaveNote, scaleDef: ScaleDef, noteDefs: NoteName[]): ScaleObj => {
+export const getOctaveScaleObject = (rootOctaveNote: OctaveNote, scaleDef: ScaleDef, allNotes: NoteName[]): ScaleObj => {
   return {
     id: scaleDef.id,
     label: scaleDef.label,
-    notes: getOctaveNotesInScale(rootOctaveNote, scaleDef, noteDefs, true)
+    notes: getOctaveNotesInScale(rootOctaveNote, scaleDef, allNotes, true)
   }
 }
 
-export const getKeyScaleObject = (musicKey: string, scaleDef: ScaleDef, noteDefs: NoteName[]): ScaleObj => {
+export const getKeyScaleObject = (musicKey: string, scaleDef: ScaleDef, allNotes: NoteName[]): ScaleObj => {
   return {
     id: scaleDef.id,
     label: scaleDef.label,
-    notes: getNotesInScale(musicKey, scaleDef, noteDefs, true)
+    notes: getNotesInScale(musicKey, scaleDef, allNotes, true)
   }
 }
 
@@ -109,30 +109,30 @@ export const getKeyScaleObject = (musicKey: string, scaleDef: ScaleDef, noteDefs
 
   example ('F-2', 'B#-3') => ['F-2','F#-2','A-3','A#-3','B-3','B#-3']
 */
-export const getAllOctaveNotesBetween = (startOctaveNote: OctaveNote, endOctaveNote: OctaveNote, noteDefs: NoteName[]) => {
+export const getAllOctaveNotesBetween = (startOctaveNote: OctaveNote, endOctaveNote: OctaveNote, allNotes: NoteName[]) => {
   const startPieces = startOctaveNote.split('-');
   const endPieces = endOctaveNote.split('-');
 
   const startNote = startPieces[0] as NoteName;
-  const startNoteIdx = noteDefs.indexOf(startNote);
-  const allNotes = rotateArray(noteDefs, startNoteIdx);
+  const startNoteIdx = allNotes.indexOf(startNote);
+  const rotatedNotes = rotateArray(allNotes, startNoteIdx);
 
-  const octaveNotes = transformNotesToOctaveNotes(allNotes, noteDefs, parseInt(startPieces[1]), parseInt(endPieces[1]));
+  const octaveNotes = transformNotesToOctaveNotes(rotatedNotes, allNotes, parseInt(startPieces[1]), parseInt(endPieces[1]));
   const indexOfEnd = octaveNotes.indexOf(endOctaveNote);
   return octaveNotes.slice(0, indexOfEnd + 1);
 }
 
 // A-4, B-4, delta is -2 (A-4 < A#-4 < B-4)
-export const getOctaveNoteDelta = (firstOctaveNote: OctaveNote, secondOctaveNote: OctaveNote, noteDefs: NoteName[]) => {
+export const getOctaveNoteDelta = (firstOctaveNote: OctaveNote, secondOctaveNote: OctaveNote, allNotes: NoteName[]) => {
   const firstPieces = firstOctaveNote.split('-');
   const secondPieces = secondOctaveNote.split('-');
 
-  const firstIdx = noteDefs.indexOf(firstPieces[0] as NoteName);
+  const firstIdx = allNotes.indexOf(firstPieces[0] as NoteName);
   const firstOctave = parseInt(firstPieces[1]);
-  const secondIdx = noteDefs.indexOf(secondPieces[0] as NoteName);
+  const secondIdx = allNotes.indexOf(secondPieces[0] as NoteName);
   const secondOctave = parseInt(secondPieces[1]);
 
-  const octaveChange = (secondOctave - firstOctave) * noteDefs.length;
+  const octaveChange = (secondOctave - firstOctave) * allNotes.length;
   const idxChange = secondIdx - firstIdx;
   const noteChange = octaveChange + idxChange;
 
@@ -144,7 +144,7 @@ export const getOctaveNoteDelta = (firstOctaveNote: OctaveNote, secondOctaveNote
  * 
  * in altered chromatic, A-4 = 60
  */
-export const convertOctaveNoteToMidiId = (octaveNote: OctaveNote, midiRef: LilNoteObj, noteDefs: NoteName[]) => {
-  const delta = getOctaveNoteDelta(midiRef.octaveNote, octaveNote, noteDefs);
+export const convertOctaveNoteToMidiId = (octaveNote: OctaveNote, midiRef: LilNoteObj, allNotes: NoteName[]) => {
+  const delta = getOctaveNoteDelta(midiRef.octaveNote, octaveNote, allNotes);
   return midiRef.midiNote + delta;
 }

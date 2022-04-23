@@ -1,4 +1,4 @@
-import { LilNoteObj, NoteName, ScaleDef, ScaleDefs } from '../types';
+import { InstrumentDef, LilNoteObj, NoteName, ScaleDef, ScaleDefs } from '../types';
 
 export const STANDARD_SCALES: ScaleDefs = {
   'ionian': {
@@ -44,15 +44,15 @@ type MusicConfig = {
   midiMap: LilNoteObj
 }
 
-type MusicConfigs = {
+type TypeMusicConfigs = {
   [key: string]: MusicConfig
 }
 
 const Config_StandardChromatic: MusicConfig = {
-  notes: [ 'A', 'A#', 'B', 'B#', 'C', 'C#', 'D', 'D#', 'E', 'E#', 'F', 'F#' ],
+  notes: [ 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B' ],
   scales: STANDARD_SCALES,
   midiMap: {
-    octaveNote: 'A-4',
+    octaveNote: 'C-4',
     midiNote: 60
   }
 }
@@ -66,15 +66,17 @@ const Config_AlteredChromatic: MusicConfig = {
   }
 }
 
+export const DEFAULT_CONFIG_TYPE = 'standardChromatic';
+export const DEFAULT_INSTRUMENT_TYPE = 'standardPiano';
+// export const DEFAULT_CONFIG_TYPE = 'alteredChromatic';
+// export const DEFAULT_INSTRUMENT_TYPE = 'alteredPiano';
 
-const MusicConfigs: MusicConfigs = {
+const MusicConfigs: TypeMusicConfigs = {
   'standardChromatic': Config_StandardChromatic,
   'alteredChromatic': Config_AlteredChromatic
 }
 
-
-const defaultConfigType = 'alteredChromatic';
-const getMusicConfig = (subKey: string, configType: string = defaultConfigType) => {
+const getMusicConfig = (subKey: string, configType: string = DEFAULT_CONFIG_TYPE) => {
   
   if(!MusicConfigs[configType]){
     console.error(`cannot get config for configType${configType}`);
@@ -96,4 +98,19 @@ export const getMusicScales = (configType?: string): ScaleDefs => {
 }
 export const getMusicMidiMap = (configType?: string): LilNoteObj => {
   return getMusicConfig('midiMap', configType);
+}
+
+type InstrumentDefs = {
+  [ instrumentKey: string ]: InstrumentDef
+}
+
+export const INSTRUMENT_DEFS: InstrumentDefs = {
+  'alteredPiano': {
+    range: ['A-4', 'D-5'],
+    keyboardKeys: ['a','w','s','e','d','r','f','t','g','y','h','u','j','i','k','o','l','p',';','[','\'']
+  } as InstrumentDef,
+  'standardPiano': {
+    range: ['C-4', 'E-5'],
+    keyboardKeys: ['a','w','s','e','d','f','t','g','y','h','u','j','k','o','l','p',';']
+  } as InstrumentDef
 }

@@ -4,6 +4,7 @@ import { getColor } from '../../themes';
 import {
   getShowKeyboardKeys,
   getShowMusicNotes,
+  selectInstrumentDef,
   selectKeyboardKeysWithPressed,
   setPressedKeys,
   setShowKeyboardKeys,
@@ -83,6 +84,7 @@ export function Piano() {
   const dispatch = useAppDispatch();
   const showMusicNotes = useAppSelector(getShowMusicNotes);
   const showKeyboardKeys = useAppSelector(getShowKeyboardKeys);
+  const instrumentDef = useAppSelector(selectInstrumentDef);
   const [ fingerIsDown, setFingerIsDown ] = useState(false);
   const [ useTouchEvents, setUseTouchEvents ] = useState(false);
   const [ touchedKeys, setTouchedKeys ] = useState<string[]>([]);
@@ -218,6 +220,7 @@ export function Piano() {
         onKeysChanged={(keys: string[]) => {
           dispatch(setPressedKeys(keys));
         }}
+        keysToWatch={instrumentDef.keyboardKeys}
       />
       <MusicBox midiInstrument={MIDI_DATA.defaultInstrument} volume={0.2} />
       <ScPiano>
