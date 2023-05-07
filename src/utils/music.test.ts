@@ -1,4 +1,5 @@
 import { NoteName } from '../types';
+import { describe, it, expect } from 'vitest'
 import {
   transformNotesToOctaveNotes, getNotesInScale, rotateArray, getOctaveNotesInScale, transformScaleNotesToOctaveNotes, getAllOctaveNotesBetween, getOctaveNoteDelta, convertOctaveNoteToMidiId
 } from './music';

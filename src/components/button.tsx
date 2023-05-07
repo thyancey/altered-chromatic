@@ -1,5 +1,5 @@
+import { MouseEventHandler } from 'react';
 import styled from 'styled-components';
-import { MouseEventHandler } from 'hoist-non-react-statics/node_modules/@types/react';
 
 export const ScButton = styled.div`
   padding: 2rem;

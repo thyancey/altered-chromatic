@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 // @ts-ignore
 import MIDISounds from 'midi-sounds-react';
 
-import midiDataJSON from './mididata.js';
+import midiDataJSON from './mididata.json';
 
 type midiInstrumentData = {
   defaultInstrument: string,

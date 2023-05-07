@@ -1,4 +1,4 @@
-const MIDI_DATA = {
+{
   "defaultInstrument": "piano",
   "instruments":{
     "piano": {
@@ -10,6 +10,4 @@ const MIDI_DATA = {
       "title": "Starfield"
     }
   }
-};
-
-export default MIDI_DATA;
+}
