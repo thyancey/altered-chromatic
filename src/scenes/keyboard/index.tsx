@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { getColor } from '../../themes';
-import { DynamicBg } from './dynamic-bg';
+// import { DynamicBg } from './dynamic-bg';
 import { Piano } from './piano';
 import { Scales } from './scales';
 
@@ -10,7 +10,7 @@ const ScContainer = styled.div`
   top:0;
   bottom:0;
   right:0;
-  background-color: ${getColor('grey')};
+  background-color: ${getColor('pink')};
   z-index:-1;
   padding-top:0rem;
   
@@ -73,7 +73,7 @@ export function Keyboard() {
         <Piano />
       </ScPianoContainer>
       <Scales />
-      <DynamicBg />
+      {/* <DynamicBg /> */}
     </ScContainer>
   );
 }
