@@ -13,7 +13,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { MusicBox } from '../../components/musicbox';
 import { KeyManager } from './key-manager';
 import { PianoHalfKey, PianoWholeKey } from './piano-key';
-import MIDI_DATA from '../../components/mididata';
+import MIDI_DATA from '../../components/mididata.json';
 import { useEffect, useState } from 'react';
 import { CompleteNote, LilNoteObj, MidiNote } from '../../types';
 
