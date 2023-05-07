@@ -76,6 +76,7 @@ export type LilNoteObj = {
  * Handles how an instrument should display and perform
  */
 export type InstrumentDef = {
+  key: string,
   range: OctaveNote[],
   keyboardKeys: string[]
 }

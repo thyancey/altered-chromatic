@@ -3,11 +3,18 @@
   "instruments":{
     "piano": {
       "midiId": 5,
+      "duration": 2.5,
       "title": "Piano"
     },
     "starfield": {
       "midiId": 62,
+      "duration": 1,
       "title": "Starfield"
+    },
+    "sax": {
+      "midiId": 707,
+      "duration": 0.25,
+      "title": "Sax"
     }
   }
 }

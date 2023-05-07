@@ -3,37 +3,37 @@ import { InstrumentDef, LilNoteObj, NoteName, ScaleDef, ScaleDefs } from '../typ
 export const STANDARD_SCALES: ScaleDefs = {
   'ionian': {
     id: 'ionian',
-    label: 'Ionian (Major)',
+    label: 'Ionian (I)',
     intervals: [2,2,1,2,2,2,1]
   } as ScaleDef,
   'dorian': {
     id: 'dorian',
-    label: 'Dorian',
+    label: 'Dorian (II)',
     intervals: [2,1,2,2,2,1,2]
   } as ScaleDef,
   'phyrgian': {
     id: 'phyrgian',
-    label: 'Phyrgian',
+    label: 'Phyrgian (III)',
     intervals: [1,2,2,2,1,2,2]
   } as ScaleDef,
   'lydian': {
     id: 'lydian',
-    label: 'Lydian',
+    label: 'Lydian (IV)',
     intervals: [2,2,2,1,2,2,1]
   } as ScaleDef,
   'mixolydian': {
     id: 'mixolydian',
-    label: 'Mixolydian',
+    label: 'Mixolydian (V)',
     intervals: [2,2,1,2,2,1,2]
   } as ScaleDef,
   'aeolian': {
     id: 'aeolian',
-    label: 'Aeolian (Minor)',
+    label: 'Aeolian (VI)',
     intervals: [2,1,2,2,1,2,2]
   } as ScaleDef,
   'locrian': {
     id: 'locrian',
-    label: 'Locrian',
+    label: 'Locrian (VII)',
     intervals: [1,2,2,1,2,2,2]
   } as ScaleDef
 };
@@ -66,10 +66,10 @@ const Config_AlteredChromatic: MusicConfig = {
   }
 }
 
-export const DEFAULT_CONFIG_TYPE = 'standardChromatic';
-export const DEFAULT_INSTRUMENT_TYPE = 'standardPiano';
-// export const DEFAULT_CONFIG_TYPE = 'alteredChromatic';
-// export const DEFAULT_INSTRUMENT_TYPE = 'alteredPiano';
+// export const DEFAULT_CONFIG_TYPE = 'standardChromatic';
+// export const DEFAULT_INSTRUMENT_TYPE = 'standardPiano';
+export const DEFAULT_CONFIG_TYPE = 'alteredChromatic';
+export const DEFAULT_INSTRUMENT_TYPE = 'alteredPiano';
 
 export const MUSIC_CONFIGS: TypeMusicConfigs = {
   'standardChromatic': Config_StandardChromatic,
@@ -106,11 +106,11 @@ type InstrumentDefs = {
 
 export const INSTRUMENT_DEFS: InstrumentDefs = {
   'alteredPiano': {
-    range: ['A-4', 'D-5'],
+    range: ['A-4', 'E-5'],
     keyboardKeys: ['a','w','s','e','d','r','f','t','g','y','h','u','j','i','k','o','l','p',';','[','\'']
   } as InstrumentDef,
   'standardPiano': {
-    range: ['C-4', 'E-5'],
-    keyboardKeys: ['a','w','s','e','d','f','t','g','y','h','u','j','k','o','l','p',';']
+    range: ['C-4', 'F-5'],
+    keyboardKeys: ['a','w','s','e','d','f','t','g','y','h','u','j','k','o','l','p',';','\'']
   } as InstrumentDef
 }

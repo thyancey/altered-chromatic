@@ -16,9 +16,11 @@ export interface KeyboardState {
 }
 
 const initialState: KeyboardState = {
-  activeKey: null,
+  // activeKey: null,
+  activeKey: 'A',
   activeNote: null,
-  activeScale: null,
+  // activeScale: null,
+  activeScale: 'ionian',
   pressedKeys: [],
   showKeyboardKeys: true,
   showMusicNotes: true,
@@ -93,7 +95,10 @@ export const getInstrumentType = (state: RootState) => state.keyboard.instrument
 export const selectInstrumentDef = createSelector(
   [getInstrumentType],
   (instrumentType): InstrumentDef => {
-    return INSTRUMENT_DEFS[instrumentType];
+    return {
+      ...INSTRUMENT_DEFS[instrumentType],
+      key: instrumentType
+    }
   }
 );
 
@@ -134,6 +139,20 @@ export const selectNotesFromScale = createSelector(
   }
 );
 
+export const selectAdjacentKeys = createSelector(
+  [selectAllNotes, getActiveKey],
+  (allKeys, activeKey): [ string, string ] | null => {
+    if(!activeKey) return null;
+
+    const idx = allKeys.findIndex(keyName => keyName === activeKey);
+    if(idx === -1) return null;
+
+    const prevIdx = idx === 0 ? allKeys.length - 1 : idx - 1;
+    const nextIdx = idx === allKeys.length - 1 ? 0 : idx + 1;
+    return [ allKeys[prevIdx], allKeys[nextIdx] ];
+  }
+)
+
 export const selectActiveScaleObject = createSelector(
   [getActiveNote, selectActiveScaleDef, selectAllNotes],
   (activeNote, activeScaleDef, allNotes): ScaleObj | null => {
@@ -153,6 +172,20 @@ export const selectAllMajorScales = createSelector(
     });
   }
 );
+
+export const selectAdjacentScales = createSelector(
+  [selectAllMajorScales, getActiveScale],
+  (allScales, activeScale): [ ScaleObj, ScaleObj ] | null => {
+    if(!activeScale) return null;
+
+    const idx = allScales.findIndex(scaleObj => scaleObj.id === activeScale);
+    if(idx === -1) return null;
+
+    const prevIdx = idx === 0 ? allScales.length - 1 : idx - 1;
+    const nextIdx = idx === allScales.length - 1 ? 0 : idx + 1;
+    return [ allScales[prevIdx], allScales[nextIdx] ];
+  }
+)
 
 export const getScaleStatus = (noteLabel: string, scaleNotes: string[]): ScaleStatus => {
   if(!scaleNotes.includes(noteLabel)) return 'invalid';

@@ -222,8 +222,8 @@ export function Piano() {
         }}
         keysToWatch={instrumentDef.keyboardKeys}
       />
-      <MusicBox midiInstrument={MIDI_DATA.defaultInstrument} volume={0.2} />
-      <ScPiano>
+      <MusicBox midiInstrument={MIDI_DATA.defaultInstrument} volume={0.5} />
+      <ScPiano className={`instrument-${instrumentDef.key}`}>
         <ScPianoBar />
         <ScPianoKeys>
           {pianoKeys.map(noteObj => {

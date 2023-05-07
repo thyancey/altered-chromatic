@@ -40,8 +40,7 @@ const Anim_SharpPress = `
 
 
 type SKeyBaseProps = {
-  scaleStatus: ScaleStatus,
-  altKey?: boolean
+  scaleStatus: ScaleStatus
 }
 const ScKeyBase = styled.div<SKeyBaseProps>`
 `
@@ -128,7 +127,7 @@ const ScWholeKey = styled(ScKeyBase)`
 const ScHalfKey = styled(ScKeyBase)`
   width:5rem;
   height:10rem;
-  border-radius: 0 0 1rem 1rem;
+  border-radius: 0 0 1.5rem 1.5rem;
   
   ${CSS_BlackKey}
   box-shadow: .15rem .15rem .25rem .25rem ${getColor('blue')};
@@ -141,8 +140,6 @@ const ScHalfKey = styled(ScKeyBase)`
     ${CSS_BlueKey}
   `}
 
-  border-radius: 0 0 2.5rem 2.5rem;
-
   ${ScNoteLabel}{
     bottom:.75rem;
   }
@@ -151,17 +148,20 @@ const ScHalfKey = styled(ScKeyBase)`
     background-color: ${getColor('grey')};
   }
 
-  ${p => !p.altKey && css`
-    top:-.25rem;
-    border-radius: 0 0 1rem 1rem;
+  
+  .instrument-alteredPiano &.half-key {
+    box-shadow: .15rem .15rem .25rem .25rem ${getColor('yellow')};
+    border-radius: 2rem;
+  }
 
+  .half-key{
     ${ScNoteLabel}{ 
       bottom:.50rem;
     }
     ${ScKeyLabel}{
       bottom:4.75rem;
     }
-  `}
+  }
 `
 
 type ScKeyWrapperBaseProps = {
@@ -229,7 +229,12 @@ export function PianoHalfKey({ noteObj, onMouseEnter, onMouseDown, showMusicNote
       onMouseDown={e => onMouseDown(e, noteObj)}
       keyPressed={noteObj.keyPressed || keyIsDown}
     >
-      <ScHalfKey data-midinote={noteObj.midiNote} data-octavenote={noteObj.octaveNote} scaleStatus={noteObj.scaleStatus} altKey={SPECIAL_SHARPS.includes(noteObj.note)}>
+      <ScHalfKey
+        data-midinote={noteObj.midiNote}
+        data-octavenote={noteObj.octaveNote}
+        scaleStatus={noteObj.scaleStatus}
+        className={SPECIAL_SHARPS.includes(noteObj.note) ? 'half-key' : ''}
+      >
         {showKeyboardKeys && (<ScKeyLabel>{noteObj.keyMatch}</ScKeyLabel>)}
         {showMusicNotes && (<ScNoteLabel>{noteObj.note}</ScNoteLabel>)}
       </ScHalfKey>

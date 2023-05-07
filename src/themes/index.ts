@@ -14,6 +14,10 @@ export default createGlobalStyle`
     padding: 0;
     outline:0;
     box-sizing:border-box;
+
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
   }
   #root{
     margin:0 auto;
@@ -123,6 +127,7 @@ const shadows = {
 export type ColorType = 'black' | 'grey' | 'grey_light' | 'white' | 'blue' | 'green' | 'yellow' | 'red' | 'pink' | 'orange' | 'blue_dark';
 const colors = {
   black: '#1F1F1F',
+  black_light: '#1F1F1F',
   grey: '#4D4D4F',
   grey_light: '#D3D8CF',
   white: '#FFFFFF',

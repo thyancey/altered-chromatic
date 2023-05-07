@@ -2,7 +2,8 @@ import styled from 'styled-components';
 import { getColor } from '../../themes';
 // import { DynamicBg } from './dynamic-bg';
 import { Piano } from './piano';
-import { Scales } from './scales';
+// import { Scales } from './scales';
+import { ScaleWidget } from '../widgets/scale';
 
 const ScContainer = styled.div`
   position:absolute;
@@ -72,7 +73,7 @@ export function Keyboard() {
       <ScPianoContainer>
         <Piano />
       </ScPianoContainer>
-      <Scales />
+      <ScaleWidget />
       {/* <DynamicBg /> */}
     </ScContainer>
   );

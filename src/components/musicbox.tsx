@@ -9,7 +9,8 @@ type midiInstrumentData = {
   instruments: {
     [instrumentId: string]: {
       midiId: number,
-      title: string
+      title: string,
+      duration?: number
     }
   }
 }
@@ -23,8 +24,8 @@ const findInstrument = (instrumentId?: string) => {
 }
 
 let midiSounds: any;
-const playMidiNotes = (notes: number[], midiId: number) => {
-  midiSounds.playChordNow(midiId, notes, 2.5);
+const playMidiNotes = (notes: number[], midiId: number, duration: number = 1) => {
+  midiSounds.playChordNow(midiId, notes, duration);
 }
 
 type Props = {
@@ -37,7 +38,7 @@ export function MusicBox({ midiInstrument, volume }: Props) {
     midiSounds.cacheInstrument(foundInstrument.midiId);
     midiSounds.setMasterVolume(volume);
 
-    (global as any).globalMidiHandler = (notes: number[]) => playMidiNotes(notes, foundInstrument.midiId);
+    (global as any).globalMidiHandler = (notes: number[]) => playMidiNotes(notes, foundInstrument.midiId, foundInstrument.duration);
   }, [midiInstrument, volume])
 
   return (

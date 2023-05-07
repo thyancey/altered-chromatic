@@ -11,7 +11,6 @@ import {
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 
 export const ScContainer = styled.div`
-  /* background-color: ${getColor('pink')}; */
   display:inline-block;
   margin-top:.5rem;
 

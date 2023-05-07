@@ -136,7 +136,7 @@ const ScLinks = styled.div`
 
 const ScHint = styled.p`
   text-align:right;
-  margin-right:10rem;
+  margin-right:9rem;
   color: ${getColor('black')};
   font-style: italic;
 
@@ -150,7 +150,6 @@ const ScHint = styled.p`
     transition: all .3s ease-out;
   }
 `
-
 
 const getIcon = (id: string) => {
   switch(id){
@@ -183,7 +182,7 @@ function Header({ pages }: Props) {
         <ScShadowFixer />
       </ScHeaderTab>
       <ScHeaderBg/>
-      <ScHint>{'(pick a scale and key to see some cool stuff) >'}</ScHint>
+      <ScHint>{'learn scales, switch to a regular piano, and more!'}</ScHint>
     </ScHeader>
   );
 }
