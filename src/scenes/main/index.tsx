@@ -1,9 +1,9 @@
 import { ReactElement } from "react";
 import { Keyboard } from "../../scenes/keyboard";
 import { About } from "../../scenes/about";
-import { getColor, mixin_glowOnHover } from "../../themes/";
-import { HashRouter, Route, Routes, Link } from "react-router-dom";
-import styled, { css } from "styled-components";
+import { getColor } from "../../themes/";
+import { HashRouter, Route, Routes } from "react-router-dom";
+import styled from "styled-components";
 import Header from "../header";
 
 const ScStage = styled.div`

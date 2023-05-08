@@ -3,7 +3,7 @@ import { ColorType, getColor, mixinFontFamily } from '../../themes';
 import Icon_ChevronDown from '../../assets/chevron-down.svg';
 
 import {
-  selectActiveScaleDef, selectAdjacentRootNoteIdxs, selectAdjacentScales, selectAllNotes, selectNotesFromScale, selectRootNote
+  selectAdjacentRootNoteIdxs, selectAdjacentScales, selectScaleObjects
 } from '../keyboard/slice';
 import { setActiveScale, setRootNoteIdx } from '../../app/music-slice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -133,17 +133,16 @@ const ScNote = styled.div`
   }
 `
 
-export function ScaleWidget() {
+type Props = {
+  instrumentIdx: number;
+}
+
+export function ScaleWidget({instrumentIdx}:Props) {
   const dispatch = useAppDispatch();
-  const rootNote = useAppSelector(selectRootNote);
-  const activeScaleDef = useAppSelector(selectActiveScaleDef);
   const adjacentScales = useAppSelector(selectAdjacentScales);
   const adjacentRootNoteIdxs = useAppSelector(selectAdjacentRootNoteIdxs);
-  const allKeys = useAppSelector(selectNotesFromScale);
-  
-  const scaleLabel = useMemo(() => {
-    return activeScaleDef ? `${activeScaleDef.label}` : ''
-  }, [ activeScaleDef ])
+
+  const scaleObjs = useAppSelector(selectScaleObjects);
 
   const onKeyButton = useCallback((value:number) => {
     dispatch(setRootNoteIdx(value));
@@ -152,7 +151,12 @@ export function ScaleWidget() {
   const onScaleButton = useCallback((value:string) => {
     dispatch(setActiveScale(value));
   }, [ dispatch ]);
-  if(!rootNote || !adjacentScales || !adjacentRootNoteIdxs || !allKeys) return null;
+
+  const scaleObj = useMemo(() => {
+    return scaleObjs ? scaleObjs[instrumentIdx] : null;
+  }, [ scaleObjs, instrumentIdx ])
+
+  if(!adjacentScales || !adjacentRootNoteIdxs || !scaleObj) return null;
 
   return (
     <ScContainer>
@@ -160,24 +164,24 @@ export function ScaleWidget() {
         <div>
           <ScKey>
             <button onClick={e => onKeyButton(adjacentRootNoteIdxs[0])}><ScIcon iconId={'chevronDown'}/></button>
-            <span>{rootNote?.label}</span>
+            <span>{scaleObj.notes[0]}</span>
             <button onClick={e => onKeyButton(adjacentRootNoteIdxs[1])}><ScIcon iconId={'chevronDown'}/></button>
           </ScKey>
         </div>
         <div>
           <ScScale>
             <button onClick={e => onScaleButton(adjacentScales[0].id)}><ScIcon iconId={'chevronDown'}/></button>
-            <span>{scaleLabel}</span>
+            <span>{scaleObj.label}</span>
             <button onClick={e => onScaleButton(adjacentScales[1].id)}><ScIcon iconId={'chevronDown'}/></button>
           </ScScale>
         </div>
 
       </ScBody>
       <ScNotes>
-        { allKeys.notes.map((keyLabel, idx) => (
+        { scaleObj.notes.map((keyLabel, idx) => (
           <ScNote
             key={idx}
-            className={idx === rootNote.idx ? 'active' : ''}
+            className={keyLabel === scaleObj.notes[0] ? 'active' : ''}
           >
             {keyLabel}
           </ScNote>

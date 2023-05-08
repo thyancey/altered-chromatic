@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 import { getColor } from '../../themes';
-// import { DynamicBg } from './dynamic-bg';
 import { Piano } from './piano';
-// import { Scales } from './scales';
 import { ScaleWidget } from '../widgets/scale';
 
 const ScContainer = styled.div`
@@ -16,6 +14,8 @@ const ScContainer = styled.div`
   padding-top:0rem;
   
   text-align:center;
+
+  overflow-y:auto;
 
   >p{
     color: ${getColor('grey_light')};
@@ -41,24 +41,6 @@ const ScLogo = styled.div`
     font-weight:800;
   }
 `
-
-const ScLogoBg = styled.div`
-  background-color: ${getColor('pink')};
-  border-radius: 2.5rem 2.5rem 0 0;
-  position:absolute;
-  z-index:-1;
-  left:0;
-  right:0;
-  top:0;
-  bottom:0;
-  filter: blur(2rem);
-  opacity:.7;
-`;
-
-const ScInstruction = styled.p`
-  color:yellow !important;
-`
-
 const ScPianoContainer = styled.div`
   
 `
@@ -68,13 +50,15 @@ export function Keyboard() {
     <ScContainer>
       <ScLogo>
         <h1>{'Altered Chromatic'}</h1>
-        {/* <ScLogoBg /> */}
       </ScLogo>
       <ScPianoContainer>
-        <Piano />
+        <Piano instrumentIdx={0}/>
       </ScPianoContainer>
-      <ScaleWidget />
-      {/* <DynamicBg /> */}
+      <ScaleWidget instrumentIdx={0}/>
+      <ScPianoContainer>
+        <Piano instrumentIdx={1} />
+      </ScPianoContainer>
+      <ScaleWidget instrumentIdx={1}/>
     </ScContainer>
   );
 }

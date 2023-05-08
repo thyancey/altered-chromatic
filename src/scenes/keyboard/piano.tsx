@@ -2,16 +2,15 @@ import styled from 'styled-components';
 import { getColor } from '../../themes';
 
 import {
-  selectInstrumentDef,
-  selectKeyboardKeysWithPressed,
+  selectActiveInstrumentKeys,
 } from './slice';
-import { getShowKeyboardKeys, getShowMusicNotes, setPressedKeys, setShowKeyboardKeys } from '../../app/ui-slice';
+import { getShowKeyboardKeys, getShowMusicNotes, selectInstrumentDefs, setPressedKeys, setShowKeyboardKeys } from '../../app/ui-slice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { MusicBox } from '../../components/musicbox';
 import { KeyManager } from './key-manager';
 import { PianoHalfKey, PianoWholeKey } from './piano-key';
 import MIDI_DATA from '../../components/mididata.json';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { CompleteNote, LilNoteObj, MidiNote } from '../../types';
 
 export const ScContainer = styled.div`
@@ -74,17 +73,37 @@ const ScPianoKeys = styled.div`
   }
 `
 
+
 let otherTouchedKeys: string[] = [];
 
-export function Piano() {
-  const pianoKeys = useAppSelector(selectKeyboardKeysWithPressed);
+type Props = {
+  instrumentIdx: number;
+}
+export function Piano({instrumentIdx}: Props) {
   const dispatch = useAppDispatch();
   const showMusicNotes = useAppSelector(getShowMusicNotes);
   const showKeyboardKeys = useAppSelector(getShowKeyboardKeys);
-  const instrumentDef = useAppSelector(selectInstrumentDef);
+
+  // const instrumentDef = useAppSelector(selectInstrumentDef);
   const [ fingerIsDown, setFingerIsDown ] = useState(false);
   const [ useTouchEvents, setUseTouchEvents ] = useState(false);
   const [ touchedKeys, setTouchedKeys ] = useState<string[]>([]);
+
+  const instrumentDefs = useAppSelector(selectInstrumentDefs);
+  const instrumentDef = useMemo(() => {
+    return instrumentDefs ? instrumentDefs[instrumentIdx] : null;
+  }, [ instrumentDefs, instrumentIdx ])
+
+  
+  const instrumentKeys = useAppSelector(selectActiveInstrumentKeys);
+  const pianoKeys = useMemo(() => {
+    return instrumentKeys ? instrumentKeys[instrumentIdx] : null;
+  }, [ instrumentKeys, instrumentIdx ])
+
+  if(!instrumentDef){
+    console.error(`piano could not get instrument for idx ${instrumentIdx}`);
+    return null;
+  }
 
   const setAllTouchedKeys = (touchedKeys: string[]) => {
     setTouchedKeys(touchedKeys);
@@ -92,7 +111,6 @@ export function Piano() {
   }
 
   const onMouseDown = (e:any, noteObj:CompleteNote) => {
-    // console.log('onMouseDown!', noteObj.octaveNote, useTouchEvents);
     if(!useTouchEvents){
       setFingerIsDown(true);
       playNote(noteObj.midiNote);

@@ -1,9 +1,7 @@
 import styled from 'styled-components';
 import { getColor } from '../../themes';
 
-import {
-  getRootNoteIdx
-} from './slice';
+import { getRootNoteIdx } from '../../app/music-slice';
 import { useAppSelector } from '../../app/hooks';
 import { ScaleGroups } from './scalegroups';
 

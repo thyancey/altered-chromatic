@@ -124,6 +124,13 @@ export const getKeyScaleObject = (rootNoteIdx: number, scaleDef: ScaleDef, allNo
   }
 }
 
+export const getKeyScaleObjects = (rootNoteIdx: number, scaleDefs: ScaleDef[], allNotes: NoteName[]): ScaleObj[] => {
+  return scaleDefs.map(scaleDef => ({
+    id: scaleDef.id,
+    label: scaleDef.label,
+    notes: getNotesInScale(rootNoteIdx, scaleDef, allNotes, true)
+  }));
+}
 
 /**
   "what are all the chromatic notes between A and B?" - ex, making piano keys
@@ -165,7 +172,7 @@ export const getOctaveNoteDelta = (firstOctaveNote: OctaveNote, secondOctaveNote
  * 
  * in altered chromatic, A-4 = 60
  */
-export const convertOctaveNoteToMidiId = (octaveNote: OctaveNote, midiRef: LilNoteObj, allNotes: NoteName[]) => {
-  const delta = getOctaveNoteDelta(midiRef.octaveNote, octaveNote, allNotes);
+export const convertOctaveNoteToMidiId = (octaveNote: OctaveNote, midiRef: LilNoteObj, allNotes: NoteName[], adjusterIdx: number) => {
+  const delta = getOctaveNoteDelta(midiRef.octaveNote, octaveNote, allNotes) + adjusterIdx;
   return midiRef.midiNote + delta;
 }

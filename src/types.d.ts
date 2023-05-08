@@ -47,6 +47,11 @@ export type ScaleObj = {
   notes: string[]
 }
 
+export type InstrumentObj = {
+  activeConfig: string,
+  instrumentType: string
+}
+
 export type RootNoteObj = {
   idx: number,
   label: string,
@@ -83,6 +88,8 @@ export type LilNoteObj = {
  */
 export type InstrumentDef = {
   key: string,
+  type: string,
   range: OctaveNote[],
-  keyboardKeys: string[]
+  keyboardKeys: string[],
+  standardOffset: number
 }

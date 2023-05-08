@@ -1,9 +1,9 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { CompleteNote, RootNoteObj, InstrumentDef, LilNoteObj, NoteName, ScaleDef, ScaleDefs, ScaleObj, ScaleStatus } from '../../types';
-import { getOctaveScaleObject, getAllOctaveNotesBetween, convertOctaveNoteToMidiId, getKeyScaleObject } from '../../utils/music';
-import { DEFAULT_CONFIG_TYPE, DEFAULT_INSTRUMENT_TYPE, getMusicMidiMap, getMusicNotes, getMusicScales, INSTRUMENT_DEFS, MUSIC_CONFIGS } from '../../utils/music-data';
-import { getPressedKeys } from '../../app/ui-slice';
+import { getOctaveScaleObject, getAllOctaveNotesBetween, convertOctaveNoteToMidiId, getKeyScaleObject, getNotesInScale } from '../../utils/music';
+import { DEFAULT_CONFIG_TYPE, DEFAULT_INSTRUMENT_TYPE, getAllMusicScales, getMusicConfig, getMusicMidiMap, getMusicNotes, getMusicScales, INSTRUMENT_DEFS, MUSIC_CONFIGS } from '../../utils/music-data';
+import { getInstruments, getPressedKeys, selectInstrumentDefs } from '../../app/ui-slice';
 import { getActiveScale, getRootNoteIdx, getRootNoteOctave } from '../../app/music-slice';
 
 export interface KeyboardState {
@@ -78,15 +78,6 @@ export const selectActiveScaleDef = createSelector(
   }
 );
 
-export const selectNotesFromScale = createSelector(
-  [getRootNoteIdx, selectActiveScaleDef, selectAllNotes],
-  (rootNoteIdx, activeScaleDef, allNotes): ScaleObj | null => {
-    if(rootNoteIdx === -1  || !activeScaleDef || !allNotes) return null;
-
-    return getKeyScaleObject(rootNoteIdx, activeScaleDef, allNotes);
-  }
-);
-
 export const selectAdjacentRootNoteIdxs = createSelector(
   [selectAllNotes, getRootNoteIdx],
   (allKeys, rootNoteIdx): [ number, number ] | null => {
@@ -154,32 +145,102 @@ export const getScaleStatus = (noteLabel: string, scaleNotes: string[]): ScaleSt
   return 'scale';
 }
 
-export const selectKeyboardKeys = createSelector(
-  [selectNotesFromScale, selectMidiRefDef, selectAllNotes, selectInstrumentDef],
-  (keyScaleObj, midiRefDef, allNotes, instrumentDef): CompleteNote[] => {
-    const octaveNotes = getAllOctaveNotesBetween(instrumentDef.range[0], instrumentDef.range[1], allNotes);
-    return octaveNotes.map((octaveNote, idx) => {
-      const noteLabel = octaveNote.split('-')[0] as NoteName;
+
+type InstrumentKeysObj = {
+  instrumentDef: InstrumentDef;
+  completeNotes: CompleteNote[];
+}
+
+/* TODO: scale defs should really match between instruments, maybe this is not necessary */
+export const selectAllScaleDefs = createSelector(
+  [getInstruments],
+  (instrumentObjs): ScaleDefs[] => {
+    return getAllMusicScales(instrumentObjs.map(iO => iO.activeConfig));
+  }
+);
+
+export const selectActiveScaleDefs = createSelector(
+  [selectAllScaleDefs, getActiveScale],
+  (scaleDefs, activeScale): ScaleDef[] => {
+    if(!activeScale) return [];
+    return scaleDefs.map(scaleDef => scaleDef[activeScale]);
+  }
+);
+
+export const selectAllInstrumentNotes = createSelector(
+  [getActiveConfig],
+  (activeConfig): NoteName[] => {
+    return getMusicNotes(activeConfig);
+  }
+);
+
+export const selectNotesFromScale = createSelector(
+  [getRootNoteIdx, selectAllScaleDefs, getInstruments, getActiveScale],
+  (rootNoteIdx, allScaleDefs, instrumentConfigs, activeScale): ScaleObj[] | null => {
+    if(rootNoteIdx === -1 || !activeScale) return null;
+    return allScaleDefs.map((scaleDefEntry, idx) => {
+      const scaleDef = scaleDefEntry[activeScale];
+      const allNotes = getMusicConfig('notes', instrumentConfigs[idx].activeConfig);
+      
       return {
-        note: noteLabel,
-        octaveNote: octaveNote,
-        midiNote: convertOctaveNoteToMidiId(octaveNote, midiRefDef, allNotes),
-        scaleStatus: keyScaleObj ? getScaleStatus(noteLabel, keyScaleObj.notes) : 'inactive',
-        idx
-      };
+        id: scaleDef.id,
+        label: scaleDef.label,
+        notes: getNotesInScale(rootNoteIdx, scaleDef, allNotes, true)
+      }
+    });
+  }
+);
+
+export const selectInstrumentKeys = createSelector(
+  [selectNotesFromScale, selectMidiRefDef, selectInstrumentDefs],
+  (keyScaleObj, midiRefDef, instrumentDefs): InstrumentKeysObj[] => {
+    return instrumentDefs.map((instrumentDef, instrumentIdx) => {
+      const allNotes = getMusicConfig('notes', instrumentDef.type)
+      const octaveNotes = getAllOctaveNotesBetween(instrumentDef.range[0], instrumentDef.range[1], allNotes);
+
+      return {
+        instrumentDef: instrumentDef,
+        completeNotes: octaveNotes.map((octaveNote, idx) => {
+          const noteLabel = octaveNote.split('-')[0] as NoteName;
+          return {
+            note: noteLabel,
+            octaveNote: octaveNote,
+            midiNote: convertOctaveNoteToMidiId(octaveNote, midiRefDef, allNotes, instrumentDef.standardOffset),
+            scaleStatus: keyScaleObj ? getScaleStatus(noteLabel, keyScaleObj[instrumentIdx].notes) : 'inactive',
+            idx
+          };
+        })
+      }
     })
   }
 );
 
-export const selectKeyboardKeysWithPressed = createSelector(
-  [selectKeyboardKeys, getPressedKeys, selectInstrumentDef],
-  (keyboardKeys, pressedKeys, instrumentDef): CompleteNote[] => {
-    return keyboardKeys.map(kk => ({
-      ...kk,
-      keyMatch: instrumentDef.keyboardKeys[kk.idx],
-      keyPressed: pressedKeys.includes(instrumentDef.keyboardKeys[kk.idx])
-    }));
+export const selectActiveInstrumentKeys = createSelector(
+  [selectInstrumentKeys, getPressedKeys],
+  (instrumentKeys, pressedKeys): CompleteNote[][] => {
+    return instrumentKeys.map(instrumentKeyObj => 
+      instrumentKeyObj.completeNotes.map(kk => (
+        {
+          ...kk,
+          keyMatch: instrumentKeyObj.instrumentDef.keyboardKeys[kk.idx],
+          keyPressed: pressedKeys.includes(instrumentKeyObj.instrumentDef.keyboardKeys[kk.idx])
+        }
+      ))
+    )
   }
-)
+);
+
+
+export const selectScaleObjects = createSelector(
+  [getRootNoteIdx, selectActiveScaleDefs, getInstruments],
+  (rootNoteIdx, activeScaleDefs, instrumentConfigs): ScaleObj[] | null => {
+    if(rootNoteIdx === -1) return null;
+    return activeScaleDefs?.map((asd, idx) => {
+      const allNotes = getMusicConfig('notes', instrumentConfigs[idx].activeConfig);
+      return getKeyScaleObject(rootNoteIdx, asd, allNotes)
+    });
+  }
+);
+
 
 export default keyboardSlice.reducer;

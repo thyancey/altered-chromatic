@@ -41,6 +41,7 @@ export const STANDARD_SCALES: ScaleDefs = {
 type MusicConfig = {
   notes: NoteName[],
   scales: ScaleDefs,
+  standardOffset: number,
   midiMap: LilNoteObj
 }
 
@@ -51,6 +52,7 @@ type TypeMusicConfigs = {
 const Config_StandardChromatic: MusicConfig = {
   notes: [ 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B' ],
   scales: STANDARD_SCALES,
+  standardOffset: 0,
   midiMap: {
     octaveNote: 'C-4',
     midiNote: 60
@@ -60,6 +62,7 @@ const Config_StandardChromatic: MusicConfig = {
 const Config_AlteredChromatic: MusicConfig = {
   notes: [ 'A', 'A#', 'B', 'B#', 'C', 'C#', 'D', 'D#', 'E', 'E#', 'F', 'F#' ],
   scales: STANDARD_SCALES,
+  standardOffset: -9,
   midiMap: {
     octaveNote: 'A-4',
     midiNote: 60
@@ -76,14 +79,14 @@ export const MUSIC_CONFIGS: TypeMusicConfigs = {
   'alteredChromatic': Config_AlteredChromatic
 }
 
-const getMusicConfig = (subKey: string, configType: string = DEFAULT_CONFIG_TYPE) => {
+export const getMusicConfig = (subKey: string, configType: string = DEFAULT_CONFIG_TYPE) => {
   
   if(!MUSIC_CONFIGS[configType]){
-    console.error(`cannot get config for configType${configType}`);
+    console.error(`cannot get config for configType "${configType}"`);
   }
   // @ts-ignore
   if(!MUSIC_CONFIGS[configType][subKey]){
-    console.error(`cannot get config for subKey ${subKey} under ${configType}`);
+    console.error(`cannot get config for subKey "${subKey}" under "${configType}"`);
   }
 
   // @ts-ignore
@@ -100,6 +103,10 @@ export const getMusicMidiMap = (configType?: string): LilNoteObj => {
   return getMusicConfig('midiMap', configType);
 }
 
+export const getAllMusicScales = (configTypes: string[]): ScaleDefs[] => {
+  return configTypes.map(ct => getMusicConfig('scales', ct));
+}
+
 type InstrumentDefs = {
   [ instrumentKey: string ]: InstrumentDef
 }
@@ -107,10 +114,12 @@ type InstrumentDefs = {
 export const INSTRUMENT_DEFS: InstrumentDefs = {
   'alteredPiano': {
     range: ['A-4', 'E-5'],
+    type: 'alteredChromatic',
     keyboardKeys: ['a','w','s','e','d','r','f','t','g','y','h','u','j','i','k','o','l','p',';','[','\'']
   } as InstrumentDef,
   'standardPiano': {
     range: ['C-4', 'F-5'],
+    type: 'standardChromatic',
     keyboardKeys: ['a','w','s','e','d','f','t','g','y','h','u','j','k','o','l','p',';','\'']
   } as InstrumentDef
 }
