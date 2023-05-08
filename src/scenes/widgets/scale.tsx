@@ -3,8 +3,9 @@ import { ColorType, getColor, mixinFontFamily } from '../../themes';
 import Icon_ChevronDown from '../../assets/chevron-down.svg';
 
 import {
-  selectActiveScaleDef, selectAdjacentRootNoteIdxs, selectAdjacentScales, selectAllNotes, selectNotesFromScale, selectRootNote, setActiveScale, setRootNoteIdx
+  selectActiveScaleDef, selectAdjacentRootNoteIdxs, selectAdjacentScales, selectAllNotes, selectNotesFromScale, selectRootNote
 } from '../keyboard/slice';
+import { setActiveScale, setRootNoteIdx } from '../../app/music-slice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { useCallback, useMemo } from 'react';
 

@@ -2,12 +2,10 @@ import styled, { css } from 'styled-components';
 import { getColor } from '../../themes';
 
 import {
-  getActiveScale,
   selectAllMajorScales,
-  selectRootNote,
-  setActiveScale,
-  setRootNoteIdx
+  selectRootNote
 } from './slice';
+import { getActiveScale, setRootNoteIdx, setActiveScale } from '../../app/music-slice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 
 export const ScContainer = styled.div`

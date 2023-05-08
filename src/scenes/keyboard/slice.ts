@@ -4,20 +4,14 @@ import { CompleteNote, RootNoteObj, InstrumentDef, LilNoteObj, NoteName, ScaleDe
 import { getOctaveScaleObject, getAllOctaveNotesBetween, convertOctaveNoteToMidiId, getKeyScaleObject } from '../../utils/music';
 import { DEFAULT_CONFIG_TYPE, DEFAULT_INSTRUMENT_TYPE, getMusicMidiMap, getMusicNotes, getMusicScales, INSTRUMENT_DEFS, MUSIC_CONFIGS } from '../../utils/music-data';
 import { getPressedKeys } from '../../app/ui-slice';
+import { getActiveScale, getRootNoteIdx, getRootNoteOctave } from '../../app/music-slice';
 
 export interface KeyboardState {
-  rootNoteIdx: number;
-  rootNoteOctave: number;
-  activeScale: string | null;
   activeConfig: string;
   instrumentType: string;
 }
 
 const initialState: KeyboardState = {
-  rootNoteIdx: 0,
-  rootNoteOctave: 5,
-  // activeScale: null,
-  activeScale: 'ionian',
   activeConfig: DEFAULT_CONFIG_TYPE,
   instrumentType: DEFAULT_INSTRUMENT_TYPE,
 };
@@ -27,16 +21,6 @@ export const keyboardSlice = createSlice({
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
-    setRootNoteIdx: (state, action: PayloadAction<number>) => {
-      state.rootNoteIdx = action.payload;
-    },
-    setActiveScale: (state, action: PayloadAction<string>) => {
-      if(state.activeScale === action.payload){
-        state.activeScale = null;
-      }else{
-        state.activeScale = action.payload;
-      }
-    },
     setActiveConfig: (state, action: PayloadAction<string>) => {
       if(state.activeConfig !== action.payload){
         state.activeConfig = action.payload;
@@ -51,11 +35,7 @@ export const keyboardSlice = createSlice({
   }
 });
 
-export const { setRootNoteIdx, setActiveScale, setActiveConfig } = keyboardSlice.actions;
-
-export const getRootNoteIdx = (state: RootState) => state.keyboard.rootNoteIdx;
-export const getRootNoteOctave = (state: RootState) => state.keyboard.rootNoteOctave;
-export const getActiveScale = (state: RootState) => state.keyboard.activeScale;
+export const { setActiveConfig } = keyboardSlice.actions;
 
 export const getActiveConfig = (state: RootState) => state.keyboard.activeConfig;
 export const getInstrumentType = (state: RootState) => state.keyboard.instrumentType;

@@ -2,7 +2,8 @@ import styled from 'styled-components';
 import Select from '../../components/select';
 import Toggle from '../../components/toggle';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { setActiveScale, getActiveScale, selectScaleDefs, selectAllNotes, setActiveConfig, getActiveConfig, getRootNoteIdx, setRootNoteIdx } from '../keyboard/slice';
+import {  selectScaleDefs, selectAllNotes, setActiveConfig, getActiveConfig } from '../keyboard/slice';
+import { setRootNoteIdx, setActiveScale, getActiveScale, getRootNoteIdx } from '../../app/music-slice';
 import { getShowKeyboardKeys, setShowKeyboardKeys, setShowMusicNotes, getShowMusicNotes } from '../../app/ui-slice';
 import { MUSIC_CONFIGS } from '../../utils/music-data';
 
