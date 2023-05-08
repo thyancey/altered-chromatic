@@ -2,7 +2,8 @@ import styled from 'styled-components';
 import Select from '../../components/select';
 import Toggle from '../../components/toggle';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { setActiveScale, getActiveScale, setShowKeyboardKeys, getShowKeyboardKeys, setShowMusicNotes, getShowMusicNotes, selectScaleDefs, selectAllNotes, setActiveConfig, getActiveConfig, getRootNoteIdx, setRootNoteIdx } from '../keyboard/slice';
+import { setActiveScale, getActiveScale, selectScaleDefs, selectAllNotes, setActiveConfig, getActiveConfig, getRootNoteIdx, setRootNoteIdx } from '../keyboard/slice';
+import { getShowKeyboardKeys, setShowKeyboardKeys, setShowMusicNotes, getShowMusicNotes } from '../../app/ui-slice';
 import { MUSIC_CONFIGS } from '../../utils/music-data';
 
 const ScWrapper = styled.div`

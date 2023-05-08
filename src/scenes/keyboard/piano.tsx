@@ -2,13 +2,10 @@ import styled from 'styled-components';
 import { getColor } from '../../themes';
 
 import {
-  getShowKeyboardKeys,
-  getShowMusicNotes,
   selectInstrumentDef,
   selectKeyboardKeysWithPressed,
-  setPressedKeys,
-  setShowKeyboardKeys,
 } from './slice';
+import { getShowKeyboardKeys, getShowMusicNotes, setPressedKeys, setShowKeyboardKeys } from '../../app/ui-slice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { MusicBox } from '../../components/musicbox';
 import { KeyManager } from './key-manager';

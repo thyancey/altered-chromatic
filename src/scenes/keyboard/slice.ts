@@ -3,14 +3,12 @@ import { RootState } from '../../app/store';
 import { CompleteNote, RootNoteObj, InstrumentDef, LilNoteObj, NoteName, ScaleDef, ScaleDefs, ScaleObj, ScaleStatus } from '../../types';
 import { getOctaveScaleObject, getAllOctaveNotesBetween, convertOctaveNoteToMidiId, getKeyScaleObject } from '../../utils/music';
 import { DEFAULT_CONFIG_TYPE, DEFAULT_INSTRUMENT_TYPE, getMusicMidiMap, getMusicNotes, getMusicScales, INSTRUMENT_DEFS, MUSIC_CONFIGS } from '../../utils/music-data';
+import { getPressedKeys } from '../../app/ui-slice';
 
 export interface KeyboardState {
   rootNoteIdx: number;
   rootNoteOctave: number;
   activeScale: string | null;
-  pressedKeys: string[];
-  showKeyboardKeys: boolean;
-  showMusicNotes: boolean;
   activeConfig: string;
   instrumentType: string;
 }
@@ -20,9 +18,6 @@ const initialState: KeyboardState = {
   rootNoteOctave: 5,
   // activeScale: null,
   activeScale: 'ionian',
-  pressedKeys: [],
-  showKeyboardKeys: true,
-  showMusicNotes: true,
   activeConfig: DEFAULT_CONFIG_TYPE,
   instrumentType: DEFAULT_INSTRUMENT_TYPE,
 };
@@ -42,15 +37,6 @@ export const keyboardSlice = createSlice({
         state.activeScale = action.payload;
       }
     },
-    setPressedKeys: (state, action: PayloadAction<string[]>) => {
-      state.pressedKeys = action.payload;
-    },
-    setShowKeyboardKeys: (state, action: PayloadAction<boolean>) => {
-      state.showKeyboardKeys = action.payload;
-    },
-    setShowMusicNotes: (state, action: PayloadAction<boolean>) => {
-      state.showMusicNotes = action.payload;
-    },
     setActiveConfig: (state, action: PayloadAction<string>) => {
       if(state.activeConfig !== action.payload){
         state.activeConfig = action.payload;
@@ -65,14 +51,11 @@ export const keyboardSlice = createSlice({
   }
 });
 
-export const { setShowMusicNotes, setShowKeyboardKeys, setRootNoteIdx, setActiveScale, setPressedKeys, setActiveConfig } = keyboardSlice.actions;
+export const { setRootNoteIdx, setActiveScale, setActiveConfig } = keyboardSlice.actions;
 
 export const getRootNoteIdx = (state: RootState) => state.keyboard.rootNoteIdx;
 export const getRootNoteOctave = (state: RootState) => state.keyboard.rootNoteOctave;
 export const getActiveScale = (state: RootState) => state.keyboard.activeScale;
-export const getPressedKeys = (state: RootState) => state.keyboard.pressedKeys;
-export const getShowKeyboardKeys = (state: RootState) => state.keyboard.showKeyboardKeys;
-export const getShowMusicNotes = (state: RootState) => state.keyboard.showMusicNotes;
 
 export const getActiveConfig = (state: RootState) => state.keyboard.activeConfig;
 export const getInstrumentType = (state: RootState) => state.keyboard.instrumentType;
