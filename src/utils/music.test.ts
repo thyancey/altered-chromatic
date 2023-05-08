@@ -39,22 +39,22 @@ describe('utils > music', () => {
 
   describe('#getNotesInScale', () => {
     it('should return notes', () => {
-      expect(getNotesInScale('A', STANDARD_SCALES['ionian'], ALTERED_NOTES)).toEqual(
+      expect(getNotesInScale(0, STANDARD_SCALES['ionian'], ALTERED_NOTES)).toEqual(
         ['A','B','C','C#','D#','E#','F#']
       );
     });
     it('should return notes from another rootNote', () => {
-      expect(getNotesInScale('C#', STANDARD_SCALES['ionian'], ALTERED_NOTES)).toEqual(
+      expect(getNotesInScale(5, STANDARD_SCALES['ionian'], ALTERED_NOTES)).toEqual(
         ['C#','D#','E#','F','A','B','C']
       );
     });
     it('should return notes from aeolian mode', () => {
-      expect(getNotesInScale('A', STANDARD_SCALES['aeolian'], ALTERED_NOTES)).toEqual(
+      expect(getNotesInScale(0, STANDARD_SCALES['aeolian'], ALTERED_NOTES)).toEqual(
         ['A','B','B#','C#','D#','E','F']
       );
     });
     it('should wrap root note, if requested', () => {
-      expect(getNotesInScale('A', STANDARD_SCALES['aeolian'], ALTERED_NOTES, true)).toEqual(
+      expect(getNotesInScale(0, STANDARD_SCALES['aeolian'], ALTERED_NOTES, true)).toEqual(
         ['A','B','B#','C#','D#','E','F','A']
       );
     });
@@ -103,12 +103,22 @@ describe('utils > music', () => {
 
   describe('#getOctaveNotesInScale', () => {
     it('should return octaveNotes in normal range', () => {
-      expect(getOctaveNotesInScale('F-2', STANDARD_SCALES['ionian'], ALTERED_NOTES)).toEqual(
+      const rootNote = {
+        idx:10,
+        octave:2,
+        label:'F'
+      };
+      expect(getOctaveNotesInScale(rootNote, STANDARD_SCALES['ionian'], ALTERED_NOTES)).toEqual(
         ['F-2','A-3','B-3','B#-3','C#-3','D#-3','E#-3']
       );
     });
     it('should return octaveNotes in normal range, and wrap root note, if requested', () => {
-      expect(getOctaveNotesInScale('F-2', STANDARD_SCALES['ionian'], ALTERED_NOTES, true)).toEqual(
+      const rootNote = {
+        idx:10,
+        octave:2,
+        label:'F'
+      };
+      expect(getOctaveNotesInScale(rootNote, STANDARD_SCALES['ionian'], ALTERED_NOTES, true)).toEqual(
         ['F-2','A-3','B-3','B#-3','C#-3','D#-3','E#-3','F-3']
       );
     });

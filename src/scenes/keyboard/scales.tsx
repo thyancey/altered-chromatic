@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { getColor } from '../../themes';
 
 import {
-  getActiveKey
+  getRootNoteIdx
 } from './slice';
 import { useAppSelector } from '../../app/hooks';
 import { ScaleGroups } from './scalegroups';
@@ -50,8 +50,8 @@ const ScScalesBg = styled.div`
 `
 
 export function Scales() {
-  const activeKey = useAppSelector(getActiveKey);
-  if(!activeKey) return null;
+  const rootNoteIdx = useAppSelector(getRootNoteIdx);
+  if(rootNoteIdx === -1) return null;
 
   return (
     <ScContainer>

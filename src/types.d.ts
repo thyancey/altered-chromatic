@@ -47,6 +47,12 @@ export type ScaleObj = {
   notes: string[]
 }
 
+export type RootNoteObj = {
+  idx: number,
+  label: string,
+  octave: number
+}
+
 export type CompleteNote = {
   note: NoteName,
   octaveNote: OctaveNote,

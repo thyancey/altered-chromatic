@@ -2,11 +2,11 @@ import styled, { css } from 'styled-components';
 import { getColor } from '../../themes';
 
 import {
-  getActiveKey,
   getActiveScale,
   selectAllMajorScales,
-  setActiveKey,
-  setActiveScale
+  selectRootNote,
+  setActiveScale,
+  setRootNoteIdx
 } from './slice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 
@@ -67,7 +67,7 @@ export const ScScaleLabel = styled.p`
 export function ScaleGroups() {
   const allScales = useAppSelector(selectAllMajorScales);
   const activeScale = useAppSelector(getActiveScale);
-  const activeKey = useAppSelector(getActiveKey);
+  const rootNote = useAppSelector(selectRootNote);
   const dispatch = useAppDispatch();
   if(!allScales) return null;
 
@@ -75,8 +75,8 @@ export function ScaleGroups() {
     dispatch(setActiveScale(clickedId));
   }
   
-  const onClickNote = (e:any, clickedNote:string) => {
-    dispatch(setActiveKey(clickedNote));
+  const onClickNote = (e:any, noteIdx:number) => {
+    dispatch(setRootNoteIdx(noteIdx));
   }
 
   return (
@@ -86,14 +86,14 @@ export function ScaleGroups() {
           <ScScaleLabel
             onClick={e => onClick(e, scaleObj.id)}
           >
-            {`${activeKey} ${scaleObj.label}:`}
+            {`${rootNote?.label} ${scaleObj.label}:`}
           </ScScaleLabel>
           <ul>
             {scaleObj.notes.map((note, sIdx) => (
               <ScScaleNote 
                 key={`${idx}_${sIdx}_${note}`} 
                 id={note}
-                onClick={e => onClickNote(e, note)}
+                onClick={e => onClickNote(e, sIdx)}
               >
                 <span>{note.split('-')[0]}</span>
               </ScScaleNote>

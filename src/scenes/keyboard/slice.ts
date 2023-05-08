@@ -1,12 +1,12 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { CompleteNote, InstrumentDef, LilNoteObj, NoteName, ScaleDef, ScaleDefs, ScaleObj, ScaleStatus } from '../../types';
-import { getOctaveScaleObject, getAllOctaveNotesBetween, convertOctaveNoteToMidiId, getKeyScaleObject, translateNoteBetweenConfigs } from '../../utils/music';
+import { CompleteNote, RootNoteObj, InstrumentDef, LilNoteObj, NoteName, ScaleDef, ScaleDefs, ScaleObj, ScaleStatus } from '../../types';
+import { getOctaveScaleObject, getAllOctaveNotesBetween, convertOctaveNoteToMidiId, getKeyScaleObject } from '../../utils/music';
 import { DEFAULT_CONFIG_TYPE, DEFAULT_INSTRUMENT_TYPE, getMusicMidiMap, getMusicNotes, getMusicScales, INSTRUMENT_DEFS, MUSIC_CONFIGS } from '../../utils/music-data';
 
 export interface KeyboardState {
-  activeKey: string | null;
-  activeNote: string | null;
+  rootNoteIdx: number;
+  rootNoteOctave: number;
   activeScale: string | null;
   pressedKeys: string[];
   showKeyboardKeys: boolean;
@@ -16,9 +16,8 @@ export interface KeyboardState {
 }
 
 const initialState: KeyboardState = {
-  // activeKey: null,
-  activeKey: 'A',
-  activeNote: null,
+  rootNoteIdx: 0,
+  rootNoteOctave: 5,
   // activeScale: null,
   activeScale: 'ionian',
   pressedKeys: [],
@@ -33,16 +32,8 @@ export const keyboardSlice = createSlice({
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
-    setActiveKey: (state, action: PayloadAction<string>) => {
-      state.activeKey = action.payload;
-    },
-    setActiveNote: (state, action: PayloadAction<string>) => {
-      state.activeNote = action.payload;
-      if(action.payload){
-        state.activeKey = action.payload.split('-')[0];
-      }else{
-        state.activeKey = null;
-      }
+    setRootNoteIdx: (state, action: PayloadAction<number>) => {
+      state.rootNoteIdx = action.payload;
     },
     setActiveScale: (state, action: PayloadAction<string>) => {
       if(state.activeScale === action.payload){
@@ -65,25 +56,19 @@ export const keyboardSlice = createSlice({
         state.activeConfig = action.payload;
         if(action.payload === 'alteredChromatic'){
           state.instrumentType = 'alteredPiano';
-          if(state.activeKey){
-            state.activeKey = translateNoteBetweenConfigs(state.activeKey, MUSIC_CONFIGS.standardChromatic.notes, MUSIC_CONFIGS.alteredChromatic.notes);
-          }
         }
         if(action.payload === 'standardChromatic'){
           state.instrumentType = 'standardPiano';
-          if(state.activeKey){
-            state.activeKey = translateNoteBetweenConfigs(state.activeKey, MUSIC_CONFIGS.alteredChromatic.notes, MUSIC_CONFIGS.standardChromatic.notes);
-          }
         }
       }
     },
   }
 });
 
-export const { setShowMusicNotes, setShowKeyboardKeys, setActiveKey, setActiveNote, setActiveScale, setPressedKeys, setActiveConfig } = keyboardSlice.actions;
+export const { setShowMusicNotes, setShowKeyboardKeys, setRootNoteIdx, setActiveScale, setPressedKeys, setActiveConfig } = keyboardSlice.actions;
 
-export const getActiveKey = (state: RootState) => state.keyboard.activeKey;
-export const getActiveNote = (state: RootState) => state.keyboard.activeNote;
+export const getRootNoteIdx = (state: RootState) => state.keyboard.rootNoteIdx;
+export const getRootNoteOctave = (state: RootState) => state.keyboard.rootNoteOctave;
 export const getActiveScale = (state: RootState) => state.keyboard.activeScale;
 export const getPressedKeys = (state: RootState) => state.keyboard.pressedKeys;
 export const getShowKeyboardKeys = (state: RootState) => state.keyboard.showKeyboardKeys;
@@ -131,44 +116,54 @@ export const selectActiveScaleDef = createSelector(
 );
 
 export const selectNotesFromScale = createSelector(
-  [getActiveKey, selectActiveScaleDef, selectAllNotes],
-  (activeKey, activeScaleDef, allNotes): ScaleObj | null => {
-    if(!activeKey || !activeScaleDef || !allNotes) return null;
+  [getRootNoteIdx, selectActiveScaleDef, selectAllNotes],
+  (rootNoteIdx, activeScaleDef, allNotes): ScaleObj | null => {
+    if(rootNoteIdx === -1  || !activeScaleDef || !allNotes) return null;
 
-    return getKeyScaleObject(activeKey, activeScaleDef, allNotes);
+    return getKeyScaleObject(rootNoteIdx, activeScaleDef, allNotes);
   }
 );
 
-export const selectAdjacentKeys = createSelector(
-  [selectAllNotes, getActiveKey],
-  (allKeys, activeKey): [ string, string ] | null => {
-    if(!activeKey) return null;
+export const selectAdjacentRootNoteIdxs = createSelector(
+  [selectAllNotes, getRootNoteIdx],
+  (allKeys, rootNoteIdx): [ number, number ] | null => {
+    if(rootNoteIdx === -1) return null;
 
-    const idx = allKeys.findIndex(keyName => keyName === activeKey);
-    if(idx === -1) return null;
-
-    const prevIdx = idx === 0 ? allKeys.length - 1 : idx - 1;
-    const nextIdx = idx === allKeys.length - 1 ? 0 : idx + 1;
-    return [ allKeys[prevIdx], allKeys[nextIdx] ];
+    return [ 
+      rootNoteIdx === 0 ? allKeys.length - 1 : rootNoteIdx - 1, // prev, wrap to end
+      rootNoteIdx === allKeys.length - 1 ? 0 : rootNoteIdx + 1 // next, wrap to beginning
+    ];
   }
 )
 
-export const selectActiveScaleObject = createSelector(
-  [getActiveNote, selectActiveScaleDef, selectAllNotes],
-  (activeNote, activeScaleDef, allNotes): ScaleObj | null => {
-    if(!activeNote || !activeScaleDef) return null;
+export const selectRootNote = createSelector(
+  [getRootNoteIdx, getRootNoteOctave, selectAllNotes],
+  (rootNoteIdx, rootNoteOctave, allNotes): RootNoteObj | null => {
+    if(rootNoteIdx === -1 || !allNotes) return null;
+    return {
+      idx: rootNoteIdx,
+      label: allNotes[rootNoteIdx],
+      octave: rootNoteOctave
+    }
+  }
+);
 
-    return getOctaveScaleObject(activeNote, activeScaleDef, allNotes);
+export const selectActiveScaleObject = createSelector(
+  [selectRootNote, selectActiveScaleDef, selectAllNotes],
+  (rootNote, activeScaleDef, allNotes): ScaleObj | null => {
+    if(!rootNote || !activeScaleDef) return null;
+
+    return getOctaveScaleObject(rootNote, activeScaleDef, allNotes);
   }
 );
 
 export const selectAllMajorScales = createSelector(
-  [getActiveKey, selectScaleDefs, selectAllNotes],
-  (activeKey, scaleDefs, allNotes): ScaleObj[] => {
-    if(!activeKey || !scaleDefs || !allNotes) return [];
+  [getRootNoteIdx, selectScaleDefs, selectAllNotes],
+  (rootNoteIdx, scaleDefs, allNotes): ScaleObj[] => {
+    if(rootNoteIdx === -1 || !scaleDefs || !allNotes) return [];
 
     return Object.keys(scaleDefs).map(scaleKey => {
-      return getKeyScaleObject(activeKey, scaleDefs[scaleKey], allNotes)
+      return getKeyScaleObject(rootNoteIdx, scaleDefs[scaleKey], allNotes)
     });
   }
 );
