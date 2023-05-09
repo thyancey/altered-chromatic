@@ -182,7 +182,7 @@ function Header({ pages }: Props) {
         <ScShadowFixer />
       </ScHeaderTab>
       <ScHeaderBg/>
-      <ScHint>{'learn scales, switch to a regular piano, and more!'}</ScHint>
+      {/* <ScHint>{'learn scales, switch to a regular piano, and more!'}</ScHint> */}
     </ScHeader>
   );
 }

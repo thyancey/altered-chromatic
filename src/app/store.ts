@@ -1,11 +1,9 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import keyboardReducer from '../scenes/keyboard/slice';
 import uiReducer from './ui-slice';
 import musicReducer from './music-slice';
 
 export const store = configureStore({
   reducer: {
-    keyboard: keyboardReducer,
     ui: uiReducer,
     music: musicReducer,
   },

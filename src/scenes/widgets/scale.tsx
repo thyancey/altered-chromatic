@@ -4,7 +4,7 @@ import Icon_ChevronDown from '../../assets/chevron-down.svg';
 
 import {
   selectAllAdjacentRootNoteIdxs, selectAdjacentScales, selectScaleObjects
-} from '../keyboard/slice';
+} from '../../app/selectors';
 import { setActiveScale, setRootNoteIdx } from '../../app/music-slice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { useCallback, useMemo } from 'react';

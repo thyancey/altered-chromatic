@@ -14,6 +14,7 @@ const ScToggle = styled.button<ScWrapperProps>`
   margin:.5rem;
 
   border:none;
+  cursor: pointer;
   
   color: ${getColor('white')};
   background-color: ${getColor('pink')};

@@ -1,21 +1,10 @@
-import { createSelector, createSlice } from '@reduxjs/toolkit';
-import { CompleteNote, InstrumentDef, NoteName, ScaleDef, ScaleDefs, ScaleObj, ScaleStatus } from '../../types';
-import { getAllOctaveNotesBetween, convertOctaveNoteToMidiId, getKeyScaleObject, getNotesInScale } from '../../utils/music';
-import { getAllMusicScales, getMusicConfig, MUSIC_CONFIGS, STANDARD_SCALES } from '../../utils/music-data';
-import { getInstruments, getPressedKeys, selectInstrumentDefs } from '../../app/ui-slice';
-import { getActiveScale, getRootNoteIdx } from '../../app/music-slice';
+import { createSelector } from '@reduxjs/toolkit';
+import { CompleteNote, InstrumentDef, NoteName, ScaleDef, ScaleDefs, ScaleObj, ScaleStatus } from '../types';
+import { getAllOctaveNotesBetween, convertOctaveNoteToMidiId, getKeyScaleObject, getNotesInScale } from '../utils/music';
+import { getAllMusicScales, getMusicConfig, MUSIC_CONFIGS, STANDARD_SCALES } from '../utils/music-data';
+import { getInstruments, getPressedKeys, selectInstrumentDefs } from './ui-slice';
+import { getActiveScale, getRootNoteIdx } from './music-slice';
 
-export interface KeyboardState {}
-const initialState: KeyboardState = {};
-
-export const keyboardSlice = createSlice({
-  name: 'keyboard',
-  initialState,
-  // The `reducers` field lets us define reducers and generate associated actions
-  reducers: {}
-});
-
-export const {} = keyboardSlice.actions;
 
 export const selectAllAdjacentRootNoteIdxs = createSelector(
   [getRootNoteIdx, selectInstrumentDefs],
@@ -144,6 +133,3 @@ export const selectScaleObjects = createSelector(
     });
   }
 );
-
-
-export default keyboardSlice.reducer;

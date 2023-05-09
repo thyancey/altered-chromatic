@@ -3,7 +3,7 @@ import { getColor } from '../../themes';
 
 import {
   selectActiveInstrumentKeys,
-} from './slice';
+} from '../../app/selectors';
 import { getShowKeyboardKeys, getShowMusicNotes, selectInstrumentDefs, setPressedKeys, setShowKeyboardKeys } from '../../app/ui-slice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { MusicBox } from '../../components/musicbox';

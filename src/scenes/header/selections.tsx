@@ -75,7 +75,7 @@ function Selections() {
       </ScGroup> */}
       <ScGroup>
         <ScToggleGroup>
-          <p>{'Notes'}</p>
+          <p>{'Note Labels'}</p>
           <Toggle 
             labels={{'off': 'OFF', 'on': 'ON'}}
             size='sm'
@@ -85,7 +85,7 @@ function Selections() {
           />
         </ScToggleGroup>
         <ScToggleGroup>
-          <p>{'Keyboard'}</p>
+          <p>{'Keyboard Labels'}</p>
           <Toggle 
             labels={{'off': 'OFF', 'on': 'ON'}}
             size='sm'
