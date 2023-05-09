@@ -172,7 +172,7 @@ export const getOctaveNoteDelta = (firstOctaveNote: OctaveNote, secondOctaveNote
  * 
  * in altered chromatic, A-4 = 60
  */
-export const convertOctaveNoteToMidiId = (octaveNote: OctaveNote, midiRef: LilNoteObj, allNotes: NoteName[], adjusterIdx: number) => {
-  const delta = getOctaveNoteDelta(midiRef.octaveNote, octaveNote, allNotes) + adjusterIdx;
+export const convertOctaveNoteToMidiId = (octaveNote: OctaveNote, midiRef: LilNoteObj, allNotes: NoteName[]) => {
+  const delta = getOctaveNoteDelta(midiRef.octaveNote, octaveNote, allNotes);
   return midiRef.midiNote + delta;
 }

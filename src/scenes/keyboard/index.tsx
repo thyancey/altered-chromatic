@@ -55,6 +55,9 @@ export function Keyboard() {
         <Piano instrumentIdx={0}/>
       </ScPianoContainer>
       <ScaleWidget instrumentIdx={0}/>
+      <ScLogo>
+        <h1>{'Standard Piano'}</h1>
+      </ScLogo>
       <ScPianoContainer>
         <Piano instrumentIdx={1} />
       </ScPianoContainer>

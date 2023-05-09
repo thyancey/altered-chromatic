@@ -1,9 +1,9 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { ColorType, getColor, mixinFontFamily } from '../../themes';
 import Icon_ChevronDown from '../../assets/chevron-down.svg';
 
 import {
-  selectAdjacentRootNoteIdxs, selectAdjacentScales, selectScaleObjects
+  selectAllAdjacentRootNoteIdxs, selectAdjacentScales, selectScaleObjects
 } from '../keyboard/slice';
 import { setActiveScale, setRootNoteIdx } from '../../app/music-slice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -140,8 +140,7 @@ type Props = {
 export function ScaleWidget({instrumentIdx}:Props) {
   const dispatch = useAppDispatch();
   const adjacentScales = useAppSelector(selectAdjacentScales);
-  const adjacentRootNoteIdxs = useAppSelector(selectAdjacentRootNoteIdxs);
-
+  const allAdjacentRootNoteIdxs = useAppSelector(selectAllAdjacentRootNoteIdxs);
   const scaleObjs = useAppSelector(selectScaleObjects);
 
   const onKeyButton = useCallback((value:number) => {
@@ -154,7 +153,11 @@ export function ScaleWidget({instrumentIdx}:Props) {
 
   const scaleObj = useMemo(() => {
     return scaleObjs ? scaleObjs[instrumentIdx] : null;
-  }, [ scaleObjs, instrumentIdx ])
+  }, [ scaleObjs, instrumentIdx ]);
+
+  const adjacentRootNoteIdxs = useMemo(() => {
+    return allAdjacentRootNoteIdxs ? allAdjacentRootNoteIdxs[instrumentIdx] : null;
+  }, [ allAdjacentRootNoteIdxs, instrumentIdx ]);
 
   if(!adjacentScales || !adjacentRootNoteIdxs || !scaleObj) return null;
 
@@ -170,9 +173,9 @@ export function ScaleWidget({instrumentIdx}:Props) {
         </div>
         <div>
           <ScScale>
-            <button onClick={e => onScaleButton(adjacentScales[0].id)}><ScIcon iconId={'chevronDown'}/></button>
+            <button onClick={e => onScaleButton(adjacentScales[0])}><ScIcon iconId={'chevronDown'}/></button>
             <span>{scaleObj.label}</span>
-            <button onClick={e => onScaleButton(adjacentScales[1].id)}><ScIcon iconId={'chevronDown'}/></button>
+            <button onClick={e => onScaleButton(adjacentScales[1])}><ScIcon iconId={'chevronDown'}/></button>
           </ScScale>
         </div>
 

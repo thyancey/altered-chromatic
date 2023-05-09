@@ -41,7 +41,6 @@ export const STANDARD_SCALES: ScaleDefs = {
 type MusicConfig = {
   notes: NoteName[],
   scales: ScaleDefs,
-  standardOffset: number,
   midiMap: LilNoteObj
 }
 
@@ -52,7 +51,6 @@ type TypeMusicConfigs = {
 const Config_StandardChromatic: MusicConfig = {
   notes: [ 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B' ],
   scales: STANDARD_SCALES,
-  standardOffset: 0,
   midiMap: {
     octaveNote: 'C-4',
     midiNote: 60
@@ -62,7 +60,6 @@ const Config_StandardChromatic: MusicConfig = {
 const Config_AlteredChromatic: MusicConfig = {
   notes: [ 'A', 'A#', 'B', 'B#', 'C', 'C#', 'D', 'D#', 'E', 'E#', 'F', 'F#' ],
   scales: STANDARD_SCALES,
-  standardOffset: -9,
   midiMap: {
     octaveNote: 'A-4',
     midiNote: 60
@@ -80,7 +77,6 @@ export const MUSIC_CONFIGS: TypeMusicConfigs = {
 }
 
 export const getMusicConfig = (subKey: string, configType: string = DEFAULT_CONFIG_TYPE) => {
-  
   if(!MUSIC_CONFIGS[configType]){
     console.error(`cannot get config for configType "${configType}"`);
   }
@@ -93,14 +89,15 @@ export const getMusicConfig = (subKey: string, configType: string = DEFAULT_CONF
   return MUSIC_CONFIGS[configType][subKey];
 }
 
+export const getAllMusicNotes = () => {
+
+}
+
 export const getMusicNotes = (configType?: string): NoteName[] => {
   return getMusicConfig('notes', configType);
 }
 export const getMusicScales = (configType?: string): ScaleDefs => {
   return getMusicConfig('scales', configType);
-}
-export const getMusicMidiMap = (configType?: string): LilNoteObj => {
-  return getMusicConfig('midiMap', configType);
 }
 
 export const getAllMusicScales = (configTypes: string[]): ScaleDefs[] => {

@@ -55,8 +55,7 @@ export const selectInstrumentDefs = createSelector(
   (instruments): InstrumentDef[] => {
     return instruments.map(instrument => ({
       ...INSTRUMENT_DEFS[instrument.instrumentType],
-      key: instrument.instrumentType,
-      standardOffset: MUSIC_CONFIGS[instrument.activeConfig].standardOffset
+      key: instrument.instrumentType
     }));
   }
 );

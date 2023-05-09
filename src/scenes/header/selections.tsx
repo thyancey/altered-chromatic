@@ -1,11 +1,7 @@
 import styled from 'styled-components';
-import Select from '../../components/select';
 import Toggle from '../../components/toggle';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import {  selectScaleDefs, selectAllNotes, setActiveConfig, getActiveConfig } from '../keyboard/slice';
-import { setRootNoteIdx, setActiveScale, getActiveScale, getRootNoteIdx } from '../../app/music-slice';
 import { getShowKeyboardKeys, setShowKeyboardKeys, setShowMusicNotes, getShowMusicNotes } from '../../app/ui-slice';
-import { MUSIC_CONFIGS } from '../../utils/music-data';
 
 const ScWrapper = styled.div`
   position:absolute;
@@ -50,17 +46,16 @@ const ScToggleGroup = styled.div`
 
 function Selections() {
   const dispatch = useAppDispatch();
-  const activeScale = useAppSelector(getActiveScale);
-  const rootNoteIdx = useAppSelector(getRootNoteIdx);
+  // const activeScale = useAppSelector(getActiveScale);
+  // const rootNoteIdx = useAppSelector(getRootNoteIdx);
   const showKeyboardKeys = useAppSelector(getShowKeyboardKeys);
   const showMusicNotes = useAppSelector(getShowMusicNotes);
-  const scaleDefs = useAppSelector(selectScaleDefs);
-  const allNotes = useAppSelector(selectAllNotes);
-  const activeConfig = useAppSelector(getActiveConfig);
+  // const scaleDefs = useAppSelector(selectScaleDefs);
+  // const allNotes = useAppSelector(selectAllNotes);
 
   return (
     <ScWrapper>
-      <ScGroup>
+      {/* <ScGroup>
         <p>{'Scales'}</p>
         <Select size='sm' grow='stretch' value={activeScale || ''} onChangeValue={(value: any) => dispatch(setActiveScale(value))} >
           <option key={-1} value=''>{''}</option>
@@ -68,16 +63,8 @@ function Selections() {
             <option key={idx} value={sc}>{scaleDefs[sc].label}</option>
           )) }
         </Select>
-      </ScGroup>
-      <ScGroup>
-        <p>{'Chromatic mode'}</p>
-        <Select size='sm' grow='stretch' value={activeConfig} onChangeValue={(value: any) => dispatch(setActiveConfig(value))} >
-          { Object.keys(MUSIC_CONFIGS).map((configId: string, idx: number) => (
-            <option key={idx} value={configId}>{configId}</option>
-          )) }
-        </Select>
-      </ScGroup>
-      <ScGroup>
+      </ScGroup> */}
+      {/* <ScGroup>
         <p>{'Key'}</p>
         <Select size='sm' grow='stretch' value={rootNoteIdx} onChangeValue={(value: any) => dispatch(setRootNoteIdx(value))} >
           <option key={-1} value=''>{''}</option>
@@ -85,7 +72,7 @@ function Selections() {
             <option key={idx} value={idx}>{nN}</option>
           )) }
         </Select>
-      </ScGroup>
+      </ScGroup> */}
       <ScGroup>
         <ScToggleGroup>
           <p>{'Notes'}</p>

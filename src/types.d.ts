@@ -90,6 +90,5 @@ export type InstrumentDef = {
   key: string,
   type: string,
   range: OctaveNote[],
-  keyboardKeys: string[],
-  standardOffset: number
+  keyboardKeys: string[]
 }

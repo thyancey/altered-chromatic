@@ -84,7 +84,6 @@ export function Piano({instrumentIdx}: Props) {
   const showMusicNotes = useAppSelector(getShowMusicNotes);
   const showKeyboardKeys = useAppSelector(getShowKeyboardKeys);
 
-  // const instrumentDef = useAppSelector(selectInstrumentDef);
   const [ fingerIsDown, setFingerIsDown ] = useState(false);
   const [ useTouchEvents, setUseTouchEvents ] = useState(false);
   const [ touchedKeys, setTouchedKeys ] = useState<string[]>([]);
@@ -103,6 +102,12 @@ export function Piano({instrumentIdx}: Props) {
   if(!instrumentDef){
     console.error(`piano could not get instrument for idx ${instrumentIdx}`);
     return null;
+  }
+
+  if(!pianoKeys){
+    console.error(`piano could not get pianoKeys for idx ${instrumentIdx}`);
+    return null;
+
   }
 
   const setAllTouchedKeys = (touchedKeys: string[]) => {
