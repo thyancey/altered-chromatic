@@ -1,7 +1,7 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from './store';
 import { InstrumentDef, InstrumentObj } from '../types';
-import { INSTRUMENT_DEFS, MUSIC_CONFIGS } from '../utils/music-data';
+import { INSTRUMENT_DEFS } from '../utils/music-data';
 
 export interface UiState {
   pressedKeys: string[];

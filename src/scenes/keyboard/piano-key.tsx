@@ -1,12 +1,14 @@
 import styled, { css } from 'styled-components';
 import { getColor } from '../../themes';
-import { CompleteNote, NoteName, ScaleStatus } from '../../types';
+import { CompleteNote, NoteName } from '../../types';
 
 export const SPECIAL_SHARPS: NoteName[] = [ 'A#', 'C#', 'D#' ];
 export const ScContainer = styled.div`
   display:block;
   text-align:center;
 `
+const KEY_HEIGHT = 18;
+
 const mixin_bounceAnim = () => `
   @keyframes bounce {
     0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 
@@ -34,15 +36,6 @@ const Anim_SharpPress = `
     margin-left: -.1rem;
     margin-right: .6rem;
   }
-`
-
-
-
-
-type SKeyBaseProps = {
-  scaleStatus: ScaleStatus
-}
-const ScKeyBase = styled.div<SKeyBaseProps>`
 `
 
 const ScKeyLabel = styled.span`
@@ -73,6 +66,30 @@ const ScNoteLabel = styled.span`
   font-size:3rem;
 
   opacity:.8;
+`
+
+const ScNoteFoot = styled.span`
+  pointer-events:none;
+  position:absolute;
+  top:${KEY_HEIGHT}rem;
+  left:50%;
+  transform: translateX(-50%);
+
+  margin-top:2rem;
+  font-weight: bold;
+  font-size:3rem;
+
+  .scalestatus-invalid & {
+    opacity:.15;
+  }
+
+  .scalestatus-root & {
+    color: ${getColor('white')};
+  }
+
+  .scalestatus-scale & {
+
+  }
 `
 
 const CSS_WhiteKey = `
@@ -106,39 +123,31 @@ const CSS_BlueKey = `
   }
 `
 
+const ScKeyBase = styled.div`
+.scalestatus-invalid & {
+  opacity:.15;
+}
+.scalestatus-root & {
+  ${CSS_BlueKey}
+}
+`
 const ScWholeKey = styled(ScKeyBase)`
   width: 7rem;
   margin-left:.5rem;
-  height: 18rem;
+  height:${KEY_HEIGHT}rem;
   border-radius: 0 0 1rem 1rem;
   
   ${CSS_WhiteKey}
   box-shadow: .25rem .25rem .75rem .5rem ${getColor('black')};
-
-  ${p => p.scaleStatus === 'invalid' && css`
-    opacity:.15;
-  `}
-
-  ${p => p.scaleStatus === 'root' && css`
-    ${CSS_BlueKey}
-  `}
 `
 
 const ScHalfKey = styled(ScKeyBase)`
   width:5rem;
-  height:10rem;
+  height:${KEY_HEIGHT / 1.8}rem;
   border-radius: 0 0 1.5rem 1.5rem;
   
   ${CSS_BlackKey}
   box-shadow: .15rem .15rem .25rem .25rem ${getColor('blue')};
-
-  ${p => p.scaleStatus === 'invalid' && css`
-    opacity:.15;
-  `}
-
-  ${p => p.scaleStatus === 'root' && css`
-    ${CSS_BlueKey}
-  `}
 
   ${ScNoteLabel}{
     bottom:.75rem;
@@ -203,20 +212,23 @@ type Props = {
   onMouseDown: Function,
   showKeyboardKeys?: boolean,
   showMusicNotes?: boolean,
-  keyIsDown?: boolean
+  keyIsDown?: boolean,
+  keyboardControl?: boolean
 }
-export function PianoWholeKey({ noteObj, onMouseEnter, onMouseDown, showMusicNotes, showKeyboardKeys, keyIsDown }: Props) {
+export function PianoWholeKey({ noteObj, onMouseEnter, onMouseDown, showMusicNotes, showKeyboardKeys, keyIsDown, keyboardControl}: Props) {
   return (
     <ScWholeKeyWrapper
       key={noteObj.idx}
       onMouseEnter={e => onMouseEnter(e, noteObj)}
       onMouseDown={e => onMouseDown(e, noteObj)}
-      keyPressed={noteObj.keyPressed || keyIsDown}
+      keyPressed={noteObj.keyPressed && keyboardControl || keyIsDown}
+      className={`scalestatus-${noteObj.scaleStatus}`}
     >
-      <ScWholeKey data-midinote={noteObj.midiNote} data-octavenote={noteObj.octaveNote} scaleStatus={noteObj.scaleStatus}>
+      <ScWholeKey data-midinote={noteObj.midiNote} data-octavenote={noteObj.octaveNote}>
         {showKeyboardKeys && (<ScKeyLabel>{noteObj.keyMatch}</ScKeyLabel>)}
         {showMusicNotes && (<ScNoteLabel>{noteObj.note}</ScNoteLabel>)}
       </ScWholeKey>
+      {showMusicNotes && (<ScNoteFoot>{noteObj.note}</ScNoteFoot>)}
     </ScWholeKeyWrapper>
   );
 }
@@ -228,16 +240,17 @@ export function PianoHalfKey({ noteObj, onMouseEnter, onMouseDown, showMusicNote
       onMouseEnter={e => onMouseEnter(e, noteObj)}
       onMouseDown={e => onMouseDown(e, noteObj)}
       keyPressed={noteObj.keyPressed || keyIsDown}
+      className={`scalestatus-${noteObj.scaleStatus}`}
     >
       <ScHalfKey
         data-midinote={noteObj.midiNote}
         data-octavenote={noteObj.octaveNote}
-        scaleStatus={noteObj.scaleStatus}
         className={SPECIAL_SHARPS.includes(noteObj.note) ? 'half-key' : ''}
       >
         {showKeyboardKeys && (<ScKeyLabel>{noteObj.keyMatch}</ScKeyLabel>)}
         {showMusicNotes && (<ScNoteLabel>{noteObj.note}</ScNoteLabel>)}
       </ScHalfKey>
+      {showMusicNotes && (<ScNoteFoot>{noteObj.note}</ScNoteFoot>)}
     </ScHalfKeyWrapper>
   );
 }

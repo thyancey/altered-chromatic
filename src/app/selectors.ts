@@ -21,17 +21,21 @@ export const selectAllAdjacentRootNoteIdxs = createSelector(
   }
 );
 
+export const getAdjacentScales = (curScaleName: string, scaleNames: string[]): [ string, string ] | null => {
+  const idx = scaleNames.findIndex(scaleName => scaleName === curScaleName);
+  if(idx === -1) return null;
+
+  const prevIdx = idx === 0 ? scaleNames.length - 1 : idx - 1;
+  const nextIdx = idx === scaleNames.length - 1 ? 0 : idx + 1;
+  return [ scaleNames[prevIdx], scaleNames[nextIdx] ];
+}
+
 export const selectAdjacentScales = createSelector(
   [getActiveScale],
   (activeScale): [ string, string ] | null => {
     if(!activeScale) return null;
     const scaleNames = Object.keys(STANDARD_SCALES);
-    const idx = scaleNames.findIndex(scaleName => scaleName === activeScale);
-    if(idx === -1) return null;
-
-    const prevIdx = idx === 0 ? scaleNames.length - 1 : idx - 1;
-    const nextIdx = idx === scaleNames.length - 1 ? 0 : idx + 1;
-    return [ scaleNames[prevIdx], scaleNames[nextIdx] ];
+    return getAdjacentScales(activeScale, scaleNames);
   }
 )
 

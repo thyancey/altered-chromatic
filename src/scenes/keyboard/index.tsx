@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { getColor } from '../../themes';
-import { Piano } from './piano';
-import { ScaleWidget } from '../widgets/scale';
+import { Instrument } from './instrument';
 
 const ScContainer = styled.div`
   position:absolute;
@@ -29,20 +28,17 @@ const ScLogo = styled.div`
   margin: auto;
   position: relative;
   padding: 2rem 2rem 0rem 2rem;
-  margin-bottom: -6.5rem;
+  margin-bottom: -2rem;
+  margin-top: -3rem;
 
   >h1{
     color: ${getColor('black')};
     font-size: 9rem;
 
-    padding:1rem;
     width: max-content;
     margin:auto;
     font-weight:800;
   }
-`
-const ScPianoContainer = styled.div`
-  
 `
 
 export function Keyboard() {
@@ -51,17 +47,8 @@ export function Keyboard() {
       <ScLogo>
         <h1>{'Altered Chromatic'}</h1>
       </ScLogo>
-      <ScPianoContainer>
-        <Piano instrumentIdx={0}/>
-      </ScPianoContainer>
-      <ScaleWidget instrumentIdx={0}/>
-      <ScLogo>
-        <h1>{'Standard Piano'}</h1>
-      </ScLogo>
-      <ScPianoContainer>
-        <Piano instrumentIdx={1} />
-      </ScPianoContainer>
-      <ScaleWidget instrumentIdx={1}/>
+      <Instrument instrumentIdx={0} />
+      <Instrument instrumentIdx={1} />
     </ScContainer>
   );
 }
