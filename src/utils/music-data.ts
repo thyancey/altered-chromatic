@@ -35,6 +35,16 @@ export const STANDARD_SCALES: ScaleDefs = {
     id: 'locrian',
     label: 'Locrian (VII)',
     intervals: [1,2,2,1,2,2,2]
+  } as ScaleDef,
+  'bm-pentatonic': {
+    id: 'bm-pentatonic',
+    label: 'Blues Minor (Pentatonic)',
+    intervals: [3,2,1,1,3]
+  } as ScaleDef,
+  'hirajoshi': {
+    id: 'hirajoshi',
+    label: 'Hirajoshi',
+    intervals: [2,1,4,1,4]
   } as ScaleDef
 };
 

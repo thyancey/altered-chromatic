@@ -7,13 +7,16 @@ export interface UiState {
   pressedKeys: string[];
   showKeyboardKeys: boolean;
   showMusicNotes: boolean;
+  showScaleNotes: boolean;
   instruments: InstrumentObj[];
+  activeInstrumentIdx: number;
 }
 
 const initialState: UiState = {
   pressedKeys: [],
   showKeyboardKeys: true,
-  showMusicNotes: true,
+  showMusicNotes: false,
+  showScaleNotes: true,
   instruments: [
     {
       activeConfig: "alteredChromatic",
@@ -23,7 +26,8 @@ const initialState: UiState = {
       activeConfig: "standardChromatic",
       instrumentType: "standardPiano"
     }
-  ]
+  ],
+  activeInstrumentIdx: 0,
 };
 
 export const uiSlice = createSlice({
@@ -39,16 +43,24 @@ export const uiSlice = createSlice({
     },
     setShowMusicNotes: (state, action: PayloadAction<boolean>) => {
       state.showMusicNotes = action.payload;
+    },
+    setShowScaleNotes: (state, action: PayloadAction<boolean>) => {
+      state.showScaleNotes = action.payload;
+    },
+    setActiveInstrumentIdx: (state, action: PayloadAction<number>) => {
+      state.activeInstrumentIdx = action.payload;
     }
   }
 });
 
-export const { setShowMusicNotes, setShowKeyboardKeys, setPressedKeys } = uiSlice.actions;
+export const { setActiveInstrumentIdx, setShowScaleNotes, setShowMusicNotes, setShowKeyboardKeys, setPressedKeys } = uiSlice.actions;
 
 export const getPressedKeys = (state: RootState) => state.ui.pressedKeys;
 export const getShowKeyboardKeys = (state: RootState) => state.ui.showKeyboardKeys;
 export const getShowMusicNotes = (state: RootState) => state.ui.showMusicNotes;
+export const getShowScaleNotes = (state: RootState) => state.ui.showScaleNotes;
 export const getInstruments = (state: RootState) => state.ui.instruments;
+export const getActiveInstrumentIdx = (state: RootState) => state.ui.activeInstrumentIdx;
 
 export const selectInstrumentDefs = createSelector(
   [getInstruments],

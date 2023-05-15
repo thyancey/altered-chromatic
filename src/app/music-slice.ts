@@ -27,11 +27,18 @@ export const musicSlice = createSlice({
       }else{
         state.activeScale = action.payload;
       }
+    },
+    setDefaultScale: (state, action: PayloadAction<string>) => {
+      if(state.activeScale === action.payload){
+        state.activeScale = null;
+      }else{
+        state.activeScale = action.payload;
+      }
     }
   }
 });
 
-export const { setRootNoteIdx, setActiveScale } = musicSlice.actions;
+export const { setRootNoteIdx, setActiveScale, setDefaultScale } = musicSlice.actions;
 
 export const getRootNoteIdx = (state: RootState) => state.music.rootNoteIdx;
 export const getRootNoteOctave = (state: RootState) => state.music.rootNoteOctave;

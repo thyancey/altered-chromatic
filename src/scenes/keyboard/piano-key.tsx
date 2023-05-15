@@ -77,7 +77,7 @@ const ScNoteFoot = styled.span`
 
   margin-top:2rem;
   font-weight: bold;
-  font-size:3rem;
+  font-size:2rem;
 
   .scalestatus-invalid & {
     opacity:.15;
@@ -124,12 +124,12 @@ const CSS_BlueKey = `
 `
 
 const ScKeyBase = styled.div`
-.scalestatus-invalid & {
-  opacity:.15;
-}
-.scalestatus-root & {
-  ${CSS_BlueKey}
-}
+  .scalestatus-invalid & {
+    opacity: .3;
+  }
+  .scalestatus-root & {
+    ${CSS_BlueKey}
+  }
 `
 const ScWholeKey = styled(ScKeyBase)`
   width: 7rem;
@@ -158,18 +158,8 @@ const ScHalfKey = styled(ScKeyBase)`
   }
 
   
-  .instrument-alteredPiano &.half-key {
-    box-shadow: .15rem .15rem .25rem .25rem ${getColor('yellow')};
-    border-radius: 2rem;
-  }
-
-  .half-key{
-    ${ScNoteLabel}{ 
-      bottom:.50rem;
-    }
-    ${ScKeyLabel}{
-      bottom:4.75rem;
-    }
+  .instrument-alteredPiano &.special-key {
+    height: ${KEY_HEIGHT / 1.6}rem;
   }
 `
 
@@ -212,28 +202,32 @@ type Props = {
   onMouseDown: Function,
   showKeyboardKeys?: boolean,
   showMusicNotes?: boolean,
+  showScaleNotes?: boolean,
   keyIsDown?: boolean,
-  keyboardControl?: boolean
+  isActiveInstrument?: boolean
 }
-export function PianoWholeKey({ noteObj, onMouseEnter, onMouseDown, showMusicNotes, showKeyboardKeys, keyIsDown, keyboardControl}: Props) {
+export function PianoWholeKey({ noteObj, onMouseEnter, onMouseDown, showMusicNotes, showScaleNotes, showKeyboardKeys, keyIsDown, isActiveInstrument}: Props) {
   return (
     <ScWholeKeyWrapper
       key={noteObj.idx}
       onMouseEnter={e => onMouseEnter(e, noteObj)}
       onMouseDown={e => onMouseDown(e, noteObj)}
-      keyPressed={noteObj.keyPressed && keyboardControl || keyIsDown}
+      keyPressed={noteObj.keyPressed && isActiveInstrument || keyIsDown}
       className={`scalestatus-${noteObj.scaleStatus}`}
     >
-      <ScWholeKey data-midinote={noteObj.midiNote} data-octavenote={noteObj.octaveNote}>
-        {showKeyboardKeys && (<ScKeyLabel>{noteObj.keyMatch}</ScKeyLabel>)}
+      <ScWholeKey 
+        data-midinote={noteObj.midiNote}
+        data-octavenote={noteObj.octaveNote}
+      >
+        {showKeyboardKeys && isActiveInstrument && (<ScKeyLabel>{noteObj.keyMatch}</ScKeyLabel>)}
         {showMusicNotes && (<ScNoteLabel>{noteObj.note}</ScNoteLabel>)}
       </ScWholeKey>
-      {showMusicNotes && (<ScNoteFoot>{noteObj.note}</ScNoteFoot>)}
+      {showScaleNotes && (<ScNoteFoot>{noteObj.note}</ScNoteFoot>)}
     </ScWholeKeyWrapper>
   );
 }
 
-export function PianoHalfKey({ noteObj, onMouseEnter, onMouseDown, showMusicNotes, showKeyboardKeys, keyIsDown }: Props) {
+export function PianoHalfKey({ noteObj, onMouseEnter, onMouseDown, showScaleNotes, showMusicNotes, showKeyboardKeys, keyIsDown, isActiveInstrument }: Props) {
   return (
     <ScHalfKeyWrapper
       key={noteObj.idx}
@@ -245,12 +239,12 @@ export function PianoHalfKey({ noteObj, onMouseEnter, onMouseDown, showMusicNote
       <ScHalfKey
         data-midinote={noteObj.midiNote}
         data-octavenote={noteObj.octaveNote}
-        className={SPECIAL_SHARPS.includes(noteObj.note) ? 'half-key' : ''}
+        className={SPECIAL_SHARPS.includes(noteObj.note) ? 'special-key' : ''}
       >
-        {showKeyboardKeys && (<ScKeyLabel>{noteObj.keyMatch}</ScKeyLabel>)}
+        {showKeyboardKeys && isActiveInstrument && (<ScKeyLabel>{noteObj.keyMatch}</ScKeyLabel>)}
         {showMusicNotes && (<ScNoteLabel>{noteObj.note}</ScNoteLabel>)}
       </ScHalfKey>
-      {showMusicNotes && (<ScNoteFoot>{noteObj.note}</ScNoteFoot>)}
+      {showScaleNotes && (<ScNoteFoot>{noteObj.note}</ScNoteFoot>)}
     </ScHalfKeyWrapper>
   );
 }

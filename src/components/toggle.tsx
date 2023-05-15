@@ -11,7 +11,6 @@ type ScWrapperProps = {
 const ScToggle = styled.button<ScWrapperProps>`
   position:relative;
   width:max-content;
-  margin:.5rem;
 
   border:none;
   cursor: pointer;

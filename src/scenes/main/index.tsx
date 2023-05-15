@@ -15,34 +15,6 @@ const ScStage = styled.div`
   z-index: -1;
 `;
 
-const ScCopyright = styled.div`
-  position: absolute;
-  right: 1rem;
-  bottom: 0.5rem;
-  text-align:right;
-
-  a,
-  span {
-    font-size: 2rem;
-    font-weight: bold;
-    color: ${getColor("black")};
-  }
-
-  a {
-    text-decoration: none;
-
-    &:visited {
-      color: ${getColor("black")};
-    }
-
-    transition: color 0.2s;
-    &:hover {
-      transition: color 0.2s;
-      color: ${getColor("blue")};
-    }
-  }
-`;
-
 export type PageInfo = {
   route: string;
   text: string;
@@ -75,25 +47,6 @@ function Main() {
             <Route key={i} path={p.route} element={p.element} />
           ))}
         </Routes>
-        <ScCopyright>
-          <a href="http://thomasyancey.com" target="_blank">
-            {"©Tom Yancey, 2023"}
-          </a>
-          <br />
-          <a
-            href="https://github.com/thyancey/altered-chromatic"
-            target="_blank"
-          >
-            {"code"}
-          </a>
-          <span> {" | "}</span>
-          <a
-            href="https://thyancey.github.io/altered-chromatic/"
-            target="_blank"
-          >
-            {"alpha"}
-          </a>
-        </ScCopyright>
       </ScStage>
     </HashRouter>
   );

@@ -76,6 +76,34 @@ const ScRowPair = styled.div`
   }
 `
 
+const ScCopyright = styled.div`
+  position: absolute;
+  right: 1rem;
+  bottom: 0.5rem;
+  text-align:right;
+
+  a,
+  span {
+    font-size: 2rem;
+    font-weight: bold;
+    color: ${getColor("black")};
+  }
+
+  a {
+    text-decoration: none;
+
+    &:visited {
+      color: ${getColor("black")};
+    }
+
+    transition: color 0.2s;
+    &:hover {
+      transition: color 0.2s;
+      color: ${getColor("blue")};
+    }
+  }
+`;
+
 const oldNotes = [ 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B' ];
 const newNotes = [ 'A', 'A#', 'B', 'B#', 'C', 'C#', 'D', 'D#', 'E', 'E#', 'F', 'F#' ];
 
@@ -103,6 +131,26 @@ export function About() {
           </ScRowPair>
         ))}
       </ScTable>
+      
+      <ScCopyright>
+          <a href="http://thomasyancey.com" target="_blank">
+            {"©Tom Yancey, 2023"}
+          </a>
+          <br />
+          <a
+            href="https://github.com/thyancey/altered-chromatic"
+            target="_blank"
+          >
+            {"code"}
+          </a>
+          <span> {" | "}</span>
+          <a
+            href="https://thyancey.github.io/altered-chromatic/"
+            target="_blank"
+          >
+            {"alpha"}
+          </a>
+        </ScCopyright>
     </ScContainer>
   );
 }

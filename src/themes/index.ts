@@ -124,10 +124,10 @@ const shadows = {
   z2: '-0.1rem 0.1rem .25rem .1rem rgba(0,0,0,0.36)',
   z3: '-.2rem .5rem 1rem .2rem rgba(0,0,0,.36)'
 }
-export type ColorType = 'black' | 'grey' | 'grey_light' | 'white' | 'blue' | 'green' | 'yellow' | 'red' | 'pink' | 'orange' | 'blue_dark';
+export type ColorType = 'black' | 'black_light' | 'grey' | 'grey_light' | 'white' | 'blue' | 'green' | 'yellow' | 'red' | 'pink' | 'orange' | 'blue_dark';
 const colors = {
   black: '#1F1F1F',
-  black_light: '#1F1F1F',
+  black_light: '#3F3F3F',
   grey: '#4D4D4F',
   grey_light: '#D3D8CF',
   white: '#FFFFFF',
